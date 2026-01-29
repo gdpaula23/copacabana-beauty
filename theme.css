@@ -1,0 +1,46 @@
+:root{
+  --olive-900:#2F3A22;
+  --olive-800:#3F4D2F;
+  --olive-700:#566643;
+
+  --beige:#F4EAD6;
+  --beige-40: rgba(244,234,214,.40);
+  --beige-22: rgba(244,234,214,.22);
+  --beige-14: rgba(244,234,214,.14);
+  --beige-10: rgba(244,234,214,.10);
+
+  --line: rgba(244,234,214,.28);
+}
+
+body{
+  color: var(--beige);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(244,234,214,.10), transparent 65%),
+    radial-gradient(circle at 78% 12%, rgba(244,234,214,.08), transparent 68%),
+    radial-gradient(circle at 55% 78%, rgba(244,234,214,.07), transparent 72%),
+    linear-gradient(180deg,#4B5A3A 0%, #3F4D2F 45%, #2F3A22 100%);
+}
+
+/* mármore global */
+.marble-overlay{
+  position:fixed;
+  inset:-10%;
+  z-index:0;
+  pointer-events:none;
+
+  background-image:url("marble.png");
+  background-size:cover;
+  background-position:center;
+
+  opacity:.12;
+  filter: blur(1.2px) saturate(.85) contrast(.95);
+  mix-blend-mode: soft-light;
+
+  transform: rotate(0deg) scale(1.12);
+}
+
+/* garante tudo acima do overlay */
+body > *:not(.marble-overlay){
+  position:relative;
+  z-index:1;
+}
