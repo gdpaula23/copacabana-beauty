@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Services | Copacabana Beauty</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --olive-900:#2F3A22;
+  --olive-800:#3F4D2F;
+  --olive-700:#566643;
+
+  --beige:#F4EAD6;
+  --beige-80: rgba(244,234,214,.80);
+  --beige-40: rgba(244,234,214,.40);
+  --beige-22: rgba(244,234,214,.22);
+  --beige-14: rgba(244,234,214,.14);
+  --beige-10: rgba(244,234,214,.10);
+
+  --line: rgba(244,234,214,.28);
+  --shadow: 0 40px 90px rgba(0,0,0,.30);
+
+  --radius-xl: 24px;
+  --radius-lg: 18px;
+
+  --max: 1160px;
+}
+
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+  font-family:'Montserrat',sans-serif;
+  color:var(--beige);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(244,234,214,.10), transparent 65%),
+    radial-gradient(circle at 78% 12%, rgba(244,234,214,.08), transparent 68%),
+    radial-gradient(circle at 55% 78%, rgba(244,234,214,.07), transparent 72%),
+    linear-gradient(180deg,#4B5A3A 0%, #3F4D2F 45%, #2F3A22 100%);
+  overflow-x:hidden;
+}
+
+/* MARBLE OVERLAY */
+.marble-overlay{
+  position:fixed;
+  inset:-12%;
+  z-index:0;
+  pointer-events:none;
+  background-image:url("marble.png");
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  opacity:.11;
+  filter: blur(1.2px) saturate(.85) contrast(.95);
+  mix-blend-mode: soft-light;
+  transform: rotate(0deg) scale(1.12);
+}
+body > *:not(.marble-overlay){
+  position:relative;
+  z-index:1;
+}
+
+/* NAV */
+nav{
+  position:fixed;
+  top:0; left:0; width:100%;
+  padding:18px 40px;
+  z-index:50;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:22px;
+  background:transparent;
+  transition:background .25s ease, transform .25s ease, border-color .25s ease;
+}
+nav.is-scrolled{
+  background:rgba(0,0,0,.10);
+  border-bottom:1px solid rgba(244,234,214,.10);
+  backdrop-filter: blur(6px);
+}
+nav.is-hidden{ transform:translateY(-110%); }
+
+nav a{
+  color:rgba(244,234,214,.92);
+  text-decoration:none;
+  font-size:12px;
+  letter-spacing:2px;
+  opacity:.95;
+}
+nav a:hover{opacity:1}
+
+.nav-cta{
+  padding:10px 14px;
+  border:1px solid rgba(244,234,214,.28);
+  border-radius:999px;
+  background:rgba(244,234,214,.10);
+}
+
+/* LAYOUT */
+.wrap{max-width:var(--max); margin:0 auto; padding:0 20px;}
+.section{padding:120px 0 100px;}
+
+h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:48px;
+  text-align:center;
+  margin-bottom:12px;
+  letter-spacing:.2px;
+  text-shadow:0 18px 40px rgba(0,0,0,.20);
+}
+.sub{
+  text-align:center;
+  max-width:760px;
+  margin:0 auto 44px;
+  opacity:.88;
+  line-height:1.9;
+  font-size:15px;
+}
+
+/* linha elegante embaixo do título */
+.title-line{
+  width:min(520px, 88%);
+  height:1px;
+  margin:22px auto 0;
+  background:linear-gradient(to right, transparent, rgba(244,234,214,.50), transparent);
+}
+
+/* GRID 4 + 4 */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:18px;
+}
+
+/* CARD */
+.card{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
+    rgba(244,234,214,.10);
+  border:1px solid rgba(244,234,214,.20);
+  border-radius:var(--radius-xl);
+  box-shadow:0 24px 60px rgba(0,0,0,.18);
+  padding:26px 22px 22px;
+  text-align:center;
+  transition:transform .18s ease, background .18s ease;
+  will-change:transform;
+}
+.card:hover{
+  transform:translateY(-4px);
+  background:rgba(244,234,214,.12);
+}
+
+.card h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px;
+  line-height:1.05;
+  margin-bottom:12px;
+}
+
+.card .meta{
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  opacity:.78;
+  margin-bottom:12px;
+}
+
+.card .price{
+  font-size:14px;
+  opacity:.92;
+  margin:8px 0 18px;
+}
+.card .price strong{
+  font-size:20px;
+  font-weight:500;
+}
+
+.card a{
+  display:inline-flex;
+  width:100%;
+  justify-content:center;
+  align-items:center;
+  padding:13px 14px;
+  border-radius:999px;
+  background:var(--beige);
+  color:var(--olive-800);
+  text-decoration:none;
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  border:1px solid rgba(244,234,214,.75);
+  transition:transform .18s ease, opacity .18s ease;
+}
+.card a:hover{ transform:translateY(-2px); }
+
+/* BASKET FAB (SAFE-AREA FRIENDLY) */
+.cart-fab{
+  position: fixed !important;
+
+  left: auto !important;
+  right: 18px !important;
+  bottom: 18px !important;
+
+  z-index: 9999 !important;
+
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.18);
+  backdrop-filter: blur(10px);
+
+  padding: 12px 14px;
+  border-radius: 999px;
+  color: rgba(244,234,214,.92);
+  font-size: 12px;
+  text-decoration: none;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  white-space: nowrap;
+}
+
+.cart-fab span{
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(244,234,214,.16);
+}
+
+/* iPhone notch / safe-area (opcional) */
+@supports (padding: max(0px)){
+  .cart-fab{
+    right: max(18px, env(safe-area-inset-right)) !important;
+    bottom: max(18px, env(safe-area-inset-bottom)) !important;
+  }
+}
+
+/* evita o FAB cobrir conteúdo no final da página */
+body{ padding-bottom: 110px; }
+
+/* SCROLL REVEAL */
+.reveal{
+  opacity:0;
+  transform: translateY(16px);
+  transition: opacity .6s ease, transform .6s ease;
+  will-change:opacity, transform;
+}
+.reveal.in{
+  opacity:1;
+  transform:none;
+}
+
+/* RESPONSIVO */
+@media(max-width:1020px){
+  nav{ padding:16px 16px; }
+  .cards{ grid-template-columns:repeat(2, 1fr); }
+  .section{ padding:105px 0 80px; }
+}
+
+@media(max-width:560px){
+  nav{
+    padding:12px 14px;
+    gap:16px;
+  }
+  nav a{
+    font-size:11px;
+    letter-spacing:1.6px;
+  }
+  .nav-cta{ padding:9px 12px; }
+
+  .wrap{ padding:0 16px; }
+  .section{ padding:95px 0 70px; }
+
+  h1{ font-size:36px; line-height:1.12; }
+  .sub{ font-size:14px; line-height:1.75; margin:0 auto 30px; padding:0 6px; }
+  .title-line{ margin:18px auto 0; }
+
+  .cards{ grid-template-columns:1fr; gap:16px; }
+  .card{ padding:22px 18px 18px; }
+  .card h3{ font-size:24px; }
+  .card .meta{ font-size:11px; }
+  .card a{ padding:14px 14px; }
+
+  /* FAB mais compacto no mobile */
+  .cart-fab{
+    padding:11px 12px;
+    font-size:11px;
+    letter-spacing:1px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="marble-overlay" id="marbleOverlay"></div>
+
+<nav id="nav">
+  <a href="home.html">HOME</a>
+  <a href="services2.html">SERVICES</a>
+  <a href="cart.html" class="nav-cta">BASKET</a>
+</nav>
+
+<section class="section">
+  <div class="wrap">
+    <h1 class="reveal">Services</h1>
+    <p class="sub reveal">
+      Choose your ritual and add it to your basket. You can select more than one service.
+    </p>
+    <div class="title-line reveal"></div>
+
+    <div class="cards" style="margin-top:44px;">
+      <!-- 1 -->
+      <div class="card reveal">
+        <div class="meta">Up to 1.5 hours</div>
+        <h3>Luxury Head Spa</h3>
+        <div class="price"><strong>£120</strong></div>
+        <a href="cart.html?add=1&service=Luxury%20Head%20Spa&price=120">ADD TO BASKET</a>
+      </div>
+
+      <!-- 2 -->
+      <div class="card reveal">
+        <div class="meta">Up to 2 hours</div>
+        <h3>Head Spa & Facial</h3>
+        <div class="price"><strong>£150</strong></div>
+        <a href="cart.html?add=1&service=Head%20Spa%20%26%20Facial&price=150">ADD TO BASKET</a>
+      </div>
+
+      <!-- 3 -->
+      <div class="card reveal">
+        <div class="meta">Up to 2 hours</div>
+        <h3>Head & Foot Spa</h3>
+        <div class="price"><strong>£160</strong></div>
+        <a href="cart.html?add=1&service=Head%20%26%20Foot%20Spa&price=160">ADD TO BASKET</a>
+      </div>
+
+      <!-- 4 -->
+      <div class="card reveal">
+        <div class="meta">Up to 1.5 hours</div>
+        <h3>For Him</h3>
+        <div class="price"><strong>£100</strong></div>
+        <a href="cart.html?add=1&service=For%20Him&price=100">ADD TO BASKET</a>
+      </div>
+
+      <!-- 5 -->
+      <div class="card reveal">
+        <div class="meta">Up to 60 min</div>
+        <h3>Express Head Spa</h3>
+        <div class="price"><strong>£80</strong></div>
+        <a href="cart.html?add=1&service=Express%20Head%20Spa&price=80">ADD TO BASKET</a>
+      </div>
+
+      <!-- 6 -->
+      <div class="card reveal">
+        <div class="meta">Up to 75 min</div>
+        <h3>Scalp Detox Therapy</h3>
+        <div class="price"><strong>£95</strong></div>
+        <a href="cart.html?add=1&service=Scalp%20Detox%20Therapy&price=95">ADD TO BASKET</a>
+      </div>
+
+      <!-- 7 -->
+      <div class="card reveal">
+        <div class="meta">Up to 45 min</div>
+        <h3>Relaxing Head Massage</h3>
+        <div class="price"><strong>£70</strong></div>
+        <a href="cart.html?add=1&service=Relaxing%20Head%20Massage&price=70">ADD TO BASKET</a>
+      </div>
+
+      <!-- 8 -->
+      <div class="card reveal">
+        <div class="meta">Up to 60 min</div>
+        <h3>Luxury Facial Ritual</h3>
+        <div class="price"><strong>£110</strong></div>
+        <a href="cart.html?add=1&service=Luxury%20Facial%20Ritual&price=110">ADD TO BASKET</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<a class="cart-fab" href="cart.html">
+  BASKET <span id="cartCount">0</span>
+</a>
+
+<script>
+/* NAV hide/show */
+(() => {
+  const nav = document.getElementById("nav");
+  let lastY = window.scrollY;
+  const TOP = 8;
+  const HIDE_AFTER = 90;
+
+  function onScroll(){
+    const y = window.scrollY;
+    const down = y > lastY;
+
+    if (y > TOP) nav.classList.add("is-scrolled");
+    else nav.classList.remove("is-scrolled");
+
+    if (down && y > HIDE_AFTER) nav.classList.add("is-hidden");
+    else nav.classList.remove("is-hidden");
+
+    lastY = y;
+  }
+  window.addEventListener("scroll", onScroll, { passive:true });
+  onScroll();
+})();
+
+/* Scroll reveal */
+(() => {
+  const els = document.querySelectorAll(".reveal");
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries){
+      if (e.isIntersecting){
+        e.target.classList.add("in");
+        io.unobserve(e.target);
+      }
+    }
+  }, { threshold: 0.12, rootMargin: "0px 0px -10% 0px" });
+
+  els.forEach(el => io.observe(el));
+})();
+
+/* Random marble */
+(() => {
+  const el = document.getElementById("marbleOverlay");
+  if (!el) return;
+
+  const deg = (Math.random() * 10) - 5;
+  const x = Math.floor(Math.random() * 34) + 33;
+  const y = Math.floor(Math.random() * 34) + 33;
+
+  el.style.transform = `rotate(${deg}deg) scale(1.12)`;
+  el.style.backgroundPosition = `${x}% ${y}%`;
+})();
+
+/* Basket badge */
+const CART_KEY="cb_cart_v1";
+function loadCart(){
+  try{return JSON.parse(localStorage.getItem(CART_KEY))||[]}catch{return[]}
+}
+function count(cart){return cart.reduce((s,i)=>s+(i.qty||1),0)}
+document.getElementById("cartCount").innerText=count(loadCart());
+</script>
+
+</body>
+</html>
