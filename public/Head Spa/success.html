@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Next step | Copacabana Beauty</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --olive-800:#3F4D2F;
+  --beige:#F4EAD6;
+  --radius-xl: 24px;
+  --max: 860px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Montserrat',sans-serif;
+  color:var(--beige);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(244,234,214,.10), transparent 65%),
+    radial-gradient(circle at 78% 12%, rgba(244,234,214,.08), transparent 68%),
+    radial-gradient(circle at 55% 78%, rgba(244,234,214,.07), transparent 72%),
+    linear-gradient(180deg,#4B5A3A 0%, #3F4D2F 45%, #2F3A22 100%);
+  padding:120px 16px 90px;
+}
+.card{
+  max-width:var(--max);
+  margin:0 auto;
+  border-radius:var(--radius-xl);
+  border:1px solid rgba(244,234,214,.18);
+  background:rgba(244,234,214,.08);
+  padding:26px;
+  text-align:center;
+  box-shadow:0 26px 60px rgba(0,0,0,.16);
+}
+h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:42px;
+  margin-bottom:8px;
+}
+p{opacity:.88; line-height:1.8;}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:14px 18px;
+  border-radius:999px;
+  text-decoration:none;
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  transition:transform .2s ease, filter .2s ease;
+  margin-top:18px;
+  background:var(--beige);
+  color:var(--olive-800);
+  border:1px solid rgba(244,234,214,.75);
+}
+.btn:hover{transform:translateY(-2px); filter:brightness(.98);}
+.small{margin-top:12px;font-size:12px;opacity:.78;line-height:1.7}
+</style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>Next step</h1>
+    <p>If you’ve completed the deposit payment, open WhatsApp to schedule your appointment.</p>
+    <a id="waBtn" class="btn" href="#">Open WhatsApp</a>
+    <div class="small">If WhatsApp doesn’t open automatically, tap the button above.</div>
+  </div>
+
+<script>
+const CHECKOUT_INFO_KEY="cb_checkout_info_v1";
+const WHATSAPP_NUMBER="447934424780";
+
+function loadInfo(){
+  try{return JSON.parse(localStorage.getItem(CHECKOUT_INFO_KEY))||null}catch{return null}
+}
+function money(n){
+  const v = Math.max(0, Number(n) || 0);
+  return "£" + (Math.round(v * 100) / 100).toFixed(2).replace(".00","");
+}
+
+const info = loadInfo();
+const name = info?.name || "—";
+const deposit = info?.depositFixed ?? 20;
+
+const servicesText = (info?.services || [])
+  .map(s => `${s.name}${(s.qty||1)>1 ? ` ×${s.qty}` : ""}`)
+  .join(", ") || "—";
+
+const msg =
+  `Hello Ana Paula, I have paid the appointment deposit (${money(deposit)}). ` +
+  `Name: ${name}. ` +
+  `Services selected: ${servicesText}. ` +
+  `Could you please tell me your available dates and times?`;
+
+const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+document.getElementById("waBtn").href = waUrl;
+
+setTimeout(()=>{ window.location.href = waUrl; }, 800);
+</script>
+</body>
+</html>
