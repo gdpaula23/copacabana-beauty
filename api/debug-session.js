@@ -10,11 +10,12 @@ module.exports = async function handler(req, res) {
 
   try {
     const session = await stripe.checkout.sessions.retrieve(session_id);
-    return res.json({
+    return res.status(200).json({
       id: session.id,
       metadata: session.metadata,
     });
   } catch (err) {
+    console.error("debug-session error:", err);
     return res.status(500).json({ error: err.message });
   }
 };
