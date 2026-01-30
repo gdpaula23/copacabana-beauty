@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/gdpaula23/copacabana-beauty#readme",
   "dependencies": {
-    "googleapis": "^171.0.0"
+    "googleapis": "^171.0.0",
+    "stripe": "^20.3.0"
   }
 }
