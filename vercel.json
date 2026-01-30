@@ -1,6 +1,3 @@
 {
-  "rewrites": [
-    { "source": "/headspa.html", "destination": "/home.html" },
-    { "source": "/", "destination": "/home.html" }
-  ]
+  "rewrites": [{ "source": "/", "destination": "/home.html" }]
 }
