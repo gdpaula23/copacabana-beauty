@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Next step | Copacabana Beauty</title>
+<title>Booking confirmed | Copacabana Beauty</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 
@@ -41,6 +41,33 @@ h1{
   margin-bottom:8px;
 }
 p{opacity:.88; line-height:1.8;}
+.kv{
+  margin:18px auto 0;
+  max-width:520px;
+  text-align:left;
+  padding:16px;
+  border-radius:18px;
+  border:1px solid rgba(244,234,214,.18);
+  background:rgba(0,0,0,.10);
+}
+.row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 6px;
+  border-bottom:1px solid rgba(244,234,214,.12);
+  font-size:14px;
+}
+.row:last-child{border-bottom:none}
+.label{opacity:.75}
+.value{font-weight:500}
+.btnrow{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
 .btn{
   display:inline-flex;
   align-items:center;
@@ -53,10 +80,14 @@ p{opacity:.88; line-height:1.8;}
   letter-spacing:2px;
   text-transform:uppercase;
   transition:transform .2s ease, filter .2s ease;
-  margin-top:18px;
   background:var(--beige);
   color:var(--olive-800);
   border:1px solid rgba(244,234,214,.75);
+}
+.btn.secondary{
+  background:transparent;
+  color:var(--beige);
+  border:1px solid rgba(244,234,214,.35);
 }
 .btn:hover{transform:translateY(-2px); filter:brightness(.98);}
 .small{margin-top:12px;font-size:12px;opacity:.78;line-height:1.7}
@@ -65,41 +96,73 @@ p{opacity:.88; line-height:1.8;}
 
 <body>
   <div class="card">
-    <h1>Next step</h1>
-    <p>If you’ve completed the deposit payment, open WhatsApp to schedule your appointment.</p>
-    <a id="waBtn" class="btn" href="#">Open WhatsApp</a>
-    <div class="small">If WhatsApp doesn’t open automatically, tap the button above.</div>
+    <h1>Booking received</h1>
+    <p>Thank you — your deposit payment was received. We’ll confirm your booking shortly.</p>
+
+    <div class="kv" id="details" style="display:none;">
+      <div class="row"><span class="label">Staff</span><span class="value" id="staff">—</span></div>
+      <div class="row"><span class="label">Date</span><span class="value" id="date">—</span></div>
+      <div class="row"><span class="label">Time</span><span class="value" id="time">—</span></div>
+      <div class="row"><span class="label">Duration</span><span class="value" id="duration">—</span></div>
+    </div>
+
+    <div class="btnrow">
+      <a class="btn secondary" href="/booking.html">Make another booking</a>
+      <a id="waBtn" class="btn" href="#" target="_blank" rel="noopener" style="display:none;">Contact on WhatsApp</a>
+    </div>
+
+    <div class="small" id="hint">If you need help, you can contact us on WhatsApp.</div>
   </div>
 
 <script>
-const CHECKOUT_INFO_KEY="cb_checkout_info_v1";
-const WHATSAPP_NUMBER="447934424780";
+  // Booking salvo pelo booking.html
+  const BOOKING_KEY = "cb_booking_v1";
 
-function loadInfo(){
-  try{return JSON.parse(localStorage.getItem(CHECKOUT_INFO_KEY))||null}catch{return null}
-}
-function money(n){
-  const v = Math.max(0, Number(n) || 0);
-  return "£" + (Math.round(v * 100) / 100).toFixed(2).replace(".00","");
-}
+  function loadBooking() {
+    try { return JSON.parse(localStorage.getItem(BOOKING_KEY) || "null"); }
+    catch { return null; }
+  }
 
-const info = loadInfo();
-const name = info?.name || "—";
-const deposit = info?.depositFixed ?? 20;
+  function formatDate(yyyyMmDd){
+    // Mantém simples (sem libs). Se já vier yyyy-mm-dd, mostramos assim.
+    return yyyyMmDd || "—";
+  }
 
-const servicesText = (info?.services || [])
-  .map(s => `${s.name}${(s.qty||1)>1 ? ` ×${s.qty}` : ""}`)
-  .join(", ") || "—";
+  function formatTimeLabel(label, startISO){
+    if (label) return label;
+    if (!startISO) return "—";
+    try{
+      const d = new Date(startISO);
+      // mostra HH:MM no horário local do navegador
+      return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    } catch {
+      return "—";
+    }
+  }
 
-const msg =
-  `Hello Ana Paula, I have paid the appointment deposit (${money(deposit)}). ` +
-  `Name: ${name}. ` +
-  `Services selected: ${servicesText}. ` +
-  `Could you please tell me your available dates and times?`;
+  const booking = loadBooking();
 
+  if (booking) {
+    document.getElementById("details").style.display = "block";
+    document.getElementById("staff").textContent = booking.staffName || booking.staffKey || "—";
+    document.getElementById("date").textContent = formatDate(booking.date);
+    document.getElementById("time").textContent = formatTimeLabel(booking.label, booking.startISO);
+    document.getElementById("duration").textContent = booking.durationMin ? `${booking.durationMin} min` : "—";
+  }
 
+  // WhatsApp opcional (SEM auto redirect)
+  const WHATSAPP_NUMBER = "447934424780";
+  const waBtn = document.getElementById("waBtn");
 
+  // Mensagem simples usando booking
+  const msg = booking
+    ? `Hello! I’ve paid the deposit. Booking: ${booking.staffName || booking.staffKey} on ${booking.date} at ${formatTimeLabel(booking.label, booking.startISO)}.`
+    : `Hello! I’ve paid the deposit and need help with my booking.`;
 
+  const waUrl = `https://api.whatsapp.com/send/?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(msg)}&type=phone_number&app_absent=0`;
+
+  waBtn.href = waUrl;
+  waBtn.style.display = "inline-flex";
 </script>
 </body>
 </html>
