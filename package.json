@@ -1,0 +1,24 @@
+{
+  "name": "head-spa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gdpaula23/copacabana-beauty.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/gdpaula23/copacabana-beauty/issues"
+  },
+  "homepage": "https://github.com/gdpaula23/copacabana-beauty#readme",
+  "dependencies": {
+    "googleapis": "^171.0.0"
+  }
+}
