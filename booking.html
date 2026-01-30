@@ -1,459 +1,604 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Agendamento | Copacabana Beauty</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Booking | Copacabana Beauty</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="theme.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 
-  <style>
-    :root{
-      --olive-900:#2F3A22;
-      --olive-800:#3F4D2F;
-      --olive-700:#566643;
+<style>
+:root{
+  --verde:#3E4A2B;
+  --bege:#F4EAD6;
 
-      --beige:#F4EAD6;
-      --beige-14: rgba(244,234,214,.14);
-      --beige-22: rgba(244,234,214,.22);
-      --beige-40: rgba(244,234,214,.40);
-    }
+  --panel: rgba(244,234,214,.10);
+  --border: rgba(244,234,214,.18);
+  --border-strong: rgba(244,234,214,.55);
 
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{
-      font-family:'Montserrat',sans-serif;
-      color:var(--beige);
-      min-height:100vh;
-    }
+  --dark: rgba(0,0,0,.35);
+  --glass: rgba(0,0,0,.18);
+}
 
-    .wrap{
-      max-width:1100px;
-      margin:0 auto;
-      padding:90px 18px 80px;
-    }
+*{margin:0;padding:0;box-sizing:border-box}
 
-    .topbar{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:16px;
-      margin-bottom:22px;
-    }
+body{
+  font-family:'Montserrat',sans-serif;
+  color:var(--bege);
+}
 
-    h1{
-      font-family:'Cormorant Garamond',serif;
-      font-weight:600;
-      font-size:44px;
-      letter-spacing:.2px;
-    }
+.page-bg{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  background:
+    radial-gradient(circle 320px at 50% 18%, rgba(244,234,214,.09), transparent 70%),
+    radial-gradient(circle 260px at 20% 30%, rgba(244,234,214,.06), transparent 70%),
+    radial-gradient(circle 260px at 85% 55%, rgba(244,234,214,.05), transparent 70%),
+    radial-gradient(circle at 20% 20%, rgba(244,234,214,.12), transparent 80%),
+    linear-gradient(180deg,#3E4A2B,#3E4A2B);
+}
 
-    .sub{
-      opacity:.85;
-      font-size:14px;
-      margin-top:6px;
-    }
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
 
-    .card{
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
-        rgba(244,234,214,.10);
-      border:1px solid rgba(244,234,214,.25);
-      border-radius:22px;
-      backdrop-filter: blur(14px);
-      box-shadow:0 30px 70px rgba(0,0,0,.25);
-    }
+.hero{
+  padding:52px 20px 18px;
+  text-align:center;
+}
+.hero img{max-width:240px;}
 
-    .grid{
-      display:grid;
-      grid-template-columns: 360px 1fr;
-      gap:18px;
-      align-items:start;
-    }
+.card{
+  width:100%;
+  max-width:920px;
+  margin:0 18px 80px;
+  padding:26px;
 
-    .left{
-      padding:18px;
-    }
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
+    var(--panel);
 
-    .section-title{
-      font-size:12px;
-      letter-spacing:2px;
-      opacity:.85;
-      margin:10px 0 10px;
-      text-transform:uppercase;
-    }
+  backdrop-filter: blur(16px);
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 40px 80px rgba(0,0,0,.35);
+}
 
-    .staff-list{
-      display:grid;
-      gap:10px;
-    }
+.header{
+  text-align:center;
+}
+.header h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:38px;
+  margin-bottom:8px;
+}
+.subtitle{
+  opacity:.85;
+  font-size:14px;
+  line-height:1.6;
+}
+#tzLine{opacity:.75; display:block; margin-top:4px;}
 
-    .staff-btn{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      width:100%;
-      padding:14px 14px;
-      border-radius:14px;
-      border:1px solid rgba(244,234,214,.22);
-      background:rgba(0,0,0,.18);
-      color:var(--beige);
-      cursor:pointer;
-      transition:.2s;
-      text-align:left;
-    }
-    .staff-btn:hover{transform:translateY(-1px); background:rgba(0,0,0,.24)}
-    .staff-btn.active{
-      border-color: rgba(244,234,214,.55);
-      background: rgba(244,234,214,.12);
-    }
-    .staff-name{font-weight:500}
-    .staff-tag{font-size:12px; opacity:.8}
+.divider{
+  height:1px;
+  background:linear-gradient(to right, transparent, rgba(244,234,214,.85), transparent);
+  margin:16px 0 18px;
+}
 
-    .right{
-      padding:18px;
-      min-height:420px;
-    }
+.grid{
+  display:grid;
+  grid-template-columns: 1fr 1.45fr;
+  gap:18px;
+}
 
-    .row{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:12px;
-    }
+.block{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:16px;
+}
 
-    .date-select{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
+.label{
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  opacity:.85;
+  margin-bottom:12px;
+}
 
-    select{
-      background:rgba(0,0,0,.25);
-      color:var(--beige);
-      border:1px solid rgba(244,234,214,.22);
-      border-radius:12px;
-      padding:10px 12px;
-      outline:none;
-      min-width:190px;
-    }
+/* STAFF CARDS */
+.staff{
+  display:grid;
+  gap:10px;
+}
 
-    .slots{
-      display:grid;
-      grid-template-columns: repeat(4, minmax(90px, 1fr));
-      gap:10px;
-      margin-top:14px;
-    }
+.staff-btn{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  border:none;
+  cursor:pointer;
+  padding:12px;
+  border-radius:16px;
+  background:rgba(0,0,0,.20);
+  border:1px solid rgba(244,234,214,.18);
+  color:var(--bege);
+  transition:.18s ease;
+  text-align:left;
+}
 
-    .slot{
-      padding:12px 10px;
-      border-radius:14px;
-      border:1px solid rgba(244,234,214,.22);
-      background:rgba(0,0,0,.18);
-      color:var(--beige);
-      cursor:pointer;
-      transition:.18s;
-      text-align:center;
-      font-size:14px;
-    }
-    .slot:hover{transform:translateY(-1px); background:rgba(0,0,0,.25)}
-    .slot.active{
-      border-color: rgba(244,234,214,.65);
-      background: rgba(244,234,214,.12);
-    }
+.staff-btn:hover{transform:translateY(-1px); background:rgba(0,0,0,.26)}
+.staff-btn.active{
+  background:rgba(244,234,214,.12);
+  border-color:rgba(244,234,214,.60);
+}
 
-    .actions{
-      display:flex;
-      gap:10px;
-      justify-content:flex-end;
-      margin-top:18px;
-      flex-wrap:wrap;
-    }
+.staff-btn img{
+  width:46px;height:46px;
+  border-radius:50%;
+  object-fit:cover;
+  border:1px solid rgba(244,234,214,.35);
+  background:rgba(0,0,0,.12);
+  flex:0 0 auto;
+}
 
-    .btn{
-      border:none;
-      border-radius:999px;
-      padding:12px 18px;
-      cursor:pointer;
-      font-size:12px;
-      letter-spacing:2px;
-      text-transform:uppercase;
-      transition:.18s;
-    }
+.staff-name{font-weight:500;font-size:14px}
+.staff-role{font-size:12px;opacity:.75;margin-top:2px}
 
-    .btn-ghost{
-      background:transparent;
-      color:var(--beige);
-      border:1px solid rgba(244,234,214,.35);
-    }
-    .btn-ghost:hover{background:rgba(244,234,214,.10)}
+.meta{
+  margin-top:12px;
+  font-size:13px;
+  opacity:.9;
+  line-height:1.6;
+}
 
-    .btn-primary{
-      background:var(--beige);
-      color:var(--olive-900);
-    }
-    .btn-primary:hover{transform:translateY(-1px)}
+/* DATE PILLS */
+.date-strip{
+  display:flex;
+  gap:10px;
+  overflow:auto;
+  padding-bottom:6px;
+  scrollbar-width: thin;
+}
+.date-pill{
+  flex:0 0 auto;
+  border:1px solid rgba(244,234,214,.20);
+  background:rgba(0,0,0,.20);
+  color:var(--bege);
+  border-radius:999px;
+  padding:10px 12px;
+  cursor:pointer;
+  transition:.18s ease;
+  min-width:150px;
+  text-align:left;
+}
+.date-pill:hover{transform:translateY(-1px); background:rgba(0,0,0,.26)}
+.date-pill.active{
+  background:rgba(244,234,214,.12);
+  border-color:rgba(244,234,214,.65);
+}
+.date-pill .top{
+  font-size:12px;
+  opacity:.85;
+}
+.date-pill .bottom{
+  margin-top:2px;
+  font-size:13px;
+  font-weight:500;
+}
 
-    .hint{
-      margin-top:12px;
-      opacity:.85;
-      font-size:13px;
-      line-height:1.6;
-    }
+/* SLOTS */
+.slots{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns: repeat(4, minmax(90px, 1fr));
+  gap:10px;
+}
 
-    .error{
-      margin-top:12px;
-      color:#ffd3d3;
-      font-size:13px;
-      opacity:.95;
-    }
+.slot{
+  border:1px solid rgba(244,234,214,.20);
+  background:rgba(0,0,0,.20);
+  color:var(--bege);
+  border-radius:14px;
+  padding:10px 8px;
+  cursor:pointer;
+  transition:.18s ease;
+  font-size:13px;
+  text-align:center;
+}
 
-    .loading{
-      opacity:.9;
-      font-size:14px;
-      margin-top:10px;
-    }
+.slot:hover{transform:translateY(-1px); background:rgba(0,0,0,.26)}
+.slot.active{
+  background:rgba(244,234,214,.12);
+  border-color:rgba(244,234,214,.65);
+}
 
-    @media (max-width: 900px){
-      .grid{grid-template-columns:1fr}
-      .slots{grid-template-columns: repeat(3, minmax(90px, 1fr));}
-      h1{font-size:38px}
-    }
-    @media (max-width: 420px){
-      .slots{grid-template-columns: repeat(2, minmax(90px, 1fr));}
-    }
-  </style>
+.msg{
+  margin-top:12px;
+  font-size:13px;
+  opacity:.9;
+  line-height:1.6;
+}
+.msg.error{color:#ffd3d3; opacity:1;}
+.msg.ok{color:#d9ffd9;}
+
+.actions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+
+.btn{
+  border:none;
+  border-radius:999px;
+  padding:12px 18px;
+  cursor:pointer;
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  transition:.18s ease;
+}
+
+.btn-ghost{
+  background:transparent;
+  color:var(--bege);
+  border:1px solid rgba(244,234,214,.35);
+}
+.btn-ghost:hover{background:rgba(244,234,214,.10)}
+
+.btn-primary{
+  background:var(--bege);
+  color:var(--verde);
+}
+.btn-primary:hover{transform:translateY(-1px)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+
+.footer{
+  padding:40px 20px;
+  text-align:center;
+  font-size:12px;
+  opacity:.6;
+}
+
+@media(max-width:950px){
+  .grid{grid-template-columns:1fr}
+  .slots{grid-template-columns: repeat(3, minmax(90px, 1fr));}
+}
+@media(max-width:420px){
+  .slots{grid-template-columns: repeat(2, minmax(90px, 1fr));}
+  .hero img{max-width:210px}
+  .date-pill{min-width:140px;}
+}
+</style>
 </head>
+
 <body>
+<div class="page-bg">
+  <main class="main">
 
-  <nav style="position:fixed;top:0;left:0;width:100%;padding:18px 40px;display:flex;justify-content:flex-end;z-index:10;background:transparent;">
-    <a href="home.html" style="color:rgba(244,234,214,.9);text-decoration:none;font-size:12px;letter-spacing:2px;margin-left:22px;">HOME</a>
-    <a href="services2.html" style="color:rgba(244,234,214,.9);text-decoration:none;font-size:12px;letter-spacing:2px;margin-left:22px;">SERVICES</a>
-    <a href="cart.html" style="color:rgba(244,234,214,.9);text-decoration:none;font-size:12px;letter-spacing:2px;margin-left:22px;">BASKET</a>
-  </nav>
+    <section class="hero">
+      <img src="eu1.png" alt="Copacabana Beauty">
+    </section>
 
-  <div class="wrap">
-    <div class="topbar">
-      <div>
-        <h1>Agendamento</h1>
-        <div class="sub">Escolha a profissional e o melhor horário disponível.</div>
-      </div>
-      <div class="sub" id="tzInfo"></div>
-    </div>
+    <section class="card">
 
-    <div class="grid">
-      <div class="card left">
-        <div class="section-title">Select staff</div>
-
-        <div class="staff-list">
-          <button class="staff-btn active" data-staff="ana" id="btnAna">
-            <div>
-              <div class="staff-name">Ana Paula</div>
-              <div class="staff-tag">Therapist</div>
-            </div>
-            <div>›</div>
-          </button>
-
-          <button class="staff-btn" data-staff="glenda" id="btnGlenda">
-            <div>
-              <div class="staff-name">Glenda Garcia</div>
-              <div class="staff-tag">Therapist</div>
-            </div>
-            <div>›</div>
-          </button>
+      <div class="header">
+        <h1>Booking</h1>
+        <div class="subtitle">
+          Choose staff, then pick a date and time.
+          <span id="tzLine"></span>
         </div>
-
-        <div class="hint">
-          Duração padrão: <b>60 min</b><br/>
-          Se quiser trocar depois, a gente ajusta na API com parâmetros.
-        </div>
-
-        <div class="error" id="errBox" style="display:none;"></div>
       </div>
 
-      <div class="card right">
-        <div class="row">
-          <div class="section-title" style="margin:0;">Select date</div>
+      <div class="divider"></div>
 
-          <div class="date-select">
-            <select id="dateSelect"></select>
+      <div class="grid">
+
+        <!-- STAFF -->
+        <div class="block">
+          <div class="label">Select staff</div>
+
+          <div class="staff">
+            <button class="staff-btn active" type="button" data-staff="ana">
+              <img src="ana.jpg" alt="Ana Paula">
+              <div>
+                <div class="staff-name">Ana Paula</div>
+                <div class="staff-role">Therapist</div>
+              </div>
+            </button>
+
+            <button class="staff-btn" type="button" data-staff="glenda">
+              <img src="glenda.jpg" alt="Glenda Garcia">
+              <div>
+                <div class="staff-name">Glenda Garcia</div>
+                <div class="staff-role">Therapist</div>
+              </div>
+            </button>
+          </div>
+
+          <div class="meta">
+            Duration: <b>60 min</b> · Working hours: <b>09:00–18:00</b><br>
+            <span style="opacity:.8;">Pick a date with available slots.</span>
           </div>
         </div>
 
-        <div id="loading" class="loading">Carregando horários...</div>
-        <div id="slots" class="slots" style="display:none;"></div>
+        <!-- DATE + TIMES -->
+        <div class="block">
+          <div class="label">Select date</div>
 
-        <div class="actions">
-          <button class="btn btn-ghost" id="btnBack">Continue shopping</button>
-          <button class="btn btn-primary" id="btnNext" disabled>Continue</button>
+          <div id="dateStrip" class="date-strip" aria-label="Available dates"></div>
+
+          <div id="loading" class="msg">Loading availability...</div>
+          <div id="message" class="msg" style="display:none;"></div>
+
+          <div id="slots" class="slots" style="display:none;"></div>
+
+          <div class="actions">
+            <button class="btn btn-ghost" id="reloadBtn" type="button">Reload</button>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn btn-ghost" id="backBtn" type="button">Back</button>
+              <button class="btn btn-primary" id="continueBtn" type="button" disabled>Continue</button>
+            </div>
+          </div>
+
+          <div class="msg" id="debug" style="opacity:.55; font-size:11px; margin-top:12px;"></div>
         </div>
+
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
+
+  <footer class="footer">© 2026 Copacabana Beauty · Booking</footer>
+</div>
 
 <script>
-  // ===== Estado =====
-  const state = {
-    data: null,
-    staff: "ana",
-    date: null,
-    slot: null,
+const BOOKING_KEY = "cb_booking_v1";
+
+const state = {
+  staff: "ana",
+  data: null,
+  date: null,
+  slot: null
+};
+
+const dateStrip = document.getElementById("dateStrip");
+const slotsEl = document.getElementById("slots");
+const loadingEl = document.getElementById("loading");
+const msgEl = document.getElementById("message");
+const debugEl = document.getElementById("debug");
+const continueBtn = document.getElementById("continueBtn");
+const tzLine = document.getElementById("tzLine");
+
+function showMsg(text, type){
+  msgEl.style.display = "block";
+  msgEl.className = "msg " + (type || "");
+  msgEl.innerHTML = text;
+}
+function hideMsg(){
+  msgEl.style.display = "none";
+  msgEl.innerHTML = "";
+  msgEl.className = "msg";
+}
+
+function fmtDateLong(isoDate){
+  // isoDate: "2026-01-30"
+  const d = new Date(isoDate + "T00:00:00");
+  // Evitar “Invalid Date” em alguns browsers: iso + T00 ok.
+  return d.toLocaleDateString("en-GB", { weekday:"short", day:"2-digit", month:"short" }); // Fri, 30 Jan
+}
+function fmtDateTop(isoDate){
+  const d = new Date(isoDate + "T00:00:00");
+  return d.toLocaleDateString("en-GB", { month:"long", year:"numeric" }); // January 2026
+}
+
+function getDaysForStaff(){
+  const days = state.data?.days || [];
+  // Só datas que têm pelo menos 1 slot dessa staff
+  return days.filter(d => (d[state.staff] || []).length > 0);
+}
+
+function setStaff(staff){
+  state.staff = staff;
+  state.slot = null;
+  continueBtn.disabled = true;
+
+  document.querySelectorAll(".staff-btn").forEach(b => b.classList.remove("active"));
+  document.querySelector(`.staff-btn[data-staff="${staff}"]`)?.classList.add("active");
+
+  // Re-render: datas e horários, sempre escolhendo a primeira data válida
+  renderDatesForStaff(true);
+}
+
+function renderDatesForStaff(forcePickFirst){
+  hideMsg();
+  dateStrip.innerHTML = "";
+  slotsEl.style.display = "none";
+  slotsEl.innerHTML = "";
+  state.slot = null;
+  continueBtn.disabled = true;
+
+  const availableDays = getDaysForStaff();
+
+  if (!availableDays.length){
+    loadingEl.style.display = "none";
+    showMsg("No available dates for this staff in the next days. Try <b>Reload</b> or choose the other staff.", "");
+    debugEl.textContent = "Debug: availableDays=0 for staff=" + state.staff;
+    return;
+  }
+
+  // Se a data atual não existe mais, escolhe a primeira
+  if (forcePickFirst || !state.date || !availableDays.some(d => d.date === state.date)){
+    state.date = availableDays[0].date;
+  }
+
+  // Construir pills
+  availableDays.forEach(d => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "date-pill" + (d.date === state.date ? " active" : "");
+    btn.dataset.date = d.date;
+
+    const top = document.createElement("div");
+    top.className = "top";
+    top.textContent = fmtDateTop(d.date);
+
+    const bottom = document.createElement("div");
+    bottom.className = "bottom";
+    bottom.textContent = fmtDateLong(d.date);
+
+    btn.appendChild(top);
+    btn.appendChild(bottom);
+
+    btn.addEventListener("click", () => {
+      state.date = d.date;
+      document.querySelectorAll(".date-pill").forEach(x => x.classList.remove("active"));
+      btn.classList.add("active");
+      renderSlots();
+    });
+
+    dateStrip.appendChild(btn);
+  });
+
+  renderSlots();
+}
+
+function renderSlots(){
+  hideMsg();
+  slotsEl.innerHTML = "";
+  state.slot = null;
+  continueBtn.disabled = true;
+
+  const days = state.data?.days || [];
+  const dayObj = days.find(d => d.date === state.date);
+
+  loadingEl.style.display = "none";
+  slotsEl.style.display = "grid";
+
+  if (!dayObj){
+    showMsg("Select a date to see available times.", "");
+    slotsEl.style.display = "none";
+    debugEl.textContent = "Debug: dayObj not found for date=" + state.date;
+    return;
+  }
+
+  const list = dayObj[state.staff] || [];
+
+  if (!list.length){
+    showMsg("No available times for this date. Try another day.", "");
+    debugEl.textContent = "Debug: slots=0 for staff=" + state.staff + " date=" + state.date;
+    return;
+  }
+
+  list.forEach(slot => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "slot";
+    b.textContent = slot.label;
+    b.dataset.start = slot.startISO;
+
+    b.addEventListener("click", () => {
+      document.querySelectorAll(".slot").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      state.slot = slot;
+      continueBtn.disabled = false;
+    });
+
+    slotsEl.appendChild(b);
+  });
+
+  debugEl.textContent =
+    "Debug: staff=" + state.staff +
+    " | date=" + state.date +
+    " | slots=" + list.length +
+    " | days(total)=" + (state.data?.days?.length || 0);
+}
+
+async function loadAvailability(){
+  hideMsg();
+  slotsEl.style.display = "none";
+  loadingEl.style.display = "block";
+  debugEl.textContent = "";
+
+  try {
+    const res = await fetch("/api/availability?days=14&duration=60&step=15", {
+      cache: "no-store"
+    });
+
+    const text = await res.text();
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error(
+        "API returned HTML instead of JSON. First chars: " +
+        text.slice(0, 30)
+      );
+    }
+
+    if (!res.ok || !data.ok) {
+      throw new Error(data?.error || data?.detail || "API error");
+    }
+
+    state.data = data;
+    tzLine.textContent = data.timeZone ? ("Timezone: " + data.timeZone) : "";
+
+    renderDates();
+    renderSlots();
+
+    debugEl.textContent =
+      "Debug: days=" + (data.days?.length || 0) +
+      " | staff=ana/glenda | api OK";
+
+  } catch (e) {
+    loadingEl.style.display = "none";
+    showMsg(
+      "Error loading availability: <b>" + e.message + "</b>",
+      "error"
+    );
+    debugEl.textContent = "Debug: fetch /api/availability failed.";
+  }
+}
+
+/* EVENTS */
+document.querySelectorAll(".staff-btn").forEach(btn => {
+  btn.addEventListener("click", () => setStaff(btn.dataset.staff));
+});
+
+document.getElementById("reloadBtn").addEventListener("click", loadAvailability);
+
+document.getElementById("backBtn").addEventListener("click", () => {
+  window.location.href = "services2.html";
+});
+
+continueBtn.addEventListener("click", () => {
+  if (!state.slot || !state.date) return;
+
+  const staffName = state.staff === "ana" ? "Ana Paula" : "Glenda Garcia";
+  const payload = {
+    staffKey: state.staff,
+    staffName,
+    date: state.date,
+    startISO: state.slot.startISO,
+    endISO: state.slot.endISO,
+    label: state.slot.label,
+    durationMin: 60
   };
 
-  const CART_BOOKING_KEY = "cb_booking_v1";
+  localStorage.setItem(BOOKING_KEY, JSON.stringify(payload));
+  window.location.href = "checkout.html";
+});
 
-  const $ = (id) => document.getElementById(id);
-  const errBox = $("errBox");
-  const slotsEl = $("slots");
-  const loadingEl = $("loading");
-  const dateSelect = $("dateSelect");
-  const tzInfo = $("tzInfo");
-  const btnNext = $("btnNext");
-
-  function showError(msg){
-    errBox.style.display = "block";
-    errBox.textContent = msg;
-  }
-  function clearError(){
-    errBox.style.display = "none";
-    errBox.textContent = "";
-  }
-
-  function setStaff(staff){
-    state.staff = staff;
-    state.slot = null;
-
-    document.querySelectorAll(".staff-btn").forEach(b => b.classList.remove("active"));
-    document.querySelector(`.staff-btn[data-staff="${staff}"]`).classList.add("active");
-
-    renderSlots();
-  }
-
-  function setDate(date){
-    state.date = date;
-    state.slot = null;
-    renderSlots();
-  }
-
-  function setSlot(slotObj){
-    state.slot = slotObj;
-    btnNext.disabled = false;
-
-    document.querySelectorAll(".slot").forEach(s => s.classList.remove("active"));
-    const active = document.querySelector(`.slot[data-start="${slotObj.startISO}"]`);
-    if (active) active.classList.add("active");
-  }
-
-  function renderDates(){
-    dateSelect.innerHTML = "";
-    if (!state.data?.days?.length) return;
-
-    state.data.days.forEach(d => {
-      const opt = document.createElement("option");
-      opt.value = d.date;
-      opt.textContent = d.date;
-      dateSelect.appendChild(opt);
-    });
-
-    // default = primeiro dia
-    state.date = state.data.days[0].date;
-    dateSelect.value = state.date;
-  }
-
-  function renderSlots(){
-    if (!state.data) return;
-
-    const dayObj = state.data.days.find(d => d.date === state.date);
-    if (!dayObj) return;
-
-    const list = dayObj[state.staff] || [];
-
-    slotsEl.innerHTML = "";
-
-    loadingEl.style.display = "none";
-    slotsEl.style.display = "grid";
-
-    btnNext.disabled = true;
-
-    if (!list.length){
-      const empty = document.createElement("div");
-      empty.className = "hint";
-      empty.style.gridColumn = "1 / -1";
-      empty.innerHTML = "Sem horários disponíveis neste dia. Tente outra data.";
-      slotsEl.appendChild(empty);
-      return;
-    }
-
-    list.forEach(slot => {
-      const b = document.createElement("button");
-      b.className = "slot";
-      b.type = "button";
-      b.textContent = slot.label;
-      b.dataset.start = slot.startISO;
-
-      b.addEventListener("click", () => setSlot(slot));
-      slotsEl.appendChild(b);
-    });
-  }
-
-  async function loadAvailability(){
-    clearError();
-    loadingEl.style.display = "block";
-    slotsEl.style.display = "none";
-
-    try{
-      const res = await fetch("/api/availability");
-      const data = await res.json();
-
-      if (!data.ok){
-        throw new Error(data.error || "Falha ao carregar agenda");
-      }
-
-      state.data = data;
-      tzInfo.textContent = data.timeZone ? `Timezone: ${data.timeZone}` : "";
-
-      renderDates();
-      renderSlots();
-    }catch(e){
-      showError("Erro ao buscar agenda: " + (e.message || e));
-      loadingEl.style.display = "none";
-    }
-  }
-
-  // ===== Eventos =====
-  $("btnAna").addEventListener("click", () => setStaff("ana"));
-  $("btnGlenda").addEventListener("click", () => setStaff("glenda"));
-
-  dateSelect.addEventListener("change", () => setDate(dateSelect.value));
-
-  $("btnBack").addEventListener("click", () => {
-    window.location.href = "services2.html";
-  });
-
-  $("btnNext").addEventListener("click", () => {
-    if (!state.slot) return;
-
-    const staffName = state.staff === "ana" ? "Ana Paula" : "Glenda Garcia";
-
-    const payload = {
-      staffKey: state.staff,
-      staffName,
-      date: state.date,
-      startISO: state.slot.startISO,
-      endISO: state.slot.endISO,
-      label: state.slot.label,
-    };
-
-    localStorage.setItem(CART_BOOKING_KEY, JSON.stringify(payload));
-
-    // Você escolhe depois: cart? checkout? um "confirm booking"?
-    window.location.href = "checkout.html";
-  });
-
-  loadAvailability();
+/* INIT */
+loadAvailability();
 </script>
 </body>
 </html>
