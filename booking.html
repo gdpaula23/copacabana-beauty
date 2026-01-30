@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agendamento | Copacabana Beauty</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="theme.css">
+
+  <style>
+    :root{
+      --olive-900:#2F3A22;
+      --olive-800:#3F4D2F;
+      --olive-700:#566643;
+
+      --beige:#F4EAD6;
+      --beige-14: rgba(244,234,214,.14);
+      --beige-22: rgba(244,234,214,.22);
+      --beige-40: rgba(244,234,214,.40);
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Montserrat',sans-serif;
+      color:var(--beige);
+      min-height:100vh;
+    }
+
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:90px 18px 80px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:22px;
+    }
+
+    h1{
+      font-family:'Cormorant Garamond',serif;
+      font-weight:600;
+      font-size:44px;
+      letter-spacing:.2px;
+    }
+
+    .sub{
+      opacity:.85;
+      font-size:14px;
+      margin-top:6px;
+    }
+
+    .card{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
+        rgba(244,234,214,.10);
+      border:1px solid rgba(244,234,214,.25);
+      border-radius:22px;
+      backdrop-filter: blur(14px);
+      box-shadow:0 30px 70px rgba(0,0,0,.25);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .left{
+      padding:18px;
+    }
+
+    .section-title{
+      font-size:12px;
+      letter-spacing:2px;
+      opacity:.85;
+      margin:10px 0 10px;
+      text-transform:uppercase;
+    }
+
+    .staff-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .staff-btn{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      width:100%;
+      padding:14px 14px;
+      border-radius:14px;
+      border:1px solid rgba(244,234,214,.22);
+      background:rgba(0,0,0,.18);
+      color:var(--beige);
+      cursor:pointer;
+      transition:.2s;
+      text-align:left;
+    }
+    .staff-btn:hover{transform:translateY(-1px); background:rgba(0,0,0,.24)}
+    .staff-btn.active{
+      border-color: rgba(244,234,214,.55);
+      background: rgba(244,234,214,.12);
+    }
+    .staff-name{font-weight:500}
+    .staff-tag{font-size:12px; opacity:.8}
+
+    .right{
+      padding:18px;
+      min-height:420px;
+    }
+
+    .row{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:12px;
+    }
+
+    .date-select{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    select{
+      background:rgba(0,0,0,.25);
+      color:var(--beige);
+      border:1px solid rgba(244,234,214,.22);
+      border-radius:12px;
+      padding:10px 12px;
+      outline:none;
+      min-width:190px;
+    }
+
+    .slots{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(90px, 1fr));
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .slot{
+      padding:12px 10px;
+      border-radius:14px;
+      border:1px solid rgba(244,234,214,.22);
+      background:rgba(0,0,0,.18);
+      color:var(--beige);
+      cursor:pointer;
+      transition:.18s;
+      text-align:center;
+      font-size:14px;
+    }
+    .slot:hover{transform:translateY(-1px); background:rgba(0,0,0,.25)}
+    .slot.active{
+      border-color: rgba(244,234,214,.65);
+      background: rgba(244,234,214,.12);
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      margin-top:18px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:none;
+      border-radius:999px;
+      padding:12px 18px;
+      cursor:pointer;
+      font-size:12px;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      transition:.18s;
+    }
+
+    .btn-ghost{
+      background:transparent;
+      color:var(--beige);
+      border:1px solid rgba(244,234,214,.35);
+    }
+    .btn-ghost:hover{background:rgba(244,234,214,.10)}
+
+    .btn-primary{
+      background:var(--beige);
+      color:var(--olive-900);
+    }
+    .btn-primary:hover{transform:translateY(-1px)}
+
+    .hint{
+      margin-top:12px;
+      opacity:.85;
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    .error{
+      margin-top:12px;
+      color:#ffd3d3;
+      font-size:13px;
+      opacity:.95;
+    }
+
+    .loading{
+      opacity:.9;
+      font-size:14px;
+      margin-top:10px;
+    }
+
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr}
+      .slots{grid-template-columns: repeat(3, minmax(90px, 1fr));}
+      h1{font-size:38px}
+    }
+    @media (max-width: 420px){
+      .slots{grid-template-columns: repeat(2, minmax(90px, 1fr));}
+    }
+  </style>
+</head>
+<body>
+
+  <nav style="position:fixed;top:0;left:0;width:100%;padding:18px 40px;display:flex;justify-content:flex-end;z-index:10;background:transparent;">
+    <a href="home.html" style="color:rgba(244,234,214,.9);text-decoration:none;font-size:12px;letter-spacing:2px;margin-left:22px;">HOME</a>
+    <a href="services2.html" style="color:rgba(244,234,214,.9);text-decoration:none;font-size:12px;letter-spacing:2px;margin-left:22px;">SERVICES</a>
+    <a href="cart.html" style="color:rgba(244,234,214,.9);text-decoration:none;font-size:12px;letter-spacing:2px;margin-left:22px;">BASKET</a>
+  </nav>
+
+  <div class="wrap">
+    <div class="topbar">
+      <div>
+        <h1>Agendamento</h1>
+        <div class="sub">Escolha a profissional e o melhor horário disponível.</div>
+      </div>
+      <div class="sub" id="tzInfo"></div>
+    </div>
+
+    <div class="grid">
+      <div class="card left">
+        <div class="section-title">Select staff</div>
+
+        <div class="staff-list">
+          <button class="staff-btn active" data-staff="ana" id="btnAna">
+            <div>
+              <div class="staff-name">Ana Paula</div>
+              <div class="staff-tag">Therapist</div>
+            </div>
+            <div>›</div>
+          </button>
+
+          <button class="staff-btn" data-staff="glenda" id="btnGlenda">
+            <div>
+              <div class="staff-name">Glenda Garcia</div>
+              <div class="staff-tag">Therapist</div>
+            </div>
+            <div>›</div>
+          </button>
+        </div>
+
+        <div class="hint">
+          Duração padrão: <b>60 min</b><br/>
+          Se quiser trocar depois, a gente ajusta na API com parâmetros.
+        </div>
+
+        <div class="error" id="errBox" style="display:none;"></div>
+      </div>
+
+      <div class="card right">
+        <div class="row">
+          <div class="section-title" style="margin:0;">Select date</div>
+
+          <div class="date-select">
+            <select id="dateSelect"></select>
+          </div>
+        </div>
+
+        <div id="loading" class="loading">Carregando horários...</div>
+        <div id="slots" class="slots" style="display:none;"></div>
+
+        <div class="actions">
+          <button class="btn btn-ghost" id="btnBack">Continue shopping</button>
+          <button class="btn btn-primary" id="btnNext" disabled>Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ===== Estado =====
+  const state = {
+    data: null,
+    staff: "ana",
+    date: null,
+    slot: null,
+  };
+
+  const CART_BOOKING_KEY = "cb_booking_v1";
+
+  const $ = (id) => document.getElementById(id);
+  const errBox = $("errBox");
+  const slotsEl = $("slots");
+  const loadingEl = $("loading");
+  const dateSelect = $("dateSelect");
+  const tzInfo = $("tzInfo");
+  const btnNext = $("btnNext");
+
+  function showError(msg){
+    errBox.style.display = "block";
+    errBox.textContent = msg;
+  }
+  function clearError(){
+    errBox.style.display = "none";
+    errBox.textContent = "";
+  }
+
+  function setStaff(staff){
+    state.staff = staff;
+    state.slot = null;
+
+    document.querySelectorAll(".staff-btn").forEach(b => b.classList.remove("active"));
+    document.querySelector(`.staff-btn[data-staff="${staff}"]`).classList.add("active");
+
+    renderSlots();
+  }
+
+  function setDate(date){
+    state.date = date;
+    state.slot = null;
+    renderSlots();
+  }
+
+  function setSlot(slotObj){
+    state.slot = slotObj;
+    btnNext.disabled = false;
+
+    document.querySelectorAll(".slot").forEach(s => s.classList.remove("active"));
+    const active = document.querySelector(`.slot[data-start="${slotObj.startISO}"]`);
+    if (active) active.classList.add("active");
+  }
+
+  function renderDates(){
+    dateSelect.innerHTML = "";
+    if (!state.data?.days?.length) return;
+
+    state.data.days.forEach(d => {
+      const opt = document.createElement("option");
+      opt.value = d.date;
+      opt.textContent = d.date;
+      dateSelect.appendChild(opt);
+    });
+
+    // default = primeiro dia
+    state.date = state.data.days[0].date;
+    dateSelect.value = state.date;
+  }
+
+  function renderSlots(){
+    if (!state.data) return;
+
+    const dayObj = state.data.days.find(d => d.date === state.date);
+    if (!dayObj) return;
+
+    const list = dayObj[state.staff] || [];
+
+    slotsEl.innerHTML = "";
+
+    loadingEl.style.display = "none";
+    slotsEl.style.display = "grid";
+
+    btnNext.disabled = true;
+
+    if (!list.length){
+      const empty = document.createElement("div");
+      empty.className = "hint";
+      empty.style.gridColumn = "1 / -1";
+      empty.innerHTML = "Sem horários disponíveis neste dia. Tente outra data.";
+      slotsEl.appendChild(empty);
+      return;
+    }
+
+    list.forEach(slot => {
+      const b = document.createElement("button");
+      b.className = "slot";
+      b.type = "button";
+      b.textContent = slot.label;
+      b.dataset.start = slot.startISO;
+
+      b.addEventListener("click", () => setSlot(slot));
+      slotsEl.appendChild(b);
+    });
+  }
+
+  async function loadAvailability(){
+    clearError();
+    loadingEl.style.display = "block";
+    slotsEl.style.display = "none";
+
+    try{
+      const res = await fetch("/api/availability");
+      const data = await res.json();
+
+      if (!data.ok){
+        throw new Error(data.error || "Falha ao carregar agenda");
+      }
+
+      state.data = data;
+      tzInfo.textContent = data.timeZone ? `Timezone: ${data.timeZone}` : "";
+
+      renderDates();
+      renderSlots();
+    }catch(e){
+      showError("Erro ao buscar agenda: " + (e.message || e));
+      loadingEl.style.display = "none";
+    }
+  }
+
+  // ===== Eventos =====
+  $("btnAna").addEventListener("click", () => setStaff("ana"));
+  $("btnGlenda").addEventListener("click", () => setStaff("glenda"));
+
+  dateSelect.addEventListener("change", () => setDate(dateSelect.value));
+
+  $("btnBack").addEventListener("click", () => {
+    window.location.href = "services2.html";
+  });
+
+  $("btnNext").addEventListener("click", () => {
+    if (!state.slot) return;
+
+    const staffName = state.staff === "ana" ? "Ana Paula" : "Glenda Garcia";
+
+    const payload = {
+      staffKey: state.staff,
+      staffName,
+      date: state.date,
+      startISO: state.slot.startISO,
+      endISO: state.slot.endISO,
+      label: state.slot.label,
+    };
+
+    localStorage.setItem(CART_BOOKING_KEY, JSON.stringify(payload));
+
+    // Você escolhe depois: cart? checkout? um "confirm booking"?
+    window.location.href = "checkout.html";
+  });
+
+  loadAvailability();
+</script>
+</body>
+</html>
