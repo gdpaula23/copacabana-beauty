@@ -9,9 +9,9 @@ module.exports = async function handler(req, res) {
     const session = await stripe.checkout.sessions.retrieve(session_id);
     return res.status(200).json({
       id: session.id,
-      url: session.url,
       success_url: session.success_url,
       cancel_url: session.cancel_url,
+      url: session.url,
       metadata: session.metadata,
     });
   } catch (err) {
