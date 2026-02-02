@@ -43,7 +43,6 @@ body{
   overflow-x:hidden;
 }
 
-/* MARBLE OVERLAY */
 .marble-overlay{
   position:fixed;
   inset:-12%;
@@ -63,7 +62,6 @@ body > *:not(.marble-overlay){
   z-index:1;
 }
 
-/* NAV */
 nav{
   position:fixed;
   top:0; left:0; width:100%;
@@ -99,7 +97,6 @@ nav a:hover{opacity:1}
   background:rgba(244,234,214,.10);
 }
 
-/* LAYOUT */
 .wrap{max-width:var(--max); margin:0 auto; padding:0 20px;}
 .section{padding:95px 0;}
 .section.tight{padding:70px 0;}
@@ -118,7 +115,6 @@ nav a:hover{opacity:1}
   font-size:15px;
 }
 
-/* DIVIDER */
 .divider{
   height:1px;
   width:min(720px, 90%);
@@ -126,7 +122,6 @@ nav a:hover{opacity:1}
   background:linear-gradient(to right, transparent, rgba(244,234,214,.45), transparent);
 }
 
-/* HERO */
 .hero{
   min-height:100vh;
   padding-top:64px;
@@ -234,7 +229,6 @@ nav a:hover{opacity:1}
   filter:brightness(1.03);
 }
 
-/* FOTO */
 .hero-media{
   position:relative;
   border-radius: var(--radius-xl);
@@ -250,12 +244,13 @@ nav a:hover{opacity:1}
   content:"";
   position:absolute;
   inset:0;
+  z-index:2;
   background:
     radial-gradient(circle at 70% 30%, rgba(244,234,214,.06), transparent 60%),
     linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.28));
   pointer-events:none;
 }
-.hero-media img{
+.hero-media video{
   position:absolute;
   inset:0;
   width:100%;
@@ -263,9 +258,10 @@ nav a:hover{opacity:1}
   object-fit:cover;
   object-position:center;
   filter: saturate(.9) contrast(.98) brightness(.95);
+  display:block;
+  z-index:1;
 }
 
-/* FEATURE STRIP */
 .strip{
   display:grid;
   grid-template-columns:repeat(3, 1fr);
@@ -289,14 +285,12 @@ nav a:hover{opacity:1}
   color: #2F3A22;
 }
 
-/* MANIFESTO */
 .manifesto{
   text-align:center;
   padding:180px 0 140px;
   position:relative;
   background: radial-gradient(circle at 50% 40%, rgba(244,234,214,.06), transparent 60%);
 }
-
 .manifesto::before,
 .manifesto::after{
   content:"";
@@ -306,7 +300,6 @@ nav a:hover{opacity:1}
   margin:0 auto;
   background:rgba(244,234,214,.35);
 }
-
 .manifesto::before{ margin-bottom:28px; }
 .manifesto::after{ margin-top:32px; }
 
@@ -317,7 +310,6 @@ nav a:hover{opacity:1}
   opacity:.65;
 }
 
-/* ALT SECTIONS */
 .alt{
   display:grid;
   grid-template-columns: 1fr 1fr;
@@ -325,7 +317,6 @@ nav a:hover{opacity:1}
   align-items:flex-start;
 }
 
-/* card premium */
 .card{
   background:
     linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01)),
@@ -356,7 +347,6 @@ nav a:hover{opacity:1}
   margin-bottom:14px;
 }
 
-/* media premium */
 .media{
   position:relative;
   border-radius: var(--radius-xl);
@@ -364,6 +354,7 @@ nav a:hover{opacity:1}
   border:1px solid rgba(244,234,214,.18);
   box-shadow: var(--shadow);
   background:rgba(0,0,0,.10);
+  height: 100%;
 }
 .media::after{
   content:"";
@@ -371,18 +362,23 @@ nav a:hover{opacity:1}
   background:linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.20));
   pointer-events:none;
 }
-.media img{
+.media img,
+.media video{
   width:100%;
   height:100%;
   object-fit:cover;
-  object-position: center 35%;
+  object-position:center;
   display:block;
 }
-.alt[data-sync="1"] .media{
-  height: 360px;
+#experienceVideo{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;        /* preenche o espaço */
+  object-position: center;  /* centraliza o corte */
+  display:block;
+  background: transparent;
 }
 
-/* SERVICES */
 .services{
   display:grid;
   gap:26px;
@@ -476,7 +472,6 @@ nav a:hover{opacity:1}
   filter:brightness(1.03);
 }
 
-/* CONTACT */
 .contact{text-align:center;}
 .contact .box{
   max-width:860px;
@@ -488,29 +483,6 @@ nav a:hover{opacity:1}
 }
 .contact p{line-height:2; opacity:.9}
 
-.whatsapp-cta{
-  margin-top:22px;
-  display:flex;
-  justify-content:center;
-}
-.whatsapp-cta a{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:14px 20px;
-  border-radius:999px;
-  background:rgba(244,234,214,.14);
-  border:1px solid rgba(244,234,214,.32);
-  color:var(--beige);
-  text-decoration:none;
-  font-size:14px;
-  transition:.2s ease;
-}
-.whatsapp-cta a:hover{ transform:translateY(-2px); background:rgba(244,234,214,.18); }
-.wa-icon{font-size:20px}
-.whatsapp-cta small{display:block; font-size:11px; opacity:.75}
-
-/* BASKET FAB */
 .cart-fab{
   position:fixed !important;
   left:auto !important;
@@ -537,7 +509,6 @@ nav a:hover{opacity:1}
   background:rgba(244,234,214,.16);
 }
 
-/* SCROLL REVEAL */
 .reveal{
   opacity:0;
   transform: translateY(16px);
@@ -549,7 +520,6 @@ nav a:hover{opacity:1}
   transform: translateY(0) scale(1.01);
 }
 
-/* RESPONSIVO */
 @media(max-width:1020px){
   .hero-grid{ grid-template-columns:1fr; }
   .hero-media{ min-height:440px; }
@@ -557,8 +527,9 @@ nav a:hover{opacity:1}
   .alt{ grid-template-columns:1fr; }
   nav{ padding:16px 16px; }
 
-  .alt[data-sync="1"] .media{ height:auto !important; }
+  .media{ height:auto !important; }
   .media img{ height:auto !important; }
+  .media video{ height:auto !important; }
 
   .service{ grid-template-columns:1fr; }
   .service-media{ height:240px !important; }
@@ -569,19 +540,13 @@ nav a:hover{opacity:1}
   .brand-logo{ width:240px; }
 }
 
-/* ===== FIX MOBILE HERO (HOME) ===== */
-/* ===== MOBILE HERO FINAL (overwrite) ===== */
-/* ===== MOBILE: VOLTAR PRO "POSTER" (igual antes) ===== */
 @media (max-width: 620px){
-
-  /* hero com cara de editorial */
   .hero{
     min-height: auto !important;
     padding-top: 70px !important;
     padding-bottom: 22px !important;
   }
 
-  /* centraliza o conteúdo */
   .hero-grid{
     grid-template-columns: 1fr !important;
     gap: 18px !important;
@@ -593,7 +558,6 @@ nav a:hover{opacity:1}
     gap: 14px !important;
   }
 
-  /* logo do jeito “antes”: maior e com presença */
   .hero-top{ padding-bottom: 10px !important; }
   .brand-logo{
     width: 230px !important;
@@ -602,7 +566,6 @@ nav a:hover{opacity:1}
     margin: 0 auto 4px !important;
   }
 
-  /* kicker central com linha menor */
   .kicker{
     justify-content: center !important;
     font-size: 11px !important;
@@ -623,7 +586,6 @@ nav a:hover{opacity:1}
     margin: 0 auto !important;
   }
 
-  /* botões como antes: no centro, sem full width */
   .hero-actions{
     justify-content: center !important;
     gap: 12px !important;
@@ -635,7 +597,6 @@ nav a:hover{opacity:1}
     padding: 13px 18px !important;
   }
 
-  /* pills 1 por linha, bem clean */
   .strip{
     grid-template-columns: 1fr !important;
     gap: 10px !important;
@@ -648,21 +609,17 @@ nav a:hover{opacity:1}
     padding: 12px 14px !important;
   }
 
-  /* no mobile, some com a foto do hero (ela atrapalha o “poster”) */
   .hero-media{
-    display: none !important;
+    display:block !important;
+    min-height:260px;
+    max-height:320px;
   }
 
-  /* menos espaço entre seções no mobile */
   .divider{ margin: 76px auto !important; }
   .section{ padding: 78px 0 !important; }
   .section.tight{ padding: 60px 0 !important; }
   .manifesto{ padding: 120px 0 100px !important; }
 }
-
-
-
-
 </style>
 </head>
 
@@ -676,7 +633,6 @@ nav a:hover{opacity:1}
   <a href="cart.html" class="nav-cta">BASKET</a>
 </nav>
 
-<!-- HERO -->
 <header class="hero">
   <div class="wrap">
 
@@ -711,16 +667,18 @@ nav a:hover{opacity:1}
       </div>
 
       <div class="hero-media reveal">
-        <img src="exemplo3.png" alt="Ana Paula - Copacabana Beauty">
+        <video autoplay muted loop playsinline preload="metadata" poster="exemplo3.png">
+          <source src="hero.mp4" type="video/mp4">
+          Seu navegador não suporta vídeo.
+        </video>
       </div>
-    </div>
 
+    </div>
   </div>
 </header>
 
 <div class="divider"></div>
 
-<!-- MANIFESTO -->
 <section class="manifesto section tight">
   <div class="wrap reveal">
     <div class="quote">
@@ -731,7 +689,6 @@ nav a:hover{opacity:1}
   </div>
 </section>
 
-<!-- SERVICES -->
 <section id="services" class="section">
   <div class="wrap">
     <h2 class="section-title reveal">Our Services</h2>
@@ -821,7 +778,6 @@ nav a:hover{opacity:1}
 
 <div class="divider"></div>
 
-<!-- ABOUT -->
 <section id="about" class="section">
   <div class="wrap alt" data-sync="1">
     <div class="card reveal">
@@ -850,12 +806,16 @@ nav a:hover{opacity:1}
   </div>
 </section>
 
-<!-- EXPERIENCE -->
 <section class="section tight">
   <div class="wrap alt" data-sync="1">
+
     <div class="media reveal">
-      <img src="exemplo.jpg" alt="Ritual details">
+      <video id="experienceVideo" autoplay muted loop playsinline preload="metadata" poster="exemplo.jpg">
+        <source src="experience.mp4" type="video/mp4">
+        Seu navegador não suporta vídeo.
+      </video>
     </div>
+
     <div class="card reveal">
       <h2>The experience</h2>
       <p>
@@ -869,12 +829,12 @@ nav a:hover{opacity:1}
         — Ana Paula
       </p>
     </div>
+
   </div>
 </section>
 
 <div class="divider"></div>
 
-<!-- CONTACT -->
 <section id="contact" class="section contact">
   <div class="wrap">
     <h2 class="section-title reveal">Contact & Location</h2>
@@ -886,7 +846,7 @@ nav a:hover{opacity:1}
       <p>LS11 7DF</p>
       <p>Email: xxxxx@gmail.com</p>
       <p>Phone: +44 7934 424780</p>
-
+    </div>
   </div>
 </section>
 
@@ -895,7 +855,6 @@ nav a:hover{opacity:1}
 </a>
 
 <script>
-/* NAV hide/show */
 (() => {
   const nav = document.getElementById("nav");
   let lastY = window.scrollY;
@@ -918,7 +877,6 @@ nav a:hover{opacity:1}
   onScroll();
 })();
 
-/* Scroll reveal */
 (() => {
   const els = document.querySelectorAll(".reveal");
   const io = new IntersectionObserver((entries) => {
@@ -933,7 +891,6 @@ nav a:hover{opacity:1}
   els.forEach(el => io.observe(el));
 })();
 
-/* Random marble */
 (() => {
   const el = document.getElementById("marbleOverlay");
   if (!el) return;
@@ -946,26 +903,26 @@ nav a:hover{opacity:1}
   el.style.backgroundPosition = `${x}% ${y}%`;
 })();
 
-/* SYNC: about/experience imagem = card */
 (function syncAltHeights(){
   function run(){
     const isMobile = window.matchMedia("(max-width: 1020px)").matches;
+
     document.querySelectorAll('.alt[data-sync="1"]').forEach((alt) => {
       const card = alt.querySelector(".card");
       const media = alt.querySelector(".media");
       if(!card || !media) return;
 
+      const mediaEl = media.querySelector("img, video");
+
       if(isMobile){
         media.style.height = "auto";
-        const img = media.querySelector("img");
-        if(img) img.style.height = "auto";
+        if(mediaEl) mediaEl.style.height = "auto";
         return;
       }
 
       const h = Math.ceil(card.getBoundingClientRect().height);
       media.style.height = h + "px";
-      const img = media.querySelector("img");
-      if(img) img.style.height = "100%";
+      if(mediaEl) mediaEl.style.height = "100%";
     });
   }
 
@@ -974,44 +931,12 @@ nav a:hover{opacity:1}
   setTimeout(run, 50);
 })();
 
-/* SYNC: services imagem = conteúdo */
-(function syncServiceHeights(){
-  function run(){
-    const isMobile = window.matchMedia("(max-width: 1020px)").matches;
-
-    document.querySelectorAll('.service[data-sync-service="1"]').forEach((card) => {
-      const media = card.querySelector(".service-media");
-      const content = card.querySelector(".service-content");
-      if(!media || !content) return;
-
-      if(isMobile){
-        media.style.height = "240px";
-        const img = media.querySelector("img");
-        if(img) img.style.height = "100%";
-        return;
-      }
-
-      const h = Math.ceil(content.getBoundingClientRect().height);
-      media.style.height = h + "px";
-      const img = media.querySelector("img");
-      if(img) img.style.height = "100%";
-        
-    });
-  }
-
-  window.addEventListener("load", run);
-  window.addEventListener("resize", run);
-  setTimeout(run, 50);
-})();
-
-/* Basket badge */
 const CART_KEY="cb_cart_v1";
 function loadCart(){
   try{return JSON.parse(localStorage.getItem(CART_KEY))||[]}catch{return[]}
 }
 function count(cart){return cart.reduce((s,i)=>s+(i.qty||1),0)}
 document.getElementById("cartCount").innerText=count(loadCart());
-
 </script>
 
 </body>

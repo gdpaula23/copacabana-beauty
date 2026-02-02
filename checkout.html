@@ -529,6 +529,14 @@ el.payBtn.addEventListener("click", async (e) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("in"); });
   }, { threshold: 0.12 });
   els.forEach(x => io.observe(x));
+  const booking = getBooking();
+
+// 🚨 GUARDA GLOBAL (OBRIGATÓRIO)
+if (!booking || !booking.staffKey || !booking.startISO || !booking.endISO) {
+  window.location.replace("/booking.html");
+  throw new Error("No booking found — redirecting");
+}
+
 </script>
 
 
