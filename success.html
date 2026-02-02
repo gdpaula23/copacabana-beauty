@@ -96,8 +96,8 @@ p{opacity:.88; line-height:1.8;}
 
 <body>
   <div class="card">
-    <h1>Booking received</h1>
-    <p>Thank you — your deposit payment was received. We’ll confirm your booking shortly.</p>
+    <h1 id="title">Checking payment…</h1>
+    <p id="subtitle">Please wait a moment.</p>
 
     <div class="kv" id="details" style="display:none;">
       <div class="row"><span class="label">Staff</span><span class="value" id="staff">—</span></div>
@@ -115,8 +115,20 @@ p{opacity:.88; line-height:1.8;}
   </div>
 
 <script>
-  // Booking salvo pelo booking.html
   const BOOKING_KEY = "cb_booking_v1";
+  const WHATSAPP_NUMBER = "447934424780";
+
+  const el = {
+    title: document.getElementById("title"),
+    subtitle: document.getElementById("subtitle"),
+    details: document.getElementById("details"),
+    staff: document.getElementById("staff"),
+    date: document.getElementById("date"),
+    time: document.getElementById("time"),
+    duration: document.getElementById("duration"),
+    waBtn: document.getElementById("waBtn"),
+    hint: document.getElementById("hint"),
+  };
 
   function loadBooking() {
     try { return JSON.parse(localStorage.getItem(BOOKING_KEY) || "null"); }
@@ -124,7 +136,6 @@ p{opacity:.88; line-height:1.8;}
   }
 
   function formatDate(yyyyMmDd){
-    // Mantém simples (sem libs). Se já vier yyyy-mm-dd, mostramos assim.
     return yyyyMmDd || "—";
   }
 
@@ -133,36 +144,87 @@ p{opacity:.88; line-height:1.8;}
     if (!startISO) return "—";
     try{
       const d = new Date(startISO);
-      // mostra HH:MM no horário local do navegador
       return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     } catch {
       return "—";
     }
   }
 
-  const booking = loadBooking();
-
-  if (booking) {
-    document.getElementById("details").style.display = "block";
-    document.getElementById("staff").textContent = booking.staffName || booking.staffKey || "—";
-    document.getElementById("date").textContent = formatDate(booking.date);
-    document.getElementById("time").textContent = formatTimeLabel(booking.label, booking.startISO);
-    document.getElementById("duration").textContent = booking.durationMin ? `${booking.durationMin} min` : "—";
+  function showDetails(data){
+    el.details.style.display = "block";
+    el.staff.textContent = data.staffName || data.staffKey || "—";
+    el.date.textContent = formatDate(data.date);
+    el.time.textContent = formatTimeLabel(data.label, data.startISO);
+    el.duration.textContent = data.durationMin ? `${data.durationMin} min` : "—";
   }
 
-  // WhatsApp opcional (SEM auto redirect)
-  const WHATSAPP_NUMBER = "447934424780";
-  const waBtn = document.getElementById("waBtn");
+  function showWhatsApp(data){
+    const msg = data
+      ? `Hello! My deposit is paid. Booking: ${data.staffName || data.staffKey} on ${data.date} at ${formatTimeLabel(data.label, data.startISO)}.`
+      : `Hello! I’ve paid the deposit and need help with my booking.`;
 
-  // Mensagem simples usando booking
-  const msg = booking
-    ? `Hello! I’ve paid the deposit. Booking: ${booking.staffName || booking.staffKey} on ${booking.date} at ${formatTimeLabel(booking.label, booking.startISO)}.`
-    : `Hello! I’ve paid the deposit and need help with my booking.`;
+    const waUrl = `https://api.whatsapp.com/send/?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(msg)}&type=phone_number&app_absent=0`;
+    el.waBtn.href = waUrl;
+    el.waBtn.style.display = "inline-flex";
+  }
 
-  const waUrl = `https://api.whatsapp.com/send/?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(msg)}&type=phone_number&app_absent=0`;
+  async function init(){
+    const bookingLS = loadBooking();
 
-  waBtn.href = waUrl;
-  waBtn.style.display = "inline-flex";
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id");
+
+    // fallback imediato (se não tiver session_id)
+    if (!sessionId){
+      el.title.textContent = "Booking received";
+      el.subtitle.textContent = "Thank you — your deposit payment was received. We’ll confirm your booking shortly.";
+      if (bookingLS) showDetails(bookingLS);
+      showWhatsApp(bookingLS);
+      return;
+    }
+
+    try {
+      const resp = await fetch(`/api/get-session?session_id=${encodeURIComponent(sessionId)}`);
+      const data = await resp.json();
+
+      if (!resp.ok || !data?.ok){
+        throw new Error(data?.error || "Failed to verify payment");
+      }
+
+      const md = data.metadata || {};
+      // usa Stripe metadata como fonte principal
+      const booking = {
+        staffKey: md.staffKey || bookingLS?.staffKey,
+        staffName: md.staffName || bookingLS?.staffName,
+        date: md.date || bookingLS?.date,
+        label: md.label || bookingLS?.label,
+        startISO: md.startISO || bookingLS?.startISO,
+        endISO: md.endISO || bookingLS?.endISO,
+        durationMin: md.durationMin || bookingLS?.durationMin,
+      };
+
+      if (data.payment_status === "paid") {
+        el.title.textContent = "Booking confirmed ✅";
+        el.subtitle.textContent = "Thank you — your deposit payment was received and your appointment is confirmed.";
+      } else {
+        el.title.textContent = "Payment not confirmed";
+        el.subtitle.textContent = "We couldn’t confirm your payment yet. If you already paid, please wait a moment and refresh.";
+      }
+
+      showDetails(booking);
+      showWhatsApp(booking);
+
+    } catch (e){
+      console.error(e);
+      // fallback com localStorage
+      el.title.textContent = "Booking received";
+      el.subtitle.textContent = "Thank you — your deposit payment was received. We’ll confirm your booking shortly.";
+      if (bookingLS) showDetails(bookingLS);
+      showWhatsApp(bookingLS);
+    }
+  }
+
+  init();
 </script>
 </body>
 </html>

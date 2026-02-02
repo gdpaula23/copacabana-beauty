@@ -391,196 +391,144 @@ h1{
 </a>
 
 <script>
-/* ===== Nav hide/show ===== */
-(() => {
-  const nav = document.getElementById("nav");
-  let lastY = window.scrollY;
-  const TOP = 8;
-  const HIDE_AFTER = 90;
+const BOOKING_KEY = "cb_booking_v1";
+const CART_KEY = "cb_cart_v1";
+const DEPOSIT = 20;
 
-  function onScroll(){
-    const y = window.scrollY;
-    const down = y > lastY;
-
-    if (y > TOP) nav.classList.add("is-scrolled");
-    else nav.classList.remove("is-scrolled");
-
-    if (down && y > HIDE_AFTER) nav.classList.add("is-hidden");
-    else nav.classList.remove("is-hidden");
-
-    lastY = y;
-  }
-  window.addEventListener("scroll", onScroll, { passive:true });
-  onScroll();
-})();
-
-/* ===== Random marble ===== */
-(() => {
-  const el = document.getElementById("marbleOverlay");
-  if (!el) return;
-  const deg = (Math.random() * 10) - 5;
-  const x = Math.floor(Math.random() * 34) + 33;
-  const y = Math.floor(Math.random() * 34) + 33;
-  el.style.transform = `rotate(${deg}deg) scale(1.12)`;
-  el.style.backgroundPosition = `${x}% ${y}%`;
-})();
-
-/* ===== Reveal ===== */
-(() => {
-  const els = document.querySelectorAll(".reveal");
-  const io = new IntersectionObserver((entries) => {
-    for (const e of entries){
-      if (e.isIntersecting){
-        e.target.classList.add("in");
-        io.unobserve(e.target);
-      }
-    }
-  }, { threshold: 0.12, rootMargin: "0px 0px -10% 0px" });
-  els.forEach(el => io.observe(el));
-})();
-
-/* ===== CONFIG ===== */
-const CART_KEY="cb_cart_v1";
-const DEPOSIT_FIXED_GBP = 20;
-
-/* ===== HELPERS ===== */
-function loadCart(){
-  try{return JSON.parse(localStorage.getItem(CART_KEY))||[]}catch{return[]}
-}
-function cartCount(cart){ return cart.reduce((s,i)=>s+(i.qty||1),0); }
-
-function money(n){
-  const v = Math.max(0, Number(n) || 0);
-  return "£" + (Math.round(v * 100) / 100).toFixed(2).replace(".00","");
+function loadJSON(key){
+  try { return JSON.parse(localStorage.getItem(key) || "null"); }
+  catch { return null; }
 }
 
-function computeSubtotal(cart){
-  return cart.reduce((s,i)=> s + (Number(i.price)||0) * (Number(i.qty)||1), 0);
+function moneyGBP(v){
+  const n = Number(v || 0);
+  return "£" + n.toFixed(0);
 }
 
-function computeTotals(cart){
-  const total = computeSubtotal(cart);
-  const depositToday = Math.min(total, DEPOSIT_FIXED_GBP);
-  const remaining = Math.max(0, total - depositToday);
-  return { depositToday, remaining, total };
+function getBooking(){ return loadJSON(BOOKING_KEY); }
+function getCart(){ return loadJSON(CART_KEY); }
+
+function getServiceFromCart(){
+  const cart = getCart();
+  if (!Array.isArray(cart) || !cart.length) return null;
+  const item = cart[0];
+  const name = item?.name || item?.title || "Service";
+  const price = Number(item?.price || item?.value || 150);
+  const qty = Number(item?.qty || 1);
+  return { name, price, qty, subtotal: price * qty };
 }
 
-function showStatus(msg){
-  const box = document.getElementById("statusBox");
-  box.style.display = "block";
-  box.textContent = msg;
+const el = {
+  customerName: document.getElementById("customerName"),
+  customerEmail: document.getElementById("customerEmail"),
+  statusBox: document.getElementById("statusBox"),
+  payBtn: document.getElementById("payBtn"),
+
+  subtotal: document.getElementById("subtotal"),
+  depositToday: document.getElementById("depositToday"),
+  remainingDay: document.getElementById("remainingDay"),
+  total: document.getElementById("total"),
+  miniItems: document.getElementById("miniItems"),
+  cartCount: document.getElementById("cartCount"),
+};
+
+function setStatus(html){
+  el.statusBox.style.display = "block";
+  el.statusBox.innerHTML = html;
 }
 
-/* ===== RENDER ===== */
-function render(){
-  const cart = loadCart();
-  document.getElementById("cartCount").innerText = cartCount(cart);
+function setLoading(isLoading){
+  el.payBtn.disabled = isLoading;
+  if (isLoading) el.payBtn.style.opacity = "0.7";
+  else el.payBtn.style.opacity = "1";
+}
 
-  if(cart.length === 0){
-    window.location.href = "cart.html";
-    return;
-  }
+(function initSummary(){
+  const cart = getCart();
+  el.cartCount.textContent = Array.isArray(cart) ? String(cart.length) : "0";
 
-  const subtotal = computeSubtotal(cart);
-  const { depositToday, remaining, total } = computeTotals(cart);
+  const service = getServiceFromCart() || { name: "Head Spa & Facial", subtotal: 150 };
+  const total = Number(service.subtotal || 150);
+  const remaining = Math.max(0, total - DEPOSIT);
 
-  document.getElementById("subtotal").innerText = money(subtotal);
-  document.getElementById("depositToday").innerText = money(depositToday);
-  document.getElementById("remainingDay").innerText = money(remaining);
-  document.getElementById("total").innerText = money(total);
+  el.subtotal.textContent = moneyGBP(total);
+  el.depositToday.textContent = moneyGBP(DEPOSIT);
+  el.remainingDay.textContent = moneyGBP(remaining);
+  el.total.textContent = moneyGBP(total);
 
-  const mini = document.getElementById("miniItems");
-  mini.innerHTML = "";
-  cart.forEach((i)=>{
-    const name = i.name || "";
-    const qty = Number(i.qty||1);
-    const div = document.createElement("div");
-    div.className = "mini";
-    div.innerHTML = `
-      <div class="t">${name}${qty>1 ? ` ×${qty}` : ""}</div>
+  // Mini item card (direita)
+  el.miniItems.innerHTML = `
+    <div class="mini">
+      <div class="t">${service.name}</div>
       <div class="m">Service selected</div>
-      <div class="b">Value: <b>${money((Number(i.price)||0)*qty)}</b></div>
+      <div class="b">Value: <b>${moneyGBP(total)}</b></div>
+    </div>
+  `;
+
+  // Opcional: mostrar booking resumido se existir
+  const booking = getBooking();
+  if (booking){
+    const when = (booking.date ? booking.date : "") + (booking.label ? (" · " + booking.label) : "");
+    el.miniItems.innerHTML += `
+      <div class="mini">
+        <div class="t">Appointment</div>
+        <div class="m">${booking.staffName || booking.staffKey || "Staff"}</div>
+        <div class="b">${when || ""}<br><span style="opacity:.8;">Duration: ${booking.durationMin || 60} min</span></div>
+      </div>
     `;
-    mini.appendChild(div);
-  });
-}
-render();
+  }
+})();
 
-/* ===== PAY BUTTON (Stripe Checkout Session) ===== */
-const nameEl = document.getElementById("customerName");
-const emailEl = document.getElementById("customerEmail");
-const payBtn  = document.getElementById("payBtn");
+el.payBtn.addEventListener("click", async (e) => {
+  e.preventDefault();
 
-function isValidEmail(v){
-  const s = (v||"").trim();
-  return s.includes("@") && s.includes(".") && s.length >= 6;
-}
+  const booking = getBooking();
+  const customerName = (el.customerName.value || "").trim();
+  const customerEmail = (el.customerEmail.value || "").trim();
 
-function syncPayState(){
-  const name = nameEl.value.trim();
-  const email = emailEl.value.trim();
-  const ok = name.length >= 2 && isValidEmail(email);
-
-  payBtn.disabled = !ok;
-  payBtn.style.opacity = ok ? "1" : ".65";
-  payBtn.style.pointerEvents = ok ? "auto" : "none";
-  payBtn.style.transform = "none";
-}
-
-nameEl.addEventListener("input", syncPayState);
-emailEl.addEventListener("input", syncPayState);
-syncPayState();
-
-payBtn.addEventListener("click", async () => {
-  const name = nameEl.value.trim();
-  const email = emailEl.value.trim();
-
-  if(name.length < 2){ alert("Please enter your name."); return; }
-  if(!isValidEmail(email)){ alert("Please enter a valid email."); return; }
-
-  // booking escolhido no booking.html
-  let booking = null;
-  try { booking = JSON.parse(localStorage.getItem("cb_booking_v1") || "null"); } catch {}
-
-  if(!booking || !booking.staffKey || !booking.startISO || !booking.endISO){
-    alert("Booking not found. Please go back and select a staff, date and time.");
+  if (!booking?.staffKey || !booking?.startISO || !booking?.endISO){
+    setStatus("⚠️ Missing booking info. Please go back and select a time again.");
+    return;
+  }
+  if (!customerEmail){
+    setStatus("⚠️ Please enter your email.");
     return;
   }
 
-  payBtn.disabled = true;
-  const oldText = payBtn.textContent;
-  payBtn.textContent = "Redirecting…";
-  showStatus("Creating secure Stripe Checkout…");
+  try {
+    setLoading(true);
+    setStatus("Opening secure Stripe Checkout…");
 
-  try{
-    const r = await fetch("/api/create-checkout", {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body: JSON.stringify({
-        booking,
-        customerName: name,
-        customerEmail: email,
-      })
+    const resp = await fetch("/api/create-checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ booking, customerName, customerEmail })
     });
 
-    const data = await r.json().catch(()=>({}));
-
-    if(!r.ok || !data.url){
-      console.log("create-checkout error:", data);
-      throw new Error(data?.error || data?.details || "Failed to create checkout session.");
+    const data = await resp.json();
+    if (!resp.ok || !data?.url){
+      setLoading(false);
+      setStatus("⚠️ Could not start payment. Please try again.");
+      return;
     }
 
     window.location.href = data.url;
-  }catch(err){
+  } catch (err){
     console.error(err);
-    alert(err.message || "Something went wrong.");
-    payBtn.disabled = false;
-    payBtn.textContent = oldText;
-    syncPayState();
-    showStatus("Unable to start payment. Please try again.");
+    setLoading(false);
+    setStatus("⚠️ Something went wrong. Please try again.");
   }
 });
 </script>
+<script>
+  // Reveal animation
+  const els = document.querySelectorAll(".reveal");
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("in"); });
+  }, { threshold: 0.12 });
+  els.forEach(x => io.observe(x));
+</script>
+
 
 </body>
 </html>

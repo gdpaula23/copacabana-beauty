@@ -5,7 +5,7 @@ module.exports = async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
 
   try {
-    const body = req.body || {};
+    const body = typeof req.body === "string" ? JSON.parse(req.body) : (req.body || {});
     const booking = body.booking || {}; // vem do localStorage
     const customerName = body.customerName || "";
     const customerEmail = body.customerEmail || "";

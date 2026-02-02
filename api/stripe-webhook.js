@@ -13,8 +13,20 @@ async function getRawBody(req) {
   });
 }
 
+function parseServiceAccount(jsonStr) {
+  const obj = JSON.parse(jsonStr);
+  // Corrige \n do private_key quando vem pela env var
+  if (obj.private_key && obj.private_key.includes("\\n")) {
+    obj.private_key = obj.private_key.replace(/\\n/g, "\n");
+  }
+  return obj;
+}
+
 function getCalendarClient() {
-  const sa = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
+  const saJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+  if (!saJson) throw new Error("Missing GOOGLE_SERVICE_ACCOUNT_JSON");
+
+  const sa = parseServiceAccount(saJson);
 
   const auth = new google.auth.JWT({
     email: sa.client_email,
@@ -29,6 +41,16 @@ function calendarIdForStaff(staffKey) {
   if (staffKey === "ana") return process.env.CALENDAR_ID_ANA;
   if (staffKey === "glenda") return process.env.CALENDAR_ID_GLENDA;
   return null;
+}
+
+// ✅ ID determinístico no Google Calendar (idempotência sem DB)
+function toGoogleEventIdFromStripeSession(sessionId) {
+  const clean = String(sessionId)
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, "-")
+    .replace(/-+/g, "-")
+    .slice(0, 60);
+  return `stripe-${clean}`;
 }
 
 module.exports = async function handler(req, res) {
@@ -51,65 +73,57 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object;
+    if (event.type !== "checkout.session.completed") {
+      return res.status(200).json({ received: true, ignored: "event_type" });
+    }
 
-      // só processa se pago
-      if (session.payment_status !== "paid") {
-        return res.status(200).json({ received: true, ignored: "not_paid" });
-      }
+    const session = event.data.object;
 
-      const md = session.metadata || {};
-      const staffKey = md.staffKey;
-      const staffName = md.staffName || staffKey;
-      const startISO = md.startISO;
-      const endISO = md.endISO;
+    // só processa se pago
+    if (session.payment_status !== "paid") {
+      return res.status(200).json({ received: true, ignored: "not_paid" });
+    }
 
-      const customerName = md.customerName || "";
-      const customerEmail =
-        md.customerEmail || session.customer_details?.email || "";
+    const md = session.metadata || {};
+    const staffKey = md.staffKey;
+    const staffName = md.staffName || staffKey;
+    const startISO = md.startISO;
+    const endISO = md.endISO;
 
-      if (!staffKey || !startISO || !endISO) {
-        console.error("Missing required metadata:", md);
-        return res.status(200).json({ received: true, ignored: "missing_metadata" });
-      }
+    const customerName = md.customerName || "";
+    const customerEmail = md.customerEmail || session.customer_details?.email || "";
 
-      const calendarId = calendarIdForStaff(staffKey);
-      if (!calendarId) {
-        console.error("Invalid staffKey:", staffKey);
-        return res.status(200).json({ received: true, ignored: "invalid_staff" });
-      }
+    if (!staffKey || !startISO || !endISO) {
+      console.error("Missing required metadata:", md);
+      // IMPORTANT: retorna 200 pro Stripe não ficar reenviando eternamente
+      return res.status(200).json({ received: true, ignored: "missing_metadata" });
+    }
 
-      const calendar = getCalendarClient();
+    const calendarId = calendarIdForStaff(staffKey);
+    if (!calendarId) {
+      console.error("Invalid staffKey:", staffKey);
+      return res.status(200).json({ received: true, ignored: "invalid_staff" });
+    }
 
-      // ✅ proteção anti-duplicado:
-      // Vamos buscar eventos no mesmo intervalo e checar se já existe session.id na descrição
-      const existing = await calendar.events.list({
-        calendarId,
-        timeMin: startISO,
-        timeMax: endISO,
-        singleEvents: true,
-        orderBy: "startTime",
-      });
+    const calendar = getCalendarClient();
 
-      const already = (existing.data.items || []).some((ev) =>
-        (ev.description || "").includes(`Stripe session: ${session.id}`)
-      );
+    const googleEventId = toGoogleEventIdFromStripeSession(session.id);
 
-      if (already) {
-        return res.status(200).json({ received: true, skipped: "duplicate" });
-      }
+    const summary = `Booking — ${customerName || customerEmail || "Client"}`;
+    const description = [
+      `Staff: ${staffName}`,
+      `Client: ${customerName}`,
+      `Email: ${customerEmail}`,
+      `Stripe session: ${session.id}`,
+      `Stripe event: ${event.id}`,
+    ]
+      .filter(Boolean)
+      .join("\n");
 
-      const summary = `Booking — ${customerName || customerEmail || "Client"}`;
-      const description = [
-        `Staff: ${staffName}`,
-        `Client: ${customerName}`,
-        `Email: ${customerEmail}`,
-        `Stripe session: ${session.id}`,
-      ].filter(Boolean).join("\n");
-
+    try {
       await calendar.events.insert({
         calendarId,
+        eventId: googleEventId, // ✅ idempotência aqui
         requestBody: {
           summary,
           description,
@@ -118,12 +132,20 @@ module.exports = async function handler(req, res) {
         },
       });
 
-      return res.status(200).json({ received: true, created: true });
-    }
+      return res.status(200).json({ received: true, created: true, googleEventId });
+    } catch (err) {
+      const code = err?.code || err?.response?.status;
 
-    return res.status(200).json({ received: true });
+      // ✅ Se já existe, é replay do Stripe -> OK e não duplica
+      if (code === 409) {
+        return res.status(200).json({ received: true, created: false, skipped: "duplicate", googleEventId });
+      }
+
+      // Outro erro: sobe
+      throw err;
+    }
   } catch (err) {
     console.error("Webhook handler failed:", err);
-    return res.status(500).json({ error: "Webhook failed" });
+    return res.status(500).json({ error: "Webhook failed", detail: err?.message || String(err) });
   }
 };

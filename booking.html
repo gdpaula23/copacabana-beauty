@@ -1,389 +1,477 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Booking | Copacabana Beauty</title>
+<title>Checkout | Copacabana Beauty</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --verde:#3E4A2B;
-  --bege:#F4EAD6;
-  --bege-soft: rgba(244,234,214,.10);
-  --bege-border: rgba(244,234,214,.18);
-  --dark: rgba(0,0,0,.35);
+  --olive-900:#2F3A22;
+  --olive-800:#3F4D2F;
+  --olive-700:#5A6643;
+
+  --beige:#F4EAD6;
+  --beige-40: rgba(244,234,214,.40);
+  --beige-22: rgba(244,234,214,.22);
+  --beige-14: rgba(244,234,214,.14);
+
+  --glass: rgba(0,0,0,.18);
+  --glass-2: rgba(0,0,0,.14);
+
+  --shadow: 0 40px 90px rgba(0,0,0,.32);
+  --radius-xl: 22px;
+  --radius-lg: 18px;
 }
+
+/* RESET */
 *{margin:0;padding:0;box-sizing:border-box}
 
-body{font-family:'Montserrat',sans-serif;color:var(--bege)}
-.page-bg{
-  min-height:100vh;display:flex;flex-direction:column;
+/* FUNDO */
+body{
+  font-family:'Montserrat',sans-serif;
+  color:var(--beige);
+  overflow-x:hidden;
+}
+
+.page{
+  min-height:100vh;
   background:
-    radial-gradient(circle at 20% 20%, rgba(244,234,214,.12), transparent 80%),
-    linear-gradient(180deg,#3E4A2B,#3E4A2B);
-}
-.main{flex:1;display:flex;flex-direction:column;align-items:center}
-.hero{padding:56px 20px 26px;text-align:center}
-.hero img{max-width:240px}
-
-.card{
-  width:100%;max-width:860px;margin:0 18px 80px;padding:28px;
-  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)), var(--bege-soft);
-  backdrop-filter: blur(16px);
-  border-radius:22px;border:1px solid rgba(255,255,255,.15);
-  box-shadow:0 40px 80px rgba(0,0,0,.35);
-}
-.card h1{
-  font-family:'Cormorant Garamond',serif;
-  font-size:38px;text-align:center;margin-bottom:10px;
-}
-.subtitle{text-align:center;opacity:.85;font-size:14px;line-height:1.6;margin-bottom:18px}
-.divider{height:1px;background:linear-gradient(to right, transparent, rgba(244,234,214,.85), transparent);margin:16px 0 22px}
-
-.grid{display:grid;grid-template-columns: 1fr 1.3fr;gap:18px}
-.block{background:rgba(0,0,0,.18);border:1px solid var(--bege-border);border-radius:18px;padding:16px}
-.label{font-size:12px;letter-spacing:2px;text-transform:uppercase;opacity:.85;margin-bottom:10px}
-
-.staff{display:grid;gap:10px}
-.staff-btn{
-  display:flex;align-items:center;gap:12px;width:100%;
-  border:none;cursor:pointer;padding:12px;border-radius:16px;
-  background:rgba(0,0,0,.20);
-  border:1px solid rgba(244,234,214,.18);
-  color:var(--bege);transition:.2s;text-align:left;
-}
-.staff-btn:hover{transform:translateY(-1px); background:rgba(0,0,0,.26)}
-.staff-btn.active{background:rgba(244,234,214,.12);border-color:rgba(244,234,214,.55)}
-.staff-btn img{
-  width:44px;height:44px;border-radius:50%;object-fit:cover;
-  border:1px solid rgba(244,234,214,.35);background:rgba(0,0,0,.12);
-}
-.staff-name{font-weight:500;font-size:14px}
-.staff-role{font-size:12px;opacity:.75;margin-top:2px}
-
-.select{
-  width:100%;padding:12px;border-radius:12px;
-  border:1px solid rgba(244,234,214,.20);
-  background:var(--dark);color:#fff;outline:none;
+    radial-gradient(circle at 18% 18%, rgba(244,234,214,.12), transparent 65%),
+    radial-gradient(circle at 78% 12%, rgba(244,234,214,.08), transparent 68%),
+    radial-gradient(circle at 55% 78%, rgba(244,234,214,.07), transparent 72%),
+    linear-gradient(180deg, var(--olive-800) 0%, var(--olive-900) 100%);
 }
 
-.slots{
-  margin-top:14px;
-  display:grid;
-  grid-template-columns: repeat(4, minmax(92px, 1fr));
-  gap:10px;
+/* container central */
+.wrap{
+  max-width:1100px;
+  margin:0 auto;
+  padding:46px 18px 70px;
 }
-.slot{
-  border:1px solid rgba(244,234,214,.20);
-  background:rgba(0,0,0,.20);
-  color:var(--bege);
-  border-radius:14px;
-  padding:10px 8px;
-  cursor:pointer;
-  transition:.18s;
-  font-size:13px;
+
+/* topo */
+.header{
   text-align:center;
+  padding:12px 0 26px;
 }
-.slot:hover{transform:translateY(-1px); background:rgba(0,0,0,.26)}
-.slot.active{background:rgba(244,234,214,.12);border-color:rgba(244,234,214,.65)}
 
-.msg{margin-top:12px;font-size:13px;opacity:.9;line-height:1.6}
-.msg.error{color:#ffd3d3;opacity:1}
-.msg.ok{color:#d9ffd9}
-
-.actions{
-  display:flex;justify-content:space-between;align-items:center;
-  gap:10px;flex-wrap:wrap;margin-top:18px;
+.header h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:56px;
+  letter-spacing:.2px;
+  text-shadow:0 14px 34px rgba(0,0,0,.25);
 }
+
+.header p{
+  max-width:760px;
+  margin:10px auto 0;
+  font-size:15px;
+  opacity:.86;
+  line-height:1.7;
+}
+
+/* CARD MASTER */
+.shell{
+  margin-top:26px;
+  padding:22px;
+  border-radius: var(--radius-xl);
+  border:1px solid rgba(244,234,214,.18);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
+    rgba(244,234,214,.10);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow);
+}
+
+/* GRID 2 COLUNAS */
+.grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:22px;
+  align-items:stretch;
+}
+
+/* bloco interno */
+.panel{
+  border-radius: var(--radius-xl);
+  background: rgba(0,0,0,.14);
+  border:1px solid rgba(244,234,214,.16);
+  padding:20px;
+}
+
+.panel-title{
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  opacity:.78;
+  margin-bottom:14px;
+}
+
+/* inputs */
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:14px;
+}
+
+.field label{
+  font-size:11px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  opacity:.75;
+}
+
+.field input{
+  width:100%;
+  padding:12px 12px;
+  border-radius:14px;
+  border:1px solid rgba(244,234,214,.20);
+  background: rgba(0,0,0,.20);
+  color: var(--beige);
+  outline:none;
+}
+
+.field input::placeholder{color: rgba(244,234,214,.55);}
+
+/* alerta */
+.notice{
+  margin:10px 0 16px;
+  padding:12px 12px;
+  border-radius:14px;
+  border:1px solid rgba(244,234,214,.18);
+  background: rgba(0,0,0,.20);
+  opacity:.92;
+  font-size:13px;
+  line-height:1.6;
+}
+
+/* botões */
+.btns{display:flex;flex-direction:column;gap:12px;margin-top:10px;}
+
 .btn{
-  border:none;border-radius:999px;padding:12px 18px;
-  cursor:pointer;font-size:12px;letter-spacing:2px;
-  text-transform:uppercase;transition:.18s;
+  width:100%;
+  border:none;
+  cursor:pointer;
+  padding:13px 16px;
+  border-radius:999px;
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  transition:.18s ease;
 }
-.btn-ghost{background:transparent;color:var(--bege);border:1px solid rgba(244,234,214,.35)}
-.btn-ghost:hover{background:rgba(244,234,214,.10)}
-.btn-primary{background:var(--bege);color:var(--verde)}
-.btn-primary:hover{transform:translateY(-1px)}
+
+.btn-primary{
+  background: var(--beige);
+  color: var(--olive-900);
+}
+.btn-primary:hover{transform:translateY(-1px);}
+
+.btn-ghost{
+  background: transparent;
+  color: var(--beige);
+  border:1px solid rgba(244,234,214,.35);
+}
+.btn-ghost:hover{background: rgba(244,234,214,.10);}
+
+.btn-muted{
+  background: rgba(0,0,0,.22);
+  color: rgba(244,234,214,.85);
+  border:1px solid rgba(244,234,214,.18);
+}
+.btn-muted:hover{background: rgba(0,0,0,.28);}
+
 .btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
 
-.footer{padding:40px 20px;text-align:center;font-size:12px;opacity:.6}
-
-@media(max-width:900px){
-  .card{padding:22px}
-  .grid{grid-template-columns:1fr}
-  .slots{grid-template-columns: repeat(3, minmax(92px, 1fr));}
+/* card resumo direito (branco/bege como na imagem) */
+.summary{
+  background: rgba(244,234,214,.96);
+  color: #2b2b2b;
+  border-radius: var(--radius-xl);
+  padding:20px;
+  border:1px solid rgba(255,255,255,.65);
 }
-@media(max-width:420px){
-  .slots{grid-template-columns: repeat(2, minmax(92px, 1fr));}
-  .hero img{max-width:210px}
+
+.sum-row{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  padding:10px 0;
+  font-size:14px;
+  opacity:.92;
+  border-bottom:1px solid rgba(0,0,0,.08);
+}
+
+.sum-row:last-of-type{border-bottom:none;}
+
+.sum-strong{
+  margin-top:6px;
+  padding-top:10px;
+  font-weight:600;
+  font-size:16px;
+}
+
+.sum-strong span:last-child{font-size:18px;}
+
+.service-chip{
+  margin-top:14px;
+  border-radius:14px;
+  border:1px solid rgba(0,0,0,.10);
+  background: rgba(255,255,255,.50);
+  padding:14px;
+}
+
+.service-chip .name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;
+  margin-bottom:4px;
+}
+
+.service-chip .meta{
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  opacity:.6;
+}
+
+.service-chip .value{
+  margin-top:6px;
+  font-size:13px;
+  opacity:.85;
+}
+
+/* booking info */
+.booking-mini{
+  margin-top:14px;
+  border-radius:14px;
+  background: rgba(0,0,0,.12);
+  border:1px solid rgba(0,0,0,.10);
+  padding:12px;
+  font-size:13px;
+  line-height:1.55;
+  opacity:.92;
+}
+
+/* footer tip */
+.tip{
+  margin-top:14px;
+  text-align:center;
+  font-size:12px;
+  opacity:.65;
+}
+
+/* responsive */
+@media (max-width: 980px){
+  .header h1{font-size:46px;}
+  .grid{grid-template-columns:1fr;}
+  .shell{padding:18px;}
+}
+@media (max-width: 420px){
+  .header h1{font-size:40px;}
 }
 </style>
 </head>
 
 <body>
-<div class="page-bg">
-  <main class="main">
+<div class="page">
+  <div class="wrap">
 
-    <section class="hero">
-      <img src="eu1.png" alt="Copacabana Beauty">
-    </section>
+    <header class="header">
+      <h1>Checkout</h1>
+      <p>Pay a £20 deposit to secure your appointment. The remaining balance is paid on the day of your service.</p>
+    </header>
 
-    <section class="card">
-      <h1>Booking</h1>
-      <div class="subtitle">
-        Choose staff, then pick a date and time.<br>
-        <span id="tzLine" style="opacity:.75;"></span>
-      </div>
-
-      <div class="divider"></div>
-
+    <section class="shell">
       <div class="grid">
 
-        <div class="block">
-          <div class="label">Select staff</div>
+        <!-- LEFT -->
+        <div class="panel">
+          <div class="panel-title">Customer details</div>
 
-          <div class="staff">
-            <button class="staff-btn active" type="button" data-staff="ana">
-              <img src="ana.jpg" alt="Ana Paula">
-              <div>
-                <div class="staff-name">Ana Paula</div>
-                <div class="staff-role">Therapist</div>
-              </div>
-            </button>
-
-            <button class="staff-btn" type="button" data-staff="glenda">
-              <img src="glenda.jpg" alt="Glenda Garcia">
-              <div>
-                <div class="staff-name">Glenda Garcia</div>
-                <div class="staff-role">Therapist</div>
-              </div>
-            </button>
+          <div class="field">
+            <label for="fullName">Full name</label>
+            <input id="fullName" type="text" placeholder="Your name" autocomplete="name">
           </div>
 
-          <div class="msg" style="margin-top:14px; opacity:.85;">
-            Duration: <b>60 min</b> · Working hours: <b>09:00–18:00</b>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@email.com" autocomplete="email">
           </div>
+
+          <div id="statusBox" class="notice">
+            Click <b>Pay £20 deposit</b> to open Stripe. After paying, come back and click <b>I've paid</b>.
+          </div>
+
+          <div class="btns">
+            <button class="btn btn-primary" id="payBtn" type="button">Pay £20 deposit</button>
+            <button class="btn btn-ghost" id="paidBtn" type="button">I’ve paid — Continue</button>
+            <button class="btn btn-muted" id="backBtn" type="button">Back to booking</button>
+          </div>
+
+          <div class="tip">Tip: after you finish the Stripe payment, return here and tap “I’ve paid”.</div>
         </div>
 
-        <div class="block">
-          <div class="label">Select date</div>
-
-          <select id="dateSelect" class="select"></select>
-
-          <div id="loading" class="msg">Loading availability...</div>
-          <div id="message" class="msg" style="display:none;"></div>
-
-          <div id="slots" class="slots" style="display:none;"></div>
-
-          <div class="actions">
-            <button class="btn btn-ghost" id="reloadBtn" type="button">Reload</button>
-
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="btn btn-ghost" id="backBtn" type="button">Back</button>
-              <button class="btn btn-primary" id="continueBtn" type="button" disabled>Continue</button>
-            </div>
+        <!-- RIGHT -->
+        <div class="summary">
+          <div class="sum-row">
+            <span>Subtotal</span>
+            <span id="sumSubtotal">£150</span>
+          </div>
+          <div class="sum-row">
+            <span>Deposit today</span>
+            <span id="sumDeposit">£20</span>
+          </div>
+          <div class="sum-row">
+            <span>Remaining on appointment day</span>
+            <span id="sumRemaining">£130</span>
           </div>
 
-          <div class="msg" id="debug" style="opacity:.55; font-size:11px; margin-top:12px;"></div>
+          <div class="sum-row sum-strong" style="border-bottom:none;">
+            <span>Total (full service value)</span>
+            <span id="sumTotal">£150</span>
+          </div>
+
+          <div class="service-chip">
+            <div class="name" id="serviceName">Head Spa & Facial</div>
+            <div class="meta">Service selected</div>
+            <div class="value">Value: <b id="serviceValue">£150</b></div>
+
+            <div class="booking-mini" id="bookingMini" style="display:none;"></div>
+          </div>
         </div>
 
       </div>
     </section>
 
-  </main>
-
-  <footer class="footer">© 2026 Copacabana Beauty · Booking</footer>
+  </div>
 </div>
 
 <script>
-const BOOKING_KEY = "cb_booking_v1";
+/**
+ * CONFIG
+ * Coloque seu Stripe Payment Link aqui (depósito £20).
+ * Exemplo: https://buy.stripe.com/xxxxxxx
+ */
+const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/test_cNi9ANbUj8J38Ps9tpcbC00";
 
-const state = {
-  staff: "ana",
-  data: null,
-  date: null,
-  slot: null
+/**
+ * Storage keys
+ */
+const BOOKING_KEY = "cb_booking_v1";
+const CART_KEY = "cb_cart_v1";
+
+/**
+ * Helpers
+ */
+function moneyGBP(value){
+  const n = Number(value || 0);
+  return "£" + n.toFixed(0);
+}
+
+function loadJSON(key){
+  try { return JSON.parse(localStorage.getItem(key) || "null"); }
+  catch { return null; }
+}
+
+/**
+ * Get service info (best effort):
+ * - If you have cart data, use the first item as selected service
+ * - else use defaults
+ */
+function getServiceFromCart(){
+  const cart = loadJSON(CART_KEY);
+  if (!Array.isArray(cart) || !cart.length) return null;
+
+  // tenta ler um formato comum: {name, price, qty}
+  const item = cart[0];
+  const name = item?.name || item?.title || "Service";
+  const price = Number(item?.price || item?.value || 150);
+  const qty = Number(item?.qty || 1);
+  return { name, price, qty, subtotal: price * qty };
+}
+
+function getBooking(){
+  const b = loadJSON(BOOKING_KEY);
+  if (!b) return null;
+  return b;
+}
+
+/**
+ * UI init
+ */
+const el = {
+  fullName: document.getElementById("fullName"),
+  email: document.getElementById("email"),
+  statusBox: document.getElementById("statusBox"),
+
+  payBtn: document.getElementById("payBtn"),
+  paidBtn: document.getElementById("paidBtn"),
+  backBtn: document.getElementById("backBtn"),
+
+  sumSubtotal: document.getElementById("sumSubtotal"),
+  sumDeposit: document.getElementById("sumDeposit"),
+  sumRemaining: document.getElementById("sumRemaining"),
+  sumTotal: document.getElementById("sumTotal"),
+
+  serviceName: document.getElementById("serviceName"),
+  serviceValue: document.getElementById("serviceValue"),
+  bookingMini: document.getElementById("bookingMini"),
 };
 
-const dateSelect = document.getElementById("dateSelect");
-const slotsEl = document.getElementById("slots");
-const loadingEl = document.getElementById("loading");
-const msgEl = document.getElementById("message");
-const debugEl = document.getElementById("debug");
-const continueBtn = document.getElementById("continueBtn");
-const tzLine = document.getElementById("tzLine");
+const DEPOSIT = 20;
 
-function showMsg(text, type){
-  msgEl.style.display = "block";
-  msgEl.className = "msg " + (type || "");
-  msgEl.innerHTML = text;
-}
-function hideMsg(){
-  msgEl.style.display = "none";
-  msgEl.innerHTML = "";
-  msgEl.className = "msg";
-}
+// preenche resumo
+(function initSummary(){
+  const service = getServiceFromCart() || { name: "Head Spa & Facial", subtotal: 150 };
+  const total = Number(service.subtotal || 150);
+  const remaining = Math.max(0, total - DEPOSIT);
 
-function setStaff(staff){
-  state.staff = staff;
-  state.slot = null;
-  continueBtn.disabled = true;
+  el.serviceName.textContent = service.name;
+  el.serviceValue.textContent = moneyGBP(total);
 
-  document.querySelectorAll(".staff-btn").forEach(b => b.classList.remove("active"));
-  const btn = document.querySelector(`.staff-btn[data-staff="${staff}"]`);
-  if (btn) btn.classList.add("active");
+  el.sumSubtotal.textContent = moneyGBP(total);
+  el.sumDeposit.textContent = moneyGBP(DEPOSIT);
+  el.sumRemaining.textContent = moneyGBP(remaining);
+  el.sumTotal.textContent = moneyGBP(total);
 
-  renderSlots();
-}
+  // booking mini (staff/date/time)
+  const booking = getBooking();
+  if (booking){
+    const when = (booking.date ? booking.date : "") + (booking.label ? (" · " + booking.label) : "");
+    el.bookingMini.style.display = "block";
+    el.bookingMini.innerHTML =
+      `<b>Appointment</b><br>` +
+      `${booking.staffName || "Staff"}<br>` +
+      `${when || ""}<br>` +
+      `<span style="opacity:.8;">Duration: ${booking.durationMin || 60} min</span>`;
+  }
+})();
 
-/** ✅ ESTA FUNÇÃO EXISTE AQUI (resolve teu erro) */
-function renderDates(){
-  dateSelect.innerHTML = "";
-  const days = state.data?.days || [];
-
-  if (!days.length){
-    loadingEl.style.display = "none";
-    showMsg("No dates returned from API.", "error");
-    slotsEl.style.display = "none";
-    debugEl.textContent = "Debug: data.days empty.";
+// Botões
+el.payBtn.addEventListener("click", () => {
+  if (!STRIPE_PAYMENT_LINK || STRIPE_PAYMENT_LINK.includes("COLE_AQUI")){
+    el.statusBox.innerHTML = "⚠️ Add your Stripe payment link in <b>STRIPE_PAYMENT_LINK</b> first.";
     return;
   }
 
-  days.forEach(d => {
-    const opt = document.createElement("option");
-    opt.value = d.date;
-    opt.textContent = d.date;
-    dateSelect.appendChild(opt);
-  });
-
-  state.date = days[0].date;
-  dateSelect.value = state.date;
-}
-
-function renderSlots(){
-  hideMsg();
-  slotsEl.innerHTML = "";
-  state.slot = null;
-  continueBtn.disabled = true;
-
-  const days = state.data?.days || [];
-  if (!days.length){
-    slotsEl.style.display = "none";
-    return;
-  }
-
-  if (!state.date) {
-    state.date = days[0].date;
-    dateSelect.value = state.date;
-  }
-
-  const dayObj = days.find(d => d.date === state.date);
-  if (!dayObj){
-    loadingEl.style.display = "none";
-    showMsg("Select a date to see available times.", "");
-    slotsEl.style.display = "none";
-    return;
-  }
-
-  const list = dayObj[state.staff] || [];
-
-  loadingEl.style.display = "none";
-  slotsEl.style.display = "grid";
-
-  if (!list.length){
-    showMsg("No available times for this date. Try another day.", "");
-    return;
-  }
-
-  list.forEach(slot => {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = "slot";
-    b.textContent = slot.label;
-
-    b.addEventListener("click", () => {
-      document.querySelectorAll(".slot").forEach(x => x.classList.remove("active"));
-      b.classList.add("active");
-      state.slot = slot;
-      continueBtn.disabled = false;
-    });
-
-    slotsEl.appendChild(b);
-  });
-}
-
-async function loadAvailability(){
-  hideMsg();
-  slotsEl.style.display = "none";
-  loadingEl.style.display = "block";
-  debugEl.textContent = "";
-
-  try{
-    const res = await fetch("/api/availability?days=14&duration=60&step=15", { cache: "no-store" });
-
-    const text = await res.text();
-    if (!text.trim().startsWith("{")) {
-      throw new Error("API returned HTML instead of JSON. First chars: " + text.slice(0, 40));
-    }
-
-    const data = JSON.parse(text);
-
-    if (!res.ok || !data.ok){
-      throw new Error(data?.error || data?.detail || "API error");
-    }
-
-    state.data = data;
-    tzLine.textContent = data.timeZone ? ("Timezone: " + data.timeZone) : "";
-
-    renderDates();
-    renderSlots();
-
-    debugEl.textContent = "Debug: ok | days=" + (data.days?.length || 0);
-  }catch(e){
-    loadingEl.style.display = "none";
-    showMsg("Error loading availability: <b>" + (e.message || e) + "</b>", "error");
-    debugEl.textContent = "Debug: fetch /api/availability failed or returned HTML.";
-  }
-}
-
-/* EVENTS */
-document.querySelectorAll(".staff-btn").forEach(btn => {
-  btn.addEventListener("click", () => setStaff(btn.dataset.staff));
+  // (Opcional) você pode adicionar querystring no link com nome/email depois,
+  // mas payment links não aceitam metadata direto. Isso a gente resolve com Checkout Session depois.
+  window.open(STRIPE_PAYMENT_LINK, "_blank", "noopener");
+  el.statusBox.innerHTML = "Stripe opened. After paying, come back and click <b>I’ve paid — Continue</b>.";
 });
 
-dateSelect.addEventListener("change", () => {
-  state.date = dateSelect.value;
-  renderSlots();
+el.paidBtn.addEventListener("click", () => {
+  // por enquanto, só segue para success.html (ou qualquer página)
+  // depois a gente troca isso para: confirmar pagamento via webhook + criar evento no calendário.
+  window.location.href = "success.html";
 });
 
-document.getElementById("reloadBtn").addEventListener("click", loadAvailability);
-
-document.getElementById("backBtn").addEventListener("click", () => {
-  window.location.href = "services2.html";
+el.backBtn.addEventListener("click", () => {
+  window.location.href = "booking.html";
 });
-
-continueBtn.addEventListener("click", () => {
-  if (!state.slot || !state.date) return;
-
-  const staffName = state.staff === "ana" ? "Ana Paula" : "Glenda Garcia";
-  const payload = {
-    staffKey: state.staff,
-    staffName,
-    date: state.date,
-    startISO: state.slot.startISO,
-    endISO: state.slot.endISO,
-    label: state.slot.label,
-    durationMin: 60
-  };
-
-  localStorage.setItem(BOOKING_KEY, JSON.stringify(payload));
-  window.location.href = "checkout.html";
-});
-
-/* INIT */
-loadAvailability();
 </script>
 
 </body>
