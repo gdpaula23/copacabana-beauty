@@ -350,12 +350,11 @@ h1{
 
           <div class="actions">
             <button class="btn btn-primary" id="payBtn">Pay £20 deposit</button>
-            <a class="btn btn-primary" id="paidBtn" href="success.html" style="display:none;">I’ve paid — Open WhatsApp</a>
             <a class="btn btn-ghost" href="cart.html">Back to basket</a>
           </div>
 
           <div class="note">
-            Tip: After you finish the Stripe payment, return here and tap “I’ve paid — Open WhatsApp”.
+            You’ll be redirected to secure Stripe Checkout. After payment, you’ll return to our website automatically.
           </div>
         </div>
       </div>
@@ -442,11 +441,7 @@ h1{
 
 /* ===== CONFIG ===== */
 const CART_KEY="cb_cart_v1";
-const CHECKOUT_INFO_KEY="cb_checkout_info_v1";
 const DEPOSIT_FIXED_GBP = 20;
-
-// seu Payment Link (TEST)
-const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/test_cNi9ANbUj8J38Ps9tpcbC00";
 
 /* ===== HELPERS ===== */
 function loadCart(){
@@ -474,10 +469,6 @@ function showStatus(msg){
   const box = document.getElementById("statusBox");
   box.style.display = "block";
   box.textContent = msg;
-}
-
-function showPaidButton(){
-  document.getElementById("paidBtn").style.display = "inline-flex";
 }
 
 /* ===== RENDER ===== */
@@ -512,82 +503,83 @@ function render(){
     `;
     mini.appendChild(div);
   });
-
-  // Se o usuário já clicou em pagar antes, mostra botão do WhatsApp
-  const info = (()=>{ try{return JSON.parse(localStorage.getItem(CHECKOUT_INFO_KEY))||null}catch{return null} })();
-  if(info?.depositStartedAt){
-    showPaidButton();
-    showStatus("Stripe payment opened. After paying, click “I’ve paid — Open WhatsApp”.");
-  }
 }
 render();
 
-/* ===== PAY BUTTON ===== */
+/* ===== PAY BUTTON (Stripe Checkout Session) ===== */
 const nameEl = document.getElementById("customerName");
 const emailEl = document.getElementById("customerEmail");
 const payBtn  = document.getElementById("payBtn");
 
 function isValidEmail(v){
   const s = (v||"").trim();
-  // simples e suficiente pro seu caso
   return s.includes("@") && s.includes(".") && s.length >= 6;
 }
+
 function syncPayState(){
   const name = nameEl.value.trim();
   const email = emailEl.value.trim();
-
   const ok = name.length >= 2 && isValidEmail(email);
+
   payBtn.disabled = !ok;
   payBtn.style.opacity = ok ? "1" : ".65";
   payBtn.style.pointerEvents = ok ? "auto" : "none";
   payBtn.style.transform = "none";
 }
+
 nameEl.addEventListener("input", syncPayState);
 emailEl.addEventListener("input", syncPayState);
 syncPayState();
 
-payBtn.addEventListener("click", () => {
+payBtn.addEventListener("click", async () => {
   const name = nameEl.value.trim();
   const email = emailEl.value.trim();
 
-  // redundância (seguro)
   if(name.length < 2){ alert("Please enter your name."); return; }
   if(!isValidEmail(email)){ alert("Please enter a valid email."); return; }
 
-  // salva infos para o WhatsApp (success.html vai ler)
-  const cart = loadCart();
-  const subtotal = computeSubtotal(cart);
-  const totals = computeTotals(cart);
+  // booking escolhido no booking.html
+  let booking = null;
+  try { booking = JSON.parse(localStorage.getItem("cb_booking_v1") || "null"); } catch {}
 
-  const payload = {
-    name,
-    email,
-    depositFixed: DEPOSIT_FIXED_GBP,
-    subtotal,
-    totals,
-    services: cart.map(i => ({ name: i.name, qty: i.qty||1, price: i.price||0 })),
-    depositStartedAt: Date.now()
-  };
+  if(!booking || !booking.staffKey || !booking.startISO || !booking.endISO){
+    alert("Booking not found. Please go back and select a staff, date and time.");
+    return;
+  }
 
-  localStorage.setItem(CHECKOUT_INFO_KEY, JSON.stringify(payload));
+  payBtn.disabled = true;
+  const oldText = payBtn.textContent;
+  payBtn.textContent = "Redirecting…";
+  showStatus("Creating secure Stripe Checkout…");
 
-  // abre Stripe Payment Link em nova aba (e tenta pré-preencher email)
-  const url = STRIPE_PAYMENT_LINK + "?prefilled_email=" + encodeURIComponent(email);
-  window.open(url, "_blank", "noopener");
+  try{
+    const r = await fetch("/api/create-checkout", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({
+        booking,
+        customerName: name,
+        customerEmail: email,
+      })
+    });
 
-  showPaidButton();
-  showStatus("NOTE: Stripe Payment will load.");
+    const data = await r.json().catch(()=>({}));
+
+    if(!r.ok || !data.url){
+      console.log("create-checkout error:", data);
+      throw new Error(data?.error || data?.details || "Failed to create checkout session.");
+    }
+
+    window.location.href = data.url;
+  }catch(err){
+    console.error(err);
+    alert(err.message || "Something went wrong.");
+    payBtn.disabled = false;
+    payBtn.textContent = oldText;
+    syncPayState();
+    showStatus("Unable to start payment. Please try again.");
+  }
 });
-
-  localStorage.setItem(CHECKOUT_INFO_KEY, JSON.stringify(payload));
-
-  // abre Stripe Payment Link em nova aba (e tenta pré-preencher email)
-  const url = STRIPE_PAYMENT_LINK + "?prefilled_email=" + encodeURIComponent(email);
-  window.open(url, "_blank", "noopener");
-
-  showPaidButton();
-  showStatus("NOTE: Stripe Payment will load.");
-
 </script>
 
 </body>
