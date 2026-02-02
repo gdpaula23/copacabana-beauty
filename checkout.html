@@ -516,7 +516,9 @@ el.payBtn.addEventListener("click", async (e) => {
   } catch (err){
     console.error(err);
     setLoading(false);
-    setStatus("⚠️ Something went wrong. Please try again.");
+    setStatus(`⚠️ Missing booking info. Please go back and select a time again. <br><br>
+<a href="booking.html" style="color:#F4EAD6;text-decoration:underline;">Go to booking</a>`);
+
   }
 });
 </script>
