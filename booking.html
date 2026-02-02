@@ -64,15 +64,25 @@
       box-shadow:0 30px 70px rgba(0,0,0,.25);
     }
 
+    /* ===== Layout principal: cards alinhados ===== */
     .grid{
       display:grid;
       grid-template-columns: 360px 1fr;
       gap:18px;
-      align-items:start;
+      align-items:stretch; /* deixa os 2 cards "esticarem" e alinharem */
     }
 
     .left{
       padding:18px;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .right{
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      min-height:420px;
     }
 
     .section-title{
@@ -83,64 +93,127 @@
       text-transform:uppercase;
     }
 
+    /* ===== Staff list ===== */
     .staff-list{
       display:grid;
-      gap:10px;
+      gap:12px;
+      margin-top:2px;
     }
 
+    /* Cards internos (Ana/Glenda) mesmo tamanho + alinhados */
     .staff-btn{
       display:flex;
       align-items:center;
       justify-content:space-between;
       width:100%;
-      padding:14px 14px;
-      border-radius:14px;
+      padding:18px 18px;
+      border-radius:18px;
       border:1px solid rgba(244,234,214,.22);
       background:rgba(0,0,0,.18);
       color:var(--beige);
       cursor:pointer;
       transition:.2s;
       text-align:left;
+      min-height:92px; /* tamanho fixo p/ ficar igual */
     }
     .staff-btn:hover{transform:translateY(-1px); background:rgba(0,0,0,.24)}
     .staff-btn.active{
-      border-color: rgba(244,234,214,.55);
-      background: rgba(244,234,214,.12);
-    }
-    .staff-name{font-weight:500}
-    .staff-tag{font-size:12px; opacity:.8}
-
-    .right{
-      padding:18px;
-      min-height:420px;
+      border-color: rgba(244,234,214,.70);
+      background: rgba(244,234,214,.14);
     }
 
+    .staff-left{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
+    }
+
+    /* Fotos maiores + melhor encaixe */
+    .avatar{
+      width:64px;
+      height:64px;
+      border-radius:999px;
+      flex:0 0 64px;
+      object-fit:cover;
+      object-position:center;
+      display:block;
+      border: 2px solid rgba(244,234,214,.75);
+      box-shadow:0 14px 30px rgba(0,0,0,.28);
+      background: rgba(0,0,0,.2);
+    }
+
+    .staff-meta{
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+      min-width:0;
+    }
+
+    .staff-name{
+      font-weight:500;
+      font-size:14px;
+      line-height:1.1;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .staff-tag{
+      font-size:12px;
+      opacity:.82;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .staff-chevron{
+      opacity:.9;
+      font-size:20px;
+      padding-left:10px;
+    }
+
+    .staff-btn.active .avatar{
+      border-color: rgba(244,234,214,.90);
+      box-shadow: 0 18px 40px rgba(0,0,0,.35);
+      transform: translateY(-1px);
+    }
+
+    /* Hint / erro ficam sempre no "rodapé" do card esquerdo */
+    .left .hint,
+    .left .error{
+      margin-top:14px;
+    }
+
+    /* ===== Header do calendário: alinhado e menor ===== */
     .row{
       display:flex;
       gap:12px;
-      flex-wrap:wrap;
       align-items:center;
       justify-content:space-between;
-      margin-bottom:12px;
+      margin-bottom:10px;
     }
 
     .date-select{
       display:flex;
       gap:10px;
-      flex-wrap:wrap;
       align-items:center;
     }
 
+    /* Select menor e elegante */
     select{
-      background:rgba(0,0,0,.25);
+      background:rgba(0,0,0,.22);
       color:var(--beige);
       border:1px solid rgba(244,234,214,.22);
-      border-radius:12px;
-      padding:10px 12px;
+      border-radius:14px;
+      padding:9px 12px;
       outline:none;
-      min-width:190px;
+      min-width:160px; /* diminuiu */
+      font-size:13px;
+      line-height:1;
     }
 
+    /* ===== Slots ===== */
     .slots{
       display:grid;
       grid-template-columns: repeat(4, minmax(90px, 1fr));
@@ -165,11 +238,13 @@
       background: rgba(244,234,214,.12);
     }
 
+    /* ===== Actions ficam sempre embaixo do card direito ===== */
     .actions{
       display:flex;
       gap:10px;
       justify-content:flex-end;
-      margin-top:18px;
+      margin-top:auto; /* empurra pro final do card */
+      padding-top:16px;
       flex-wrap:wrap;
     }
 
@@ -198,14 +273,12 @@
     .btn-primary:hover{transform:translateY(-1px)}
 
     .hint{
-      margin-top:12px;
       opacity:.85;
       font-size:13px;
       line-height:1.6;
     }
 
     .error{
-      margin-top:12px;
       color:#ffd3d3;
       font-size:13px;
       opacity:.95;
@@ -221,9 +294,15 @@
       .grid{grid-template-columns:1fr}
       .slots{grid-template-columns: repeat(3, minmax(90px, 1fr));}
       h1{font-size:38px}
+      select{min-width: 170px;}
     }
     @media (max-width: 420px){
       .slots{grid-template-columns: repeat(2, minmax(90px, 1fr));}
+      .avatar{
+        width:56px;height:56px;flex:0 0 56px;
+      }
+      .staff-btn{min-height:86px;padding:16px 16px;}
+      select{min-width: 150px;}
     }
   </style>
 </head>
@@ -238,8 +317,8 @@
   <div class="wrap">
     <div class="topbar">
       <div>
-        <h1>Agendamento</h1>
-        <div class="sub">Escolha a profissional e o melhor horário disponível.</div>
+        <h1>Booking</h1>
+        <div class="sub">Choose the professional and the best available time.</div>
       </div>
       <div class="sub" id="tzInfo"></div>
     </div>
@@ -249,26 +328,33 @@
         <div class="section-title">Select staff</div>
 
         <div class="staff-list">
+          <!-- Ana -->
           <button class="staff-btn active" data-staff="ana" id="btnAna">
-            <div>
-              <div class="staff-name">Ana Paula</div>
-              <div class="staff-tag">Therapist</div>
+            <div class="staff-left">
+              <img class="avatar" src="eu.jpg" alt="Ana Paula">
+              <div class="staff-meta">
+                <div class="staff-name">Ana Paula</div>
+                <div class="staff-tag">Therapist</div>
+              </div>
             </div>
-            <div>›</div>
+            <div class="staff-chevron">›</div>
           </button>
 
+          <!-- Glenda -->
           <button class="staff-btn" data-staff="glenda" id="btnGlenda">
-            <div>
-              <div class="staff-name">Glenda Garcia</div>
-              <div class="staff-tag">Therapist</div>
+            <div class="staff-left">
+              <img class="avatar" src="glenda.jpg" alt="Glenda Garcia">
+              <div class="staff-meta">
+                <div class="staff-name">Glenda Garcia</div>
+                <div class="staff-tag">Therapist</div>
+              </div>
             </div>
-            <div>›</div>
+            <div class="staff-chevron">›</div>
           </button>
         </div>
 
         <div class="hint">
-          Duração padrão: <b>60 min</b><br/>
-          Se quiser trocar depois, a gente ajusta na API com parâmetros.
+          Standard duration: <b>1h 30min</b><br/>
         </div>
 
         <div class="error" id="errBox" style="display:none;"></div>
@@ -283,7 +369,7 @@
           </div>
         </div>
 
-        <div id="loading" class="loading">Carregando horários...</div>
+        <div id="loading" class="loading">Loading available times...</div>
         <div id="slots" class="slots" style="display:none;"></div>
 
         <div class="actions">
@@ -382,7 +468,7 @@
       const empty = document.createElement("div");
       empty.className = "hint";
       empty.style.gridColumn = "1 / -1";
-      empty.innerHTML = "Sem horários disponíveis neste dia. Tente outra data.";
+      empty.innerHTML = "No available time slots on this day. Please try another date.";
       slotsEl.appendChild(empty);
       return;
     }
@@ -449,7 +535,6 @@
 
     localStorage.setItem(CART_BOOKING_KEY, JSON.stringify(payload));
 
-    // Você escolhe depois: cart? checkout? um "confirm booking"?
     window.location.href = "checkout.html";
   });
 
