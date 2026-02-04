@@ -349,7 +349,18 @@ h1{
           <div class="badge" id="statusBox" style="display:none;"></div>
 
           <div class="actions">
-            <button class="btn btn-primary" id="payBtn">Pay £20 deposit</button>
+            <!-- Health form -->
+            <button class="btn btn-ghost" id="btnHealthForm" type="button">
+              HEALTH &amp; MEDICAL FORM (REQUIRED)
+            </button>
+
+            <div class="badge" style="text-align:center;">
+              All clients must complete the Health &amp; Medical Form before their appointment.
+            </div>
+
+            <!-- Pay -->
+            <button class="btn btn-primary" id="payBtn" type="button">Pay £20 deposit</button>
+
             <a class="btn btn-ghost" href="cart.html">Back to basket</a>
           </div>
 
@@ -439,8 +450,7 @@ function setStatus(html){
 
 function setLoading(isLoading){
   el.payBtn.disabled = isLoading;
-  if (isLoading) el.payBtn.style.opacity = "0.7";
-  else el.payBtn.style.opacity = "1";
+  el.payBtn.style.opacity = isLoading ? "0.7" : "1";
 }
 
 (function initSummary(){
@@ -456,7 +466,6 @@ function setLoading(isLoading){
   el.remainingDay.textContent = moneyGBP(remaining);
   el.total.textContent = moneyGBP(total);
 
-  // Mini item card (direita)
   el.miniItems.innerHTML = `
     <div class="mini">
       <div class="t">${service.name}</div>
@@ -465,7 +474,6 @@ function setLoading(isLoading){
     </div>
   `;
 
-  // Opcional: mostrar booking resumido se existir
   const booking = getBooking();
   if (booking){
     const when = (booking.date ? booking.date : "") + (booking.label ? (" · " + booking.label) : "");
@@ -516,12 +524,12 @@ el.payBtn.addEventListener("click", async (e) => {
   } catch (err){
     console.error(err);
     setLoading(false);
-    setStatus(`⚠️ Missing booking info. Please go back and select a time again. <br><br>
+    setStatus(`⚠️ Could not start payment. Please try again. <br><br>
 <a href="booking.html" style="color:#F4EAD6;text-decoration:underline;">Go to booking</a>`);
-
   }
 });
 </script>
+
 <script>
   // Reveal animation
   const els = document.querySelectorAll(".reveal");
@@ -529,16 +537,33 @@ el.payBtn.addEventListener("click", async (e) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("in"); });
   }, { threshold: 0.12 });
   els.forEach(x => io.observe(x));
+
+  // Guard: require booking
   const booking = getBooking();
-
-// 🚨 GUARDA GLOBAL (OBRIGATÓRIO)
-if (!booking || !booking.staffKey || !booking.startISO || !booking.endISO) {
-  window.location.replace("/booking.html");
-  throw new Error("No booking found — redirecting");
-}
-
+  if (!booking || !booking.staffKey || !booking.startISO || !booking.endISO) {
+    window.location.replace("booking.html");
+    throw new Error("No booking found — redirecting");
+  }
 </script>
 
+<script>
+  (function(){
+    const btn = document.getElementById("btnHealthForm");
+    if (!btn) return;
+
+    const JOTFORM_URL = "https://form.jotform.com/260342392791055";
+
+    btn.addEventListener("click", () => {
+      window.open(JOTFORM_URL, "_blank", "noopener");
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("healthForm") === "submitted") {
+      window.history.replaceState({}, document.title, window.location.pathname);
+      alert("✅ Form received!\n\nYour Health & Medical Form has been submitted and will be reviewed. You may proceed with the deposit payment. If anything requires clarification, we will contact you.");
+    }
+  })();
+</script>
 
 </body>
 </html>
