@@ -23,11 +23,9 @@
   --surface:#F5EFE6;
   --surface-2:#FBF9F4;
   --stroke:#E2D9C7;
-  --gold:#C6B48A;
 
   --shadow: 0 40px 90px rgba(0,0,0,.30);
   --radius-xl: 24px;
-  --radius-lg: 18px;
   --max: 980px;
 }
 
@@ -57,7 +55,7 @@ body{
   opacity:.11;
   filter: blur(1.2px) saturate(.85) contrast(.95);
   mix-blend-mode: soft-light;
-  transform: rotate(0deg) scale(1.12);
+  transform: scale(1.12);
 }
 body > *:not(.marble-overlay){position:relative; z-index:1;}
 
@@ -70,14 +68,7 @@ nav{
   justify-content:flex-end;
   gap:22px;
   background:transparent;
-  transition:background .25s ease, transform .25s ease, border-color .25s ease;
 }
-nav.is-scrolled{
-  background:rgba(0,0,0,.10);
-  border-bottom:1px solid rgba(244,234,214,.10);
-  backdrop-filter: blur(6px);
-}
-nav.is-hidden{ transform:translateY(-110%); }
 nav a{
   color:rgba(244,234,214,.92);
   text-decoration:none;
@@ -85,7 +76,6 @@ nav a{
   letter-spacing:2px;
   opacity:.95;
 }
-nav a:hover{opacity:1}
 .nav-cta{
   padding:10px 14px;
   border:1px solid rgba(244,234,214,.28);
@@ -125,7 +115,6 @@ h1{
   margin-top:44px;
 }
 
-/* glass panel */
 .panel{
   background:
     linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02)),
@@ -136,7 +125,6 @@ h1{
   padding:22px;
 }
 
-/* summary light card */
 .summary-card{
   background:var(--surface-2);
   border:1px solid var(--stroke);
@@ -151,7 +139,6 @@ h1{
   justify-content:space-between;
   gap:12px;
   padding:10px 0;
-  opacity:.95;
   font-size:14px;
   color:var(--olive-900);
 }
@@ -197,11 +184,7 @@ h1{
   color:rgba(47,58,34,.85);
 }
 
-/* form */
-.form{
-  display:grid;
-  gap:12px;
-}
+.form{ display:grid; gap:12px; }
 .label{
   font-size:12px;
   letter-spacing:2px;
@@ -216,14 +199,7 @@ h1{
   outline:none;
   background:rgba(0,0,0,.10);
   color:var(--beige);
-  transition:border-color .18s ease, box-shadow .18s ease;
 }
-.input::placeholder{color:rgba(244,234,214,.55)}
-.input:focus{
-  border-color:rgba(244,234,214,.45);
-  box-shadow: 0 0 0 4px rgba(244,234,214,.10);
-}
-
 .actions{
   display:grid;
   gap:10px;
@@ -240,7 +216,6 @@ h1{
   font-size:12px;
   letter-spacing:2px;
   text-transform:uppercase;
-  transition:transform .2s ease, filter .2s ease, opacity .2s ease;
   border:none;
   cursor:pointer;
 }
@@ -249,14 +224,11 @@ h1{
   color:var(--olive-800);
   border:1px solid rgba(244,234,214,.75);
 }
-.btn-primary:hover{transform:translateY(-2px); filter:brightness(.98);}
 .btn-ghost{
   background:rgba(244,234,214,.10);
   border:1px solid rgba(244,234,214,.28);
   color:rgba(244,234,214,.92);
 }
-.btn-ghost:hover{transform:translateY(-2px);}
-
 .note{
   margin-top:12px;
   font-size:12px;
@@ -280,7 +252,6 @@ h1{
 /* FAB */
 .cart-fab{
   position:fixed !important;
-  left:auto !important;
   right:18px !important;
   bottom:18px !important;
   z-index:9999 !important;
@@ -296,7 +267,6 @@ h1{
   align-items:center;
   gap:8px;
   white-space:nowrap;
-  max-width: calc(100vw - 24px);
 }
 .cart-fab span{
   padding:2px 8px;
@@ -304,16 +274,11 @@ h1{
   background:rgba(244,234,214,.16);
 }
 
-/* REVEAL */
-.reveal{opacity:0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease;}
-.reveal.in{opacity:1; transform:none;}
-
+/* Mobile UX */
 @media(max-width:1020px){
   nav{ padding:16px 16px; }
   .layout{ grid-template-columns:1fr; }
-}
-@media(max-width:560px){
-  h1{ font-size:42px; }
+  .btn{ width:100%; }
 }
 </style>
 </head>
@@ -329,13 +294,13 @@ h1{
 
 <section class="section">
   <div class="wrap">
-    <h1 class="reveal">Checkout</h1>
-    <p class="sub reveal">Pay a £20 deposit to secure your appointment. The remaining balance is paid on the day of your service.</p>
-    <div class="title-line reveal"></div>
+    <h1>Checkout</h1>
+    <p class="sub">Pay a £20 deposit to secure your appointment. The remaining balance is paid on the day of your service.</p>
+    <div class="title-line"></div>
 
     <div class="layout">
-      <!-- LEFT: CUSTOMER -->
-      <div class="panel reveal">
+      <!-- LEFT -->
+      <div class="panel">
         <div class="form">
           <div>
             <div class="label">Full name</div>
@@ -349,7 +314,6 @@ h1{
           <div class="badge" id="statusBox" style="display:none;"></div>
 
           <div class="actions">
-            <!-- Health form -->
             <button class="btn btn-ghost" id="btnHealthForm" type="button">
               HEALTH &amp; MEDICAL FORM (REQUIRED)
             </button>
@@ -358,9 +322,7 @@ h1{
               All clients must complete the Health &amp; Medical Form before their appointment.
             </div>
 
-            <!-- Pay -->
             <button class="btn btn-primary" id="payBtn" type="button">Pay £20 deposit</button>
-
             <a class="btn btn-ghost" href="cart.html">Back to basket</a>
           </div>
 
@@ -370,8 +332,8 @@ h1{
         </div>
       </div>
 
-      <!-- RIGHT: SUMMARY -->
-      <div class="panel reveal">
+      <!-- RIGHT -->
+      <div class="panel">
         <div class="summary-card">
           <div class="summary-row">
             <span>Subtotal</span>
@@ -405,19 +367,22 @@ h1{
 const BOOKING_KEY = "cb_booking_v1";
 const CART_KEY = "cb_cart_v1";
 const DEPOSIT = 20;
+const PAYMENT_PENDING_KEY = "cb_payment_pending_v1";
 
-function loadJSON(key){
-  try { return JSON.parse(localStorage.getItem(key) || "null"); }
+function loadJSONFrom(storage, key){
+  try { return JSON.parse(storage.getItem(key) || "null"); }
   catch { return null; }
 }
-
 function moneyGBP(v){
   const n = Number(v || 0);
   return "£" + n.toFixed(0);
 }
 
-function getBooking(){ return loadJSON(BOOKING_KEY); }
-function getCart(){ return loadJSON(CART_KEY); }
+// ✅ booking ONLY sessionStorage
+function getBooking(){ return loadJSONFrom(sessionStorage, BOOKING_KEY); }
+
+// ✅ cart localStorage
+function getCart(){ return loadJSONFrom(localStorage, CART_KEY); }
 
 function getServiceFromCart(){
   const cart = getCart();
@@ -428,6 +393,52 @@ function getServiceFromCart(){
   const qty = Number(item?.qty || 1);
   return { name, price, qty, subtotal: price * qty };
 }
+
+// ✅ Auto-clean after Stripe return
+(function handleReturn(){
+  const params = new URLSearchParams(location.search);
+  const success = params.get("success") === "1";
+  const canceled = params.get("canceled") === "1";
+  const sessionId = params.get("session_id");
+  const pending = sessionStorage.getItem(PAYMENT_PENDING_KEY) === "1";
+
+  if (canceled){
+    sessionStorage.removeItem(PAYMENT_PENDING_KEY);
+  }
+
+  // success OR (has session_id and was pending)
+  if (success || (sessionId && pending)){
+    sessionStorage.removeItem(PAYMENT_PENDING_KEY);
+
+    // clear booking + cart
+    sessionStorage.removeItem(BOOKING_KEY);
+    localStorage.removeItem(BOOKING_KEY); // legado
+    localStorage.removeItem(CART_KEY);
+
+    // clean URL (no params)
+    window.history.replaceState({}, document.title, window.location.pathname);
+
+    // show message
+    const box = document.getElementById("statusBox");
+    box.style.display = "block";
+    box.innerHTML = "✅ Payment received! Your booking is confirmed. Thank you!";
+  }
+})();
+
+// ✅ Lock checkout: must have cart + booking
+(function requireData(){
+  const cart = getCart();
+  if (!Array.isArray(cart) || !cart.length){
+    window.location.replace("cart.html");
+    throw new Error("No cart found — redirecting");
+  }
+
+  const booking = getBooking();
+  if (!booking?.staffKey || !booking?.startISO || !booking?.endISO){
+    window.location.replace("booking.html");
+    throw new Error("No booking found — redirecting");
+  }
+})();
 
 const el = {
   customerName: document.getElementById("customerName"),
@@ -475,17 +486,47 @@ function setLoading(isLoading){
   `;
 
   const booking = getBooking();
-  if (booking){
-    const when = (booking.date ? booking.date : "") + (booking.label ? (" · " + booking.label) : "");
-    el.miniItems.innerHTML += `
-      <div class="mini">
-        <div class="t">Appointment</div>
-        <div class="m">${booking.staffName || booking.staffKey || "Staff"}</div>
-        <div class="b">${when || ""}<br><span style="opacity:.8;">Duration: ${booking.durationMin || 60} min</span></div>
+  const when = (booking.date ? booking.date : "") + (booking.label ? (" · " + booking.label) : "");
+  el.miniItems.innerHTML += `
+    <div class="mini">
+      <div class="t">Appointment</div>
+      <div class="m">${booking.staffName || booking.staffKey || "Staff"}</div>
+      <div class="b">
+        ${when}<br>
+        <span style="opacity:.8;">Duration: ${booking.durationMin || 60} min</span>
       </div>
-    `;
-  }
+
+      <div style="margin-top:12px;">
+        <button id="changeApptBtn" type="button"
+          style="
+            width:100%;
+            padding:12px 14px;
+            border-radius:999px;
+            border:1px solid rgba(47,58,34,.18);
+            background:rgba(47,58,34,.06);
+            color:rgba(47,58,34,.85);
+            font-size:12px;
+            letter-spacing:2px;
+            text-transform:uppercase;
+            cursor:pointer;
+          ">
+          Change therapist / time
+        </button>
+      </div>
+    </div>
+  `;
 })();
+
+// ✅ Change appointment
+document.addEventListener("click", (e) => {
+  const t = e.target;
+  if (!(t instanceof Element)) return;
+  if (t.id !== "changeApptBtn") return;
+
+  sessionStorage.removeItem(BOOKING_KEY);
+  localStorage.removeItem(BOOKING_KEY); // legado
+  window.location.href = "booking.html?reset=1";
+});
 
 el.payBtn.addEventListener("click", async (e) => {
   e.preventDefault();
@@ -503,9 +544,12 @@ el.payBtn.addEventListener("click", async (e) => {
     return;
   }
 
-  try {
+  try{
     setLoading(true);
     setStatus("Opening secure Stripe Checkout…");
+
+    // mark payment pending (used for auto-clean on return)
+    sessionStorage.setItem(PAYMENT_PENDING_KEY, "1");
 
     const resp = await fetch("/api/create-checkout", {
       method: "POST",
@@ -515,35 +559,21 @@ el.payBtn.addEventListener("click", async (e) => {
 
     const data = await resp.json();
     if (!resp.ok || !data?.url){
+      sessionStorage.removeItem(PAYMENT_PENDING_KEY);
       setLoading(false);
       setStatus("⚠️ Could not start payment. Please try again.");
       return;
     }
 
     window.location.href = data.url;
-  } catch (err){
+  }catch(err){
     console.error(err);
+    sessionStorage.removeItem(PAYMENT_PENDING_KEY);
     setLoading(false);
     setStatus(`⚠️ Could not start payment. Please try again. <br><br>
 <a href="booking.html" style="color:#F4EAD6;text-decoration:underline;">Go to booking</a>`);
   }
 });
-</script>
-
-<script>
-  // Reveal animation
-  const els = document.querySelectorAll(".reveal");
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("in"); });
-  }, { threshold: 0.12 });
-  els.forEach(x => io.observe(x));
-
-  // Guard: require booking
-  const booking = getBooking();
-  if (!booking || !booking.staffKey || !booking.startISO || !booking.endISO) {
-    window.location.replace("booking.html");
-    throw new Error("No booking found — redirecting");
-  }
 </script>
 
 <script>

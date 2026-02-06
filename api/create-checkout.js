@@ -5,8 +5,11 @@ module.exports = async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
 
   try {
-    const body = typeof req.body === "string" ? JSON.parse(req.body) : (req.body || {});
-    const booking = body.booking || {}; // vem do localStorage
+    const body = typeof req.body === "string"
+      ? JSON.parse(req.body)
+      : (req.body || {});
+
+    const booking = body.booking || {};
     const customerName = body.customerName || "";
     const customerEmail = body.customerEmail || "";
 
@@ -20,12 +23,15 @@ module.exports = async function handler(req, res) {
 
     const baseUrl =
       process.env.SITE_URL ||
-      (req.headers.origin ? req.headers.origin : `https://${req.headers.host}`);
+      (req.headers.origin
+        ? req.headers.origin
+        : `https://${req.headers.host}`);
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["card"],
       customer_email: customerEmail,
+
       line_items: [
         {
           price_data: {
@@ -37,7 +43,7 @@ module.exports = async function handler(req, res) {
         },
       ],
 
-      // ✅ metadata = o que vamos usar no webhook depois
+      // ✅ metadata para webhook / backoffice
       metadata: {
         staffKey: booking.staffKey,
         staffName: booking.staffName || "",
@@ -50,7 +56,8 @@ module.exports = async function handler(req, res) {
         customerEmail,
       },
 
-      success_url: `${baseUrl}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+      // ✅ IMPORTANTE: voltar para checkout para auto-clean
+      success_url: `${baseUrl}/checkout.html?success=1&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/checkout.html?canceled=1`,
     });
 

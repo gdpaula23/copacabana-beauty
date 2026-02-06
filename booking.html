@@ -303,14 +303,19 @@
   </div>
 
 <script>
-  // ✅ RESET: nunca ficar "grudado" ao voltar
   const CART_BOOKING_KEY = "cb_booking_v1";
-  localStorage.removeItem(CART_BOOKING_KEY);
+
+  // ✅ Reset ONLY when coming from checkout (Change therapist/time)
+  const params = new URLSearchParams(location.search);
+  if(params.get("reset") === "1"){
+    sessionStorage.removeItem(CART_BOOKING_KEY);
+    localStorage.removeItem(CART_BOOKING_KEY); // legado
+  }
 
   // ===== Estado =====
   const state = {
     data: null,
-    staff: null, // ✅ começa sem staff
+    staff: null, // começa sem staff
     date: null,
     slot: null,
   };
@@ -341,11 +346,8 @@
     document.querySelector(`.staff-btn[data-staff="${staff}"]`).classList.add("active");
 
     hintBox.textContent = "Select a date and time.";
-
-    // habilita select de datas agora
     dateSelect.disabled = false;
 
-    // define data default (primeiro dia)
     if (state.data?.days?.length){
       state.date = state.data.days[0].date;
       dateSelect.value = state.date;
@@ -380,7 +382,7 @@
       dateSelect.appendChild(opt);
     });
 
-    // sem staff selecionado ainda => deixa desabilitado e sem setar state.date
+    // sem staff ainda
     dateSelect.disabled = true;
   }
 
@@ -388,7 +390,6 @@
     slotsEl.innerHTML = "";
     btnNext.disabled = true;
 
-    // ✅ sem staff, não mostra slots
     if (!state.staff){
       loadingEl.style.display = "none";
       slotsEl.style.display = "none";
@@ -442,7 +443,7 @@
       tzInfo.textContent = data.timeZone ? `Timezone: ${data.timeZone}` : "";
 
       renderDates();
-      renderSlots(); // vai esconder porque staff null
+      renderSlots();
     }catch(e){
       showError("Erro ao buscar agenda: " + (e.message || e));
       loadingEl.style.display = "none";
@@ -455,7 +456,8 @@
   dateSelect.addEventListener("change", () => setDate(dateSelect.value));
 
   $("btnBack").addEventListener("click", () => {
-    // ✅ ao voltar, limpa booking também
+    // ✅ ao voltar, limpa booking
+    sessionStorage.removeItem(CART_BOOKING_KEY);
     localStorage.removeItem(CART_BOOKING_KEY);
     window.location.href = "services2.html";
   });
@@ -472,9 +474,13 @@
       startISO: state.slot.startISO,
       endISO: state.slot.endISO,
       label: state.slot.label,
+      durationMin: 60
     };
 
-    localStorage.setItem(CART_BOOKING_KEY, JSON.stringify(payload));
+    // ✅ sessionStorage (não gruda)
+    sessionStorage.setItem(CART_BOOKING_KEY, JSON.stringify(payload));
+    localStorage.removeItem(CART_BOOKING_KEY); // limpa legado
+
     window.location.href = "checkout.html";
   });
 
