@@ -356,6 +356,26 @@ h1{
 </style>
 </head>
 
+<script>
+  (function(){
+    const flag = sessionStorage.getItem("cb_added_to_basket");
+    if(flag !== "1") return;
+    sessionStorage.removeItem("cb_added_to_basket");
+
+    const fab = document.querySelector(".cart-fab");
+    const count = document.querySelector(".cart-fab span");
+    if(fab){
+      fab.classList.add("pop");
+      setTimeout(()=>fab.classList.remove("pop"), 450);
+    }
+    if(count){
+      count.classList.add("bump");
+      setTimeout(()=>count.classList.remove("bump"), 450);
+    }
+  })();
+</script>
+
+
 <body>
 <div class="marble-overlay" id="marbleOverlay"></div>
 

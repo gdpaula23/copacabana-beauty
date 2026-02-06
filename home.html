@@ -373,8 +373,8 @@ nav a:hover{opacity:1}
 #experienceVideo{
   width: 100%;
   height: 100%;
-  object-fit: cover;        /* preenche o espaço */
-  object-position: center;  /* centraliza o corte */
+  object-fit: cover;
+  object-position: center;
   display:block;
   background: transparent;
 }
@@ -509,6 +509,21 @@ nav a:hover{opacity:1}
   background:rgba(244,234,214,.16);
 }
 
+/* ✅ basket animations */
+@keyframes basketPop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.07); }
+  60% { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+@keyframes countBump {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.cart-fab.pop { animation: basketPop .35s ease; }
+.cart-fab span.bump { animation: countBump .35s ease; }
+
 .reveal{
   opacity:0;
   transform: translateY(16px);
@@ -619,54 +634,10 @@ nav a:hover{opacity:1}
   .section{ padding: 78px 0 !important; }
   .section.tight{ padding: 60px 0 !important; }
   .manifesto{ padding: 120px 0 100px !important; }
-.whatsapp-float{
-  position: fixed !important;
-  bottom: 22px !important;
-  right: 22px !important;
-  left: auto !important;
-  top: auto !important;
-
-  z-index: 99999 !important;
-
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-
-  background: #25D366;
-  color: #ffffff;
-  padding: 14px 18px;
-  border-radius: 999px;
-  text-decoration: none;
-
-  font-family: 'Montserrat', sans-serif;
-  font-size: 13px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-
-  box-shadow: 0 14px 34px rgba(0,0,0,.25);
-  transition: transform .2s ease, box-shadow .2s ease;
-}
-
-
-.whatsapp-float:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 18px 40px rgba(0,0,0,.30);
-}
-
-.wa-icon{
-  font-size: 18px;
-  line-height: 1;
-}
-
-.wa-text{
-  white-space: nowrap;
-}
-
 }
 </style>
 </head>
 
-<!-- WhatsApp Floating Button -->
 <!-- WhatsApp Floating Button -->
 <a
   href="https://api.whatsapp.com/send/?phone=447934424780&text=Hello!%20I%20would%20like%20to%20get%20more%20information.&type=phone_number&app_absent=0"
@@ -699,21 +670,10 @@ nav a:hover{opacity:1}
     box-shadow: 0 14px 34px rgba(0,0,0,.25) !important;
   "
 >
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 32 32"
-    width="22"
-    height="22"
-    fill="currentColor"
-    aria-hidden="true"
-    style="display:block"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="22" height="22" fill="currentColor" aria-hidden="true" style="display:block">
     <path d="M16.01 2.003c-7.728 0-14.01 6.277-14.01 14 0 2.468.65 4.885 1.887 7.016L2 30l7.17-1.862A13.93 13.93 0 0 0 16.01 30C23.737 30 30 23.723 30 16.003c0-7.723-6.263-14-13.99-14zm0 25.425a11.4 11.4 0 0 1-5.81-1.587l-.416-.245-4.256 1.105 1.137-4.138-.27-.426a11.43 11.43 0 1 1 9.615 5.291zm6.3-8.597c-.344-.172-2.04-1.006-2.356-1.121-.317-.114-.548-.171-.78.172-.23.343-.895 1.121-1.096 1.35-.202.229-.402.257-.746.086-.344-.172-1.453-.535-2.767-1.706-1.022-.912-1.712-2.04-1.913-2.383-.201-.343-.021-.528.151-.699.155-.154.344-.401.516-.602.171-.201.229-.343.344-.572.114-.229.057-.429-.029-.601-.086-.172-.78-1.878-1.068-2.576-.28-.673-.564-.581-.78-.592-.201-.011-.43-.014-.659-.014-.229 0-.601.086-.916.429-.316.343-1.204 1.177-1.204 2.87 0 1.693 1.233 3.33 1.405 3.559.172.229 2.427 3.707 5.88 5.198.822.355 1.463.567 1.963.726.825.262 1.577.225 2.171.137.663-.099 2.04-.833 2.327-1.636.287-.803.287-1.493.201-1.636-.086-.143-.316-.229-.659-.401z"/>
   </svg>
-  
 </a>
-
-
 
 <body>
 
@@ -747,7 +707,8 @@ nav a:hover{opacity:1}
         </p>
 
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#services2.html">View Services</a>
+          <!-- ✅ FIX: was #services2.html (wrong). now goes to services2.html -->
+          <a class="btn btn-primary" href="services2.html" id="viewServicesBtn">View Services</a>
           <a class="btn btn-ghost" href="#about">ABOUT US</a>
         </div>
 
@@ -789,72 +750,75 @@ nav a:hover{opacity:1}
     </p>
 
     <div class="services">
-      <article class="service reveal" data-sync-service="1">
+      <!-- Brazilian Signature Experience (£149) -->
+      <article class="service reveal">
         <div class="service-media">
-          <img src="exemplo2.jpg" alt="Luxury Head Spa">
+          <img src="exemplo2.jpg" alt="Brazilian Signature Experience">
         </div>
         <div class="service-content">
-          <span class="service-meta">2H Threatment</span>
+          <span class="service-meta">1H 15 Treatment</span>
           <h3>✨ Brazilian Signature Experience</h3>
           <p>
             A signature Brazilian ritual combining full body relaxation with Brazilian Head Spa techniques, created to calm your body and quiet your mind.
-
-This exclusive experience blends Brazilian touch with sensory care, offering a moment that feels personal, intentional and deeply restorative.
+            This exclusive experience blends Brazilian touch with sensory care, offering a moment that feels personal, intentional and deeply restorative.
           </p>
           <div class="service-footer">
             <strong>£149</strong>
-            <a href="services2.html">Choose Package</a>
+            <a href="cart.html?add=1&service=Brazilian%20Signature%20Experience&price=149" class="js-add-from-home">Choose Package</a>
           </div>
         </div>
       </article>
 
-      <article class="service reveal" data-sync-service="1">
+      <!-- Lash lift + Tint (From £50) -> add £50 base -->
+      <article class="service reveal">
         <div class="service-media">
-          <img src="images/llt.jpg" alt="Head Spa & Facial">
+          <img src="images/llt.jpg" alt="Lash lift + Tint">
         </div>
         <div class="service-content">
-          <span class="service-meta">2H Threatment</span>
-          <h3>✨Lash Lifts</h3>
+          <span class="service-meta">2H Treatment</span>
+          <h3>✨ Lash lift + Tint</h3>
           <p>
             All Lash sets are created using advanced technological fibres, designed to be lightweight, flexible and comfortable for everyday wear.
           </p>
           <div class="service-footer">
-            <strong>From : £50</strong>
-            <a href="services2.html">Choose Package</a>
+            <strong>From: £50</strong>
+            <a href="cart.html?add=1&service=Lash%20lift%20%2B%20Tint&price=50" class="js-add-from-home">Choose Package</a>
           </div>
         </div>
       </article>
 
-      <article class="service reveal" data-sync-service="1">
+      <!-- Duo Copacabana (£170) -->
+      <article class="service reveal">
         <div class="service-media">
-          <img src="exemplo2.jpg" alt="Head & Foot Spa">
+          <img src="exemplo2.jpg" alt="Duo Copacabana">
         </div>
         <div class="service-content">
-          <span class="service-meta">2H Threatment</span>
-          <h3>☀️Duo Copacabana</h3>
+          <span class="service-meta">1H 15 Treatment</span>
+          <h3>☀️ Duo Copacabana</h3>
           <p>
             Perfect for couples or close companions, this session includes the Ocean Therapy ritual for both guests, allowing you to relax together in a calm and intimate setting.
           </p>
           <div class="service-footer">
-            <strong>£175 (For Two)</strong>
-            <a href="services2.html">Choose Package</a>
+            <strong>£170 (For Two)</strong>
+            <a href="cart.html?add=1&service=Duo%20Copacabana%20(For%20Two)&price=170" class="js-add-from-home">Choose Package</a>
           </div>
         </div>
       </article>
 
-      <article class="service reveal" data-sync-service="1">
+      <!-- Brazilian Relaxing Body Massage (£50) -->
+      <article class="service reveal">
         <div class="service-media">
-          <img src="images/relaxing.jpg" alt="For Him">
+          <img src="images/relaxing.jpg" alt="Brazilian Relaxing Body Massage">
         </div>
         <div class="service-content">
-          <span class="service-meta">2H Threatment</span>
-          <h3>🌀Relaxing Body Massage</h3>
+          <span class="service-meta">50M Treatment</span>
+          <h3>🌀 Relaxing Body Massage</h3>
           <p>
             A calming Brazilian massage experience designed to release tension, slow your breathing and bring your body back into balance.
           </p>
           <div class="service-footer">
             <strong>£50</strong>
-            <a href="services2.html">Choose Package</a>
+            <a href="cart.html?add=1&service=Brazilian%20Relaxing%20Body%20Massage&price=50" class="js-add-from-home">Choose Package</a>
           </div>
         </div>
       </article>
@@ -945,6 +909,7 @@ This exclusive experience blends Brazilian touch with sensory care, offering a m
 </a>
 
 <script>
+/* NAV hide/show */
 (() => {
   const nav = document.getElementById("nav");
   let lastY = window.scrollY;
@@ -967,6 +932,7 @@ This exclusive experience blends Brazilian touch with sensory care, offering a m
   onScroll();
 })();
 
+/* Scroll reveal */
 (() => {
   const els = document.querySelectorAll(".reveal");
   const io = new IntersectionObserver((entries) => {
@@ -981,6 +947,7 @@ This exclusive experience blends Brazilian touch with sensory care, offering a m
   els.forEach(el => io.observe(el));
 })();
 
+/* Random marble */
 (() => {
   const el = document.getElementById("marbleOverlay");
   if (!el) return;
@@ -993,6 +960,7 @@ This exclusive experience blends Brazilian touch with sensory care, offering a m
   el.style.backgroundPosition = `${x}% ${y}%`;
 })();
 
+/* Sync alt heights */
 (function syncAltHeights(){
   function run(){
     const isMobile = window.matchMedia("(max-width: 1020px)").matches;
@@ -1021,12 +989,33 @@ This exclusive experience blends Brazilian touch with sensory care, offering a m
   setTimeout(run, 50);
 })();
 
+/* Basket badge */
 const CART_KEY="cb_cart_v1";
 function loadCart(){
   try{return JSON.parse(localStorage.getItem(CART_KEY))||[]}catch{return[]}
 }
 function count(cart){return cart.reduce((s,i)=>s+(i.qty||1),0)}
-document.getElementById("cartCount").innerText=count(loadCart());
+document.getElementById("cartCount").innerText = String(count(loadCart()));
+
+/* ✅ mark "added" when user clicks any add link to cart */
+document.addEventListener("click", (e) => {
+  const a = e.target.closest("a");
+  if(!a) return;
+  const href = a.getAttribute("href") || "";
+  if (href.includes("cart.html?add=1")) {
+    sessionStorage.setItem("cb_added_to_basket", "1");
+  }
+});
+
+/* ✅ extra hard fix for View Services (in case any old smooth-scroll JS exists) */
+(function(){
+  const btn = document.getElementById("viewServicesBtn");
+  if(!btn) return;
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    window.location.href = "services2.html";
+  });
+})();
 </script>
 
 </body>
