@@ -222,24 +222,6 @@
     }
     .btn-primary:hover{transform:translateY(-1px)}
 
-    /* ✅ Debug badge (remover depois se quiser) */
-    .debug-badge{
-      position:fixed;
-      left:14px;
-      bottom:14px;
-      z-index:9999;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid rgba(244,234,214,.25);
-      background:rgba(0,0,0,.22);
-      backdrop-filter: blur(10px);
-      color:rgba(244,234,214,.92);
-      font-size:12px;
-      line-height:1.6;
-      max-width:min(520px, 92vw);
-      white-space:normal;
-    }
-
     @media (max-width: 900px){
       .grid{grid-template-columns:1fr}
       .slots{grid-template-columns: repeat(3, minmax(90px, 1fr));}
@@ -300,7 +282,7 @@
         </div>
 
         <div class="hint" id="hintBox">
-          Select a professional to see available dates and times.
+          Loading…
         </div>
 
         <div class="error" id="errBox" style="display:none;"></div>
@@ -325,28 +307,23 @@
     </div>
   </div>
 
-  <div class="debug-badge" id="debugBadge" style="display:none;"></div>
-
 <script>
-  // ====== CONFIG ======
-  const VERSION = "duo-fix-v3"; // muda isso se quiser forçar cache-bust
+  const VERSION = "booking-final-v1";
   const CART_BOOKING_KEY = "cb_booking_v1";
   const CART_KEY = "cb_cart_v1";
 
-  // ===== Reset ONLY when coming from checkout =====
   const params = new URLSearchParams(location.search);
   if(params.get("reset") === "1"){
     sessionStorage.removeItem(CART_BOOKING_KEY);
-    localStorage.removeItem(CART_BOOKING_KEY); // legado
+    localStorage.removeItem(CART_BOOKING_KEY);
   }
 
   const subtitle = document.getElementById("subtitle");
-  const debugBadge = document.getElementById("debugBadge");
 
-  // ===== Helpers =====
   function loadJSON(storage, key){
     try { return JSON.parse(storage.getItem(key) || "null"); } catch { return null; }
   }
+
   function normalizeText(s){
     return String(s || "")
       .toLowerCase()
@@ -356,18 +333,16 @@
       .replace(/\s+/g, " ")
       .trim();
   }
+
   function getServiceName(){
-    // prioridade: URL param (pra teste)
     const sParam = params.get("service");
     if (sParam) return String(sParam);
 
-    // fallback: cart
     const cart = loadJSON(localStorage, CART_KEY);
     const item = (Array.isArray(cart) && cart.length) ? (cart[0] || {}) : {};
     return String(item.name || item.title || item.service || "");
   }
 
-  // ===== Allocation rules (robusto por palavras-chave) =====
   function resolveModeFromService(){
     const raw = getServiceName();
     const s = normalizeText(raw);
@@ -378,21 +353,19 @@
     const hasSignature = /\bsignature\b/.test(s);
     const hasRelaxing = /\brelaxing\b/.test(s);
 
-    // DUO services:
-    // - "DUO Copacabana"
-    // - "Brazilian Signature" (DUO)
+    // DUO Copacabana OR Brazilian Signature (DUO)
     if ((hasDuo && hasCopacabana) || (hasBrazilian && hasSignature)) return "duo";
 
-    // Glenda-only
+    // Relaxing = Glenda
     if (hasRelaxing) return "glenda";
 
-    // default Ana
+    // Default = Ana
     return "ana";
   }
 
   const resolvedMode = resolveModeFromService(); // "ana" | "glenda" | "duo"
 
-  // regra de 15:00 (SÓ se você quiser manter pro DUO)
+  // Only apply 15:00 rule for DUO (safety)
   const DUO_MIN_LABEL_TIME = "15:00";
   function allowSlot(slot){
     if (resolvedMode !== "duo") return true;
@@ -400,13 +373,7 @@
     return label >= DUO_MIN_LABEL_TIME;
   }
 
-  // ===== State =====
-  const state = {
-    data: null,
-    staff: null, // "ana" | "glenda" | "duo"
-    date: null,
-    slot: null,
-  };
+  const state = { data: null, staff: null, date: null, slot: null };
 
   const $ = (id) => document.getElementById(id);
   const errBox = $("errBox");
@@ -503,7 +470,7 @@
     const leftCard = document.querySelector(".card.left");
     const grid = document.querySelector(".grid");
 
-    // sempre fixo por serviço (cliente não escolhe staff)
+    // Auto mode = hide staff selection
     if (leftCard) leftCard.style.display = "none";
     if (grid) grid.style.gridTemplateColumns = "1fr";
 
@@ -514,27 +481,12 @@
     }
   }
 
-  function showDebug(){
-    const serviceRaw = getServiceName();
-    const norm = normalizeText(serviceRaw);
-
-    debugBadge.style.display = "block";
-    debugBadge.innerHTML =
-      `<b>DEBUG</b><br>` +
-      `service(raw): ${serviceRaw || "(empty)"}<br>` +
-      `service(norm): ${norm || "(empty)"}<br>` +
-      `mode: <b>${resolvedMode}</b><br>` +
-      `expected DUO? url has service=... then mode should be duo<br>` +
-      `version: ${VERSION}`;
-  }
-
   async function loadAvailability(){
     clearError();
     loadingEl.style.display = "block";
     slotsEl.style.display = "none";
 
     try{
-      // cache-bust na API
       const res = await fetch(`/api/availability?v=${encodeURIComponent(VERSION)}`);
       const data = await res.json();
 
@@ -550,10 +502,10 @@
       state.staff = resolvedMode;
       state.slot = null;
 
-      // só mostra dias com slot pro staff certo (e DUO já filtrado)
+      // Only show dates that have at least 1 slot for this staff (and DUO rule applied)
       const daysAvailable = (state.data.days || []).filter(d => getSlotsForDay(d).length > 0);
-      renderDates(daysAvailable);
 
+      renderDates(daysAvailable);
       dateSelect.disabled = !daysAvailable.length;
 
       if (daysAvailable.length){
@@ -568,16 +520,12 @@
         hintBox.textContent = "No availability found for this service. Please try another day.";
       }
 
-      showDebug();
-
     }catch(e){
       showError("Erro ao buscar agenda: " + (e.message || e));
       loadingEl.style.display = "none";
-      showDebug();
     }
   }
 
-  // Events
   dateSelect.addEventListener("change", () => setDate(dateSelect.value));
 
   $("btnBack").addEventListener("click", () => {
@@ -592,7 +540,7 @@
     let staffName = "";
     if (state.staff === "ana") staffName = "Ana Paula";
     if (state.staff === "glenda") staffName = "Glenda Garcia";
-    // duo = ""
+    // duo = "" (checkout/stripe already handles)
 
     const payload = {
       staffKey: state.staff,
