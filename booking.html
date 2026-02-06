@@ -104,6 +104,12 @@
       border-color: rgba(244,234,214,.70);
       background: rgba(244,234,214,.14);
     }
+    /* ✅ enquanto carrega, bloqueia clique e deixa visual claro */
+    .staff-btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      transform:none !important;
+    }
 
     .staff-left{ display:flex; align-items:center; gap:14px; min-width:0; }
 
@@ -315,7 +321,7 @@
   // ===== Estado =====
   const state = {
     data: null,
-    staff: null, // começa sem staff
+    staff: null,
     date: null,
     slot: null,
   };
@@ -328,6 +334,10 @@
   const dateSelect = $("dateSelect");
   const tzInfo = $("tzInfo");
   const btnNext = $("btnNext");
+
+  function staffButtons(){
+    return Array.from(document.querySelectorAll(".staff-btn"));
+  }
 
   function showError(msg){
     errBox.style.display = "block";
@@ -343,14 +353,21 @@
     state.slot = null;
 
     document.querySelectorAll(".staff-btn").forEach(b => b.classList.remove("active"));
-    document.querySelector(`.staff-btn[data-staff="${staff}"]`).classList.add("active");
+    const btn = document.querySelector(`.staff-btn[data-staff="${staff}"]`);
+    if (btn) btn.classList.add("active");
 
     hintBox.textContent = "Select a date and time.";
-    dateSelect.disabled = false;
 
+    // só habilita dateSelect se já tiver dados carregados
+    dateSelect.disabled = !state.data?.days?.length;
+
+    // se já tiver data carregada, seta a primeira
     if (state.data?.days?.length){
       state.date = state.data.days[0].date;
       dateSelect.value = state.date;
+    } else {
+      state.date = null;
+      dateSelect.value = "";
     }
 
     renderSlots();
@@ -396,7 +413,12 @@
       return;
     }
 
-    if (!state.data || !state.date) return;
+    if (!state.data || !state.date){
+      // se ainda não carregou, mantém loading
+      loadingEl.style.display = state.data ? "none" : "block";
+      slotsEl.style.display = "none";
+      return;
+    }
 
     const dayObj = state.data.days.find(d => d.date === state.date);
     if (!dayObj) return;
@@ -431,6 +453,9 @@
     loadingEl.style.display = "block";
     slotsEl.style.display = "none";
 
+    // ✅ FIX PRINCIPAL: bloqueia staff durante load pra evitar "clicar antes"
+    staffButtons().forEach(b => b.disabled = true);
+
     try{
       const res = await fetch("/api/availability");
       const data = await res.json();
@@ -443,10 +468,26 @@
       tzInfo.textContent = data.timeZone ? `Timezone: ${data.timeZone}` : "";
 
       renderDates();
-      renderSlots();
+
+      // ✅ libera staff agora que terminou de carregar
+      staffButtons().forEach(b => b.disabled = false);
+
+      // Se a pessoa já tinha escolhido staff (edge case), seta data agora
+      if (state.staff && state.data?.days?.length){
+        dateSelect.disabled = false;
+        if (!state.date){
+          state.date = state.data.days[0].date;
+        }
+        dateSelect.value = state.date;
+        renderSlots();
+      } else {
+        loadingEl.style.display = "none";
+      }
+
     }catch(e){
       showError("Erro ao buscar agenda: " + (e.message || e));
       loadingEl.style.display = "none";
+      staffButtons().forEach(b => b.disabled = false);
     }
   }
 
@@ -456,7 +497,6 @@
   dateSelect.addEventListener("change", () => setDate(dateSelect.value));
 
   $("btnBack").addEventListener("click", () => {
-    // ✅ ao voltar, limpa booking
     sessionStorage.removeItem(CART_BOOKING_KEY);
     localStorage.removeItem(CART_BOOKING_KEY);
     window.location.href = "services2.html";
@@ -477,9 +517,8 @@
       durationMin: 60
     };
 
-    // ✅ sessionStorage (não gruda)
     sessionStorage.setItem(CART_BOOKING_KEY, JSON.stringify(payload));
-    localStorage.removeItem(CART_BOOKING_KEY); // limpa legado
+    localStorage.removeItem(CART_BOOKING_KEY);
 
     window.location.href = "checkout.html";
   });
