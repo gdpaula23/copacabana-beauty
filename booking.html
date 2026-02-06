@@ -222,6 +222,24 @@
     }
     .btn-primary:hover{transform:translateY(-1px)}
 
+    /* ✅ Debug badge (remover depois se quiser) */
+    .debug-badge{
+      position:fixed;
+      left:14px;
+      bottom:14px;
+      z-index:9999;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(244,234,214,.25);
+      background:rgba(0,0,0,.22);
+      backdrop-filter: blur(10px);
+      color:rgba(244,234,214,.92);
+      font-size:12px;
+      line-height:1.6;
+      max-width:min(520px, 92vw);
+      white-space:normal;
+    }
+
     @media (max-width: 900px){
       .grid{grid-template-columns:1fr}
       .slots{grid-template-columns: repeat(3, minmax(90px, 1fr));}
@@ -307,66 +325,85 @@
     </div>
   </div>
 
+  <div class="debug-badge" id="debugBadge" style="display:none;"></div>
+
 <script>
+  // ====== CONFIG ======
+  const VERSION = "duo-fix-v3"; // muda isso se quiser forçar cache-bust
   const CART_BOOKING_KEY = "cb_booking_v1";
   const CART_KEY = "cb_cart_v1";
 
-  // ✅ Reset ONLY when coming from checkout (Change therapist/time)
+  // ===== Reset ONLY when coming from checkout =====
   const params = new URLSearchParams(location.search);
-  const modeParam = (params.get("mode") || "").toLowerCase(); // "duo" | "ana" | "glenda" | ""
-  const subtitle = document.getElementById("subtitle");
-
   if(params.get("reset") === "1"){
     sessionStorage.removeItem(CART_BOOKING_KEY);
     localStorage.removeItem(CART_BOOKING_KEY); // legado
   }
 
-  // ===== Helpers: cart/service detection =====
+  const subtitle = document.getElementById("subtitle");
+  const debugBadge = document.getElementById("debugBadge");
+
+  // ===== Helpers =====
   function loadJSON(storage, key){
     try { return JSON.parse(storage.getItem(key) || "null"); } catch { return null; }
   }
+  function normalizeText(s){
+    return String(s || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[_-]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+  function getServiceName(){
+    // prioridade: URL param (pra teste)
+    const sParam = params.get("service");
+    if (sParam) return String(sParam);
 
-  function getServiceNameFromCart(){
+    // fallback: cart
     const cart = loadJSON(localStorage, CART_KEY);
-    if (!Array.isArray(cart) || !cart.length) return "";
-    const item = cart[0] || {};
-    return String(item.name || item.title || item.service || "").trim();
+    const item = (Array.isArray(cart) && cart.length) ? (cart[0] || {}) : {};
+    return String(item.name || item.title || item.service || "");
   }
 
-  // ✅ Allocation rules (service -> staff mode)
-  function resolveMode(){
-    // 1) explicit query param wins (useful for testing)
-    if (modeParam === "duo" || modeParam === "ana" || modeParam === "glenda") return modeParam;
+  // ===== Allocation rules (robusto por palavras-chave) =====
+  function resolveModeFromService(){
+    const raw = getServiceName();
+    const s = normalizeText(raw);
 
-    // 2) else detect from cart service name
-    const s = getServiceNameFromCart().toLowerCase();
+    const hasDuo = /\bduo\b/.test(s);
+    const hasCopacabana = /\bcopacabana\b/.test(s);
+    const hasBrazilian = /\bbrazilian\b/.test(s);
+    const hasSignature = /\bsignature\b/.test(s);
+    const hasRelaxing = /\brelaxing\b/.test(s);
 
-    // DUO services
-    if (s.includes("duo copacabana")) return "duo";
-    if (s.includes("brazilian signature")) return "duo";
+    // DUO services:
+    // - "DUO Copacabana"
+    // - "Brazilian Signature" (DUO)
+    if ((hasDuo && hasCopacabana) || (hasBrazilian && hasSignature)) return "duo";
 
     // Glenda-only
-    if (s.includes("relaxing")) return "glenda";
+    if (hasRelaxing) return "glenda";
 
-    // default
+    // default Ana
     return "ana";
   }
 
-  const resolvedMode = resolveMode();
+  const resolvedMode = resolveModeFromService(); // "ana" | "glenda" | "duo"
 
-  // ✅ Time rule: only after 3pm for Ana/Glenda/DUO
-  const MIN_LABEL_TIME = "15:00";
-  function isAfterMinTimeLabel(label){
-    // label is "HH:MM" already used in UI
-    if (!label || typeof label !== "string") return true;
-    // string compare works for HH:MM
-    return label >= MIN_LABEL_TIME;
+  // regra de 15:00 (SÓ se você quiser manter pro DUO)
+  const DUO_MIN_LABEL_TIME = "15:00";
+  function allowSlot(slot){
+    if (resolvedMode !== "duo") return true;
+    const label = String(slot?.label || "");
+    return label >= DUO_MIN_LABEL_TIME;
   }
 
-  // ===== Estado =====
+  // ===== State =====
   const state = {
     data: null,
-    staff: null,   // "ana" | "glenda" | "duo"
+    staff: null, // "ana" | "glenda" | "duo"
     date: null,
     slot: null,
   };
@@ -380,10 +417,6 @@
   const tzInfo = $("tzInfo");
   const btnNext = $("btnNext");
 
-  function staffButtons(){
-    return Array.from(document.querySelectorAll(".staff-btn"));
-  }
-
   function showError(msg){
     errBox.style.display = "block";
     errBox.textContent = msg;
@@ -391,29 +424,6 @@
   function clearError(){
     errBox.style.display = "none";
     errBox.textContent = "";
-  }
-
-  function setStaff(staff){
-    state.staff = staff;
-    state.slot = null;
-
-    document.querySelectorAll(".staff-btn").forEach(b => b.classList.remove("active"));
-    const btn = document.querySelector(`.staff-btn[data-staff="${staff}"]`);
-    if (btn) btn.classList.add("active");
-
-    hintBox.textContent = "Select a date and time.";
-
-    dateSelect.disabled = !state.data?.days?.length;
-
-    if (state.data?.days?.length){
-      state.date = state.data.days[0].date;
-      dateSelect.value = state.date;
-    } else {
-      state.date = null;
-      dateSelect.value = "";
-    }
-
-    renderSlots();
   }
 
   function setDate(date){
@@ -431,18 +441,19 @@
     if (active) active.classList.add("active");
   }
 
-  function renderDates(){
-    dateSelect.innerHTML = "";
-    if (!state.data?.days?.length) return;
+  function getSlotsForDay(dayObj){
+    const raw = (dayObj && state.staff) ? (dayObj[state.staff] || []) : [];
+    return raw.filter(allowSlot);
+  }
 
-    state.data.days.forEach(d => {
+  function renderDates(availableDays){
+    dateSelect.innerHTML = "";
+    (availableDays || []).forEach(d => {
       const opt = document.createElement("option");
       opt.value = d.date;
       opt.textContent = d.date;
       dateSelect.appendChild(opt);
     });
-
-    dateSelect.disabled = true;
   }
 
   function renderSlots(){
@@ -454,7 +465,6 @@
       slotsEl.style.display = "none";
       return;
     }
-
     if (!state.data || !state.date){
       loadingEl.style.display = state.data ? "none" : "block";
       slotsEl.style.display = "none";
@@ -464,9 +474,7 @@
     const dayObj = state.data.days.find(d => d.date === state.date);
     if (!dayObj) return;
 
-    // ✅ pick staff list (ana/glenda/duo) and filter after 3pm
-    const rawList = dayObj[state.staff] || [];
-    const list = rawList.filter(s => isAfterMinTimeLabel(s.label));
+    const list = getSlotsForDay(dayObj);
 
     loadingEl.style.display = "none";
     slotsEl.style.display = "grid";
@@ -475,7 +483,7 @@
       const empty = document.createElement("div");
       empty.className = "hint";
       empty.style.gridColumn = "1 / -1";
-      empty.innerHTML = `No available time slots after 3pm on this day. Please try another date.`;
+      empty.innerHTML = "No available time slots on this day. Please try another date.";
       slotsEl.appendChild(empty);
       return;
     }
@@ -495,17 +503,29 @@
     const leftCard = document.querySelector(".card.left");
     const grid = document.querySelector(".grid");
 
-    // DUO or fixed staff: hide staff selection and go single column
-    if (resolvedMode === "duo" || resolvedMode === "ana" || resolvedMode === "glenda"){
-      if (leftCard) leftCard.style.display = "none";
-      if (grid) grid.style.gridTemplateColumns = "1fr";
+    // sempre fixo por serviço (cliente não escolhe staff)
+    if (leftCard) leftCard.style.display = "none";
+    if (grid) grid.style.gridTemplateColumns = "1fr";
 
-      if (subtitle){
-        if (resolvedMode === "duo") subtitle.textContent = "Choose the best available time.";
-        if (resolvedMode === "ana") subtitle.textContent = "Choose the best available time with Ana Paula.";
-        if (resolvedMode === "glenda") subtitle.textContent = "Choose the best available time with Glenda Garcia.";
-      }
+    if (subtitle){
+      if (resolvedMode === "duo") subtitle.textContent = "Choose the best available time (DUO Service).";
+      if (resolvedMode === "ana") subtitle.textContent = "Choose the best available time with Ana Paula.";
+      if (resolvedMode === "glenda") subtitle.textContent = "Choose the best available time with Glenda Garcia.";
     }
+  }
+
+  function showDebug(){
+    const serviceRaw = getServiceName();
+    const norm = normalizeText(serviceRaw);
+
+    debugBadge.style.display = "block";
+    debugBadge.innerHTML =
+      `<b>DEBUG</b><br>` +
+      `service(raw): ${serviceRaw || "(empty)"}<br>` +
+      `service(norm): ${norm || "(empty)"}<br>` +
+      `mode: <b>${resolvedMode}</b><br>` +
+      `expected DUO? url has service=... then mode should be duo<br>` +
+      `version: ${VERSION}`;
   }
 
   async function loadAvailability(){
@@ -513,10 +533,9 @@
     loadingEl.style.display = "block";
     slotsEl.style.display = "none";
 
-    staffButtons().forEach(b => b.disabled = true);
-
     try{
-      const res = await fetch("/api/availability");
+      // cache-bust na API
+      const res = await fetch(`/api/availability?v=${encodeURIComponent(VERSION)}`);
       const data = await res.json();
 
       if (!data.ok){
@@ -526,38 +545,39 @@
       state.data = data;
       tzInfo.textContent = data.timeZone ? `Timezone: ${data.timeZone}` : "";
 
-      renderDates();
-      staffButtons().forEach(b => b.disabled = false);
-
-      // ✅ apply allocation UI
       applyModeUI();
 
-      // ✅ auto-set staff by allocation
-      state.staff = resolvedMode; // "ana" | "glenda" | "duo"
+      state.staff = resolvedMode;
       state.slot = null;
 
-      dateSelect.disabled = !state.data?.days?.length;
-      if (state.data?.days?.length){
-        state.date = state.data.days[0].date;
+      // só mostra dias com slot pro staff certo (e DUO já filtrado)
+      const daysAvailable = (state.data.days || []).filter(d => getSlotsForDay(d).length > 0);
+      renderDates(daysAvailable);
+
+      dateSelect.disabled = !daysAvailable.length;
+
+      if (daysAvailable.length){
+        state.date = daysAvailable[0].date;
         dateSelect.value = state.date;
+        hintBox.textContent = "Select a date and time.";
+        renderSlots();
       } else {
         state.date = null;
-        dateSelect.value = "";
+        loadingEl.style.display = "none";
+        slotsEl.style.display = "none";
+        hintBox.textContent = "No availability found for this service. Please try another day.";
       }
 
-      hintBox.textContent = "Select a date and time.";
-      renderSlots();
+      showDebug();
 
     }catch(e){
       showError("Erro ao buscar agenda: " + (e.message || e));
       loadingEl.style.display = "none";
-      staffButtons().forEach(b => b.disabled = false);
+      showDebug();
     }
   }
 
-  // ===== Eventos =====
-  $("btnAna").addEventListener("click", () => setStaff("ana"));
-  $("btnGlenda").addEventListener("click", () => setStaff("glenda"));
+  // Events
   dateSelect.addEventListener("change", () => setDate(dateSelect.value));
 
   $("btnBack").addEventListener("click", () => {
@@ -575,8 +595,8 @@
     // duo = ""
 
     const payload = {
-      staffKey: state.staff,  // "ana" | "glenda" | "duo"
-      staffName,              // "" no DUO (checkout já trata)
+      staffKey: state.staff,
+      staffName,
       date: state.date,
       startISO: state.slot.startISO,
       endISO: state.slot.endISO,
