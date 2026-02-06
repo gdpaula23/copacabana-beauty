@@ -331,29 +331,49 @@
       .trim();
   }
 
-  function getServiceName(){
-    const sParam = params.get("service");
-    if (sParam) return String(sParam);
+  function getServiceNamesFromCart(){
+  const cart = loadJSON(localStorage, CART_KEY);
 
-    const cart = loadJSON(localStorage, CART_KEY);
-    const item = (Array.isArray(cart) && cart.length) ? (cart[0] || {}) : {};
-    return String(item.name || item.title || item.service || "");
+  // cart pode ser array ou objeto (vamos proteger)
+  if (Array.isArray(cart)) {
+    return cart.map(it => String(it?.name || it?.title || it?.service || "").trim()).filter(Boolean);
   }
-
-  function resolveModeFromService(){
-    const raw = getServiceName();
-    const s = normalizeText(raw);
-
-    const hasDuo = /\bduo\b/.test(s);
-    const hasCopacabana = /\bcopacabana\b/.test(s);
-    const hasBrazilian = /\bbrazilian\b/.test(s);
-    const hasSignature = /\bsignature\b/.test(s);
-    const hasRelaxing = /\brelaxing\b/.test(s);
-
-    if ((hasDuo && hasCopacabana) || (hasBrazilian && hasSignature)) return "duo";
-    if (hasRelaxing) return "glenda";
-    return "ana";
+  if (cart && typeof cart === "object") {
+    return [String(cart?.name || cart?.title || cart?.service || "").trim()].filter(Boolean);
   }
+  return [];
+}
+
+function getServiceName(){
+  // prioridade: URL param (pra teste)
+  const sParam = params.get("service");
+  if (sParam) return String(sParam);
+
+  // pega TODOS os nomes do carrinho (não só o primeiro)
+  const names = getServiceNamesFromCart();
+
+  // se tiver mais de um item, junta tudo numa string só (pra detecção)
+  return names.join(" | ");
+}
+
+function resolveModeFromService(){
+  const raw = getServiceName();
+  const s = normalizeText(raw);
+
+  // ---- regras DUO ----
+  // (aceita variações tipo "Duo - Copacabana", "Copacabana Duo", etc.)
+  const isDuoCopacabana = /\bduo\b/.test(s) && /\bcopacabana\b/.test(s);
+  const isBrazilianSignature = /\bbrazilian\b/.test(s) && /\bsignature\b/.test(s);
+
+  if (isDuoCopacabana || isBrazilianSignature) return "duo";
+
+  // ---- regra Glenda-only ----
+  if (/\brelaxing\b/.test(s)) return "glenda";
+
+  // ---- default ----
+  return "ana";
+}
+
 
   const resolvedMode = resolveModeFromService();
 
