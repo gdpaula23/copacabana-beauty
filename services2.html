@@ -151,12 +151,12 @@ h1{
 .cards{
   display:flex;
   flex-wrap:wrap;
-  justify-content:center; /* ✅ centraliza a última linha */
+  justify-content:center;
   gap: var(--gap);
   margin-top:34px;
 }
 
-/* 🔥 Agora dá pra escolher colunas por seção */
+/* colunas por seção */
 .cards.cols-6 .card{
   flex: 0 0 calc((100% - (var(--gap) * 5)) / 6);
   max-width: calc((100% - (var(--gap) * 5)) / 6);
@@ -178,7 +178,6 @@ h1{
   border-radius:var(--radius-xl);
   box-shadow:0 24px 60px rgba(0,0,0,.18);
   overflow:hidden;
-  text-align:center;
   transition:transform .18s ease, background .18s ease;
   will-change:transform;
 }
@@ -187,15 +186,7 @@ h1{
   background:rgba(244,234,214,.12);
 }
 
-.card-img{
-  width:100%;
-  height:130px;
-  object-fit:cover;
-  display:block;
-  opacity:.92;
-}
-
-/* corpo flex pra empurrar actions pra baixo */
+/* corpo flex */
 .card-body{
   padding:20px 18px 18px;
   display:flex;
@@ -203,39 +194,11 @@ h1{
   flex:1;
 }
 
-.card h3{
-  font-family:'Cormorant Garamond',serif;
-  font-size:22px;
-  line-height:1.1;
-  margin-bottom:10px;
-}
-
-/* opcional pra padronizar mais */
-.card .meta{
-  font-size:11px;
-  letter-spacing:2px;
-  text-transform:uppercase;
-  opacity:.78;
-  margin-bottom:10px;
-  min-height: 16px;
-}
-
-.card .price{
-  font-size:13px;
-  opacity:.92;
-  margin:6px 0 14px;
-  min-height: 24px;
-}
-.card .price strong{
-  font-size:18px;
-  font-weight:500;
-}
-
-/* actions sempre no rodapé do card */
+/* actions */
 .card-actions{
   display:flex;
   gap:10px;
-  margin-top:auto; /* ✅ alinha todos os botões */
+  margin-top:auto;
 }
 
 .card-actions a,
@@ -401,7 +364,7 @@ body.modal-open{ overflow:hidden; }
 }
 .modal-x:hover{ filter: brightness(1.08); }
 
-/* RESPONSIVO (mantém o comportamento) */
+/* RESPONSIVO */
 @media(max-width:1200px){
   .cards.cols-6 .card,
   .cards.cols-4 .card{
@@ -430,10 +393,101 @@ body.modal-open{ overflow:hidden; }
 
   .cards.cols-6 .card,
   .cards.cols-4 .card{ flex:0 0 100%; max-width:100%; }
-  .card-img{ height:150px; }
-
-  .cat-title{ font-size:26px; margin-top:40px; }
 }
+
+/* ====== ✅ NEW PREMIUM CARD LAYOUT OVERRIDES ====== */
+.card{ text-align:left; }
+
+.card-body{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+}
+
+/* 1) trava o topo (título + duração) */
+.card-header{
+  min-height: 86px; /* ajuste fino: 78–96 dependendo do seu gosto */
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+}
+
+/* opcional: limita título a 2 linhas para não estourar */
+.card-header h3{
+  display:-webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* mostra até 2 linhas */
+  overflow:hidden;
+}
+
+/* 2) imagem sempre com mesma altura (já ajuda MUITO) */
+.card-img{
+  height:190px; /* pode ser 180/200, mas fixa */
+}
+
+/* 3) trava a área do preço */
+.card .price{
+  min-height: 34px;
+  display:flex;
+  align-items:flex-end;
+}
+
+/* 4) botões sempre colados no final e alinhados */
+.card-actions{
+  margin-top:auto;
+  padding-top:14px;
+}
+
+/* ===== IMAGE GRADIENT OVERLAY (PREMIUM LOOK) ===== */
+
+.card-image-wrap{
+  position: relative;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 14px 30px rgba(0,0,0,.28);
+  background: rgba(0,0,0,.18);
+}
+
+/* Headspa: formato mais vertical (fica igual teu print bonito) */
+.card.headspa .card-image-wrap{
+  aspect-ratio: 4 / 5;
+}
+
+/* Lashes: formato mais horizontal (olho não corta estranho) */
+.card.lashes .card-image-wrap{
+  aspect-ratio: 4 / 3;
+}
+
+/* imagem ocupa o container certinho */
+.card-img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  display:block;
+  transform: none;
+  transition: transform .45s ease;
+}
+
+/* hover suave */
+.card:hover .card-img{
+  transform: scale(1.03);
+}
+
+/* remove qualquer height fixa antiga */
+.card-img{ height:100% !important; }
+
+/* stronger overlay for headspa */
+.card.headspa .card-image-wrap::after{
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0,0,0,.05) 0%,
+      rgba(0,0,0,.18) 45%,
+      rgba(0,0,0,.45) 100%
+    );
+}
+
+
 </style>
 </head>
 
@@ -527,7 +581,7 @@ Includes:
 	•	Relaxing neck massage
 	•	Hair drying` },
 
-  { id: 2, category:"headspa", title: "🌴 Tropical", duration: "1h 30", priceLabel: "£120", priceValue: 120, cartServiceName: "Tropical", img: "images/tropical.jpg",
+  { id: 2, category:"headspa", title: "🌴 Tropical", duration: "1h 30", priceLabel: "£120", priceValue: 120, cartServiceName: "Tropical", img: "images/ocean.jpg",
     desc: `A deeper Brazilian Head Spa ritual, enhanced with our signature deep hair hydration inspired by Brazilian hair care traditions.
 
 Includes:
@@ -536,7 +590,7 @@ Includes:
 	•	Deep Brazilian hair hydration
 	•	Hair drying.` },
 
-  { id: 3, category:"headspa", title: "🌿 Amazonian Experience", duration: "2h", priceLabel: "£160", priceValue: 160, cartServiceName: "Amazonian Experience", img: "images/amazon.jpg",
+  { id: 3, category:"headspa", title: "🌿 Amazonian Experience", duration: "2h", priceLabel: "£160", priceValue: 160, cartServiceName: "Amazonian Experience", img: "images/ocean.jpg",
     desc: `Our most complete Brazilian wellness journey.
 
 A full ritual designed to care for your scalp, hair, face and feet while deeply relaxing your body. This immersive experience combines Brazilian Head Spa techniques with steam therapy, detox rituals, facial cleansing and a nourishing foot treatment.
@@ -553,7 +607,7 @@ Includes:
 
 Created for women who want to fully disconnect and restore.` },
 
-  { id: 4, category:"headspa", title: "✨ Brazilian Signature Experience", duration: "1h 15", priceLabel: "£149", priceValue: 149, cartServiceName: "Brazilian Signature Experience", img: "images/signature.jpg",
+  { id: 4, category:"headspa", title: "✨ Brazilian Signature Experience", duration: "1h 15", priceLabel: "£149", priceValue: 149, cartServiceName: "Brazilian Signature Experience", img: "images/ocean.jpg",
     desc: `A signature Brazilian ritual combining full body relaxation with Brazilian Head Spa techniques, created to calm your body and quiet your mind.
 
 This exclusive experience blends Brazilian touch with sensory care, offering a moment that feels personal, intentional and deeply restorative.
@@ -568,7 +622,7 @@ Includes:
 
 Designed for women who seek more than just a treatment — a true Brazilian wellness experience.` },
 
-  { id: 5, category:"headspa", title: "Duo Copacabana", duration: "1h 15", priceLabel: "£170 (For Two)", priceValue: 170, cartServiceName: "Duo Copacabana (For Two)", img: "images/duo.jpg",
+  { id: 5, category:"headspa", title: "Duo Copacabana", duration: "1h 15", priceLabel: "£170 (For Two)", priceValue: 170, cartServiceName: "Duo Copacabana (For Two)", img: "images/ocean.jpg",
     desc: `A shared Brazilian Head Spa experience for two people.
 
 Perfect for couples or close companions, this session includes the Ocean Therapy ritual for both guests, allowing you to relax together in a calm and intimate setting.
@@ -581,7 +635,7 @@ Includes (per person):
 
 Please note: Men are only accepted as part of this Duo Experience.` },
 
-  { id: 6, category:"headspa", title: "✨ Brazilian Relaxing Body Massage", duration: "50m", priceLabel: "£50", priceValue: 50, cartServiceName: "Scalp Detox Therapy", img: "imdages/natural.jpg",
+  { id: 6, category:"headspa", title: "✨ Brazilian Relaxing Body Massage", duration: "50m", priceLabel: "£50", priceValue: 50, cartServiceName: "Scalp Detox Therapy", img: "images/relaxing.jpg",
     desc: `A calming Brazilian massage experience designed to release tension, slow your breathing and bring your body back into balance.
 
 Using gentle, intuitive Brazilian techniques, this relaxing body massage focuses on stress relief and deep relaxation, helping you disconnect from daily pressure and reconnect with yourself.
@@ -620,25 +674,34 @@ function addToBasketLink(s){
   return `cart.html?add=1&service=${service}&price=${price}`;
 }
 
+/* ✅ CARD HTML (title on top, image below) */
 function cardHTML(s){
   return `
-    <div class="card reveal" data-id="${s.id}">
-      <img class="card-img" src="${s.img}" alt="${s.title}">
+    <div class="card reveal ${s.category}" data-id="${s.id}">
       <div class="card-body">
-        <div class="meta">DURATION = ${s.duration}</div>
-        <h3>${s.title}</h3>
+
+        <div class="card-header">
+          <h3>${s.title}</h3>
+          <div class="meta">DURATION · ${s.duration}</div>
+        </div>
+
+        <div class="card-image-wrap">
+          <img class="card-img" src="${s.img}" alt="${s.title}">
+        </div>
+
         <div class="price"><strong>${s.priceLabel}</strong></div>
 
         <div class="card-actions">
           <button type="button" class="js-details">DETAILS</button>
           <a class="primary" href="${addToBasketLink(s)}">ADD</a>
         </div>
+
       </div>
     </div>
   `;
 }
 
-/* ✅ Render separado por categoria (6 em cima / 4 embaixo) */
+/* ✅ Render separado por categoria */
 headspaEl.innerHTML = SERVICES.filter(s => s.category === "headspa").map(cardHTML).join("");
 lashesEl.innerHTML  = SERVICES.filter(s => s.category === "lashes").map(cardHTML).join("");
 
