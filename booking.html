@@ -309,10 +309,11 @@
 
 <script>
   const CART_BOOKING_KEY = "cb_booking_v1";
+  const CART_KEY = "cb_cart_v1";
 
   // ✅ Reset ONLY when coming from checkout (Change therapist/time)
   const params = new URLSearchParams(location.search);
-  const mode = (params.get("mode") || "").toLowerCase(); // "duo" | "ana" | "glenda" | ""
+  const modeParam = (params.get("mode") || "").toLowerCase(); // "duo" | "ana" | "glenda" | ""
   const subtitle = document.getElementById("subtitle");
 
   if(params.get("reset") === "1"){
@@ -320,10 +321,52 @@
     localStorage.removeItem(CART_BOOKING_KEY); // legado
   }
 
+  // ===== Helpers: cart/service detection =====
+  function loadJSON(storage, key){
+    try { return JSON.parse(storage.getItem(key) || "null"); } catch { return null; }
+  }
+
+  function getServiceNameFromCart(){
+    const cart = loadJSON(localStorage, CART_KEY);
+    if (!Array.isArray(cart) || !cart.length) return "";
+    const item = cart[0] || {};
+    return String(item.name || item.title || item.service || "").trim();
+  }
+
+  // ✅ Allocation rules (service -> staff mode)
+  function resolveMode(){
+    // 1) explicit query param wins (useful for testing)
+    if (modeParam === "duo" || modeParam === "ana" || modeParam === "glenda") return modeParam;
+
+    // 2) else detect from cart service name
+    const s = getServiceNameFromCart().toLowerCase();
+
+    // DUO services
+    if (s.includes("duo copacabana")) return "duo";
+    if (s.includes("brazilian signature")) return "duo";
+
+    // Glenda-only
+    if (s.includes("relaxing")) return "glenda";
+
+    // default
+    return "ana";
+  }
+
+  const resolvedMode = resolveMode();
+
+  // ✅ Time rule: only after 3pm for Ana/Glenda/DUO
+  const MIN_LABEL_TIME = "15:00";
+  function isAfterMinTimeLabel(label){
+    // label is "HH:MM" already used in UI
+    if (!label || typeof label !== "string") return true;
+    // string compare works for HH:MM
+    return label >= MIN_LABEL_TIME;
+  }
+
   // ===== Estado =====
   const state = {
     data: null,
-    staff: null,
+    staff: null,   // "ana" | "glenda" | "duo"
     date: null,
     slot: null,
   };
@@ -421,7 +464,9 @@
     const dayObj = state.data.days.find(d => d.date === state.date);
     if (!dayObj) return;
 
-    const list = dayObj[state.staff] || [];
+    // ✅ pick staff list (ana/glenda/duo) and filter after 3pm
+    const rawList = dayObj[state.staff] || [];
+    const list = rawList.filter(s => isAfterMinTimeLabel(s.label));
 
     loadingEl.style.display = "none";
     slotsEl.style.display = "grid";
@@ -430,7 +475,7 @@
       const empty = document.createElement("div");
       empty.className = "hint";
       empty.style.gridColumn = "1 / -1";
-      empty.innerHTML = "No available time slots on this day. Please try another date.";
+      empty.innerHTML = `No available time slots after 3pm on this day. Please try another date.`;
       slotsEl.appendChild(empty);
       return;
     }
@@ -444,6 +489,23 @@
       b.addEventListener("click", () => setSlot(slot));
       slotsEl.appendChild(b);
     });
+  }
+
+  function applyModeUI(){
+    const leftCard = document.querySelector(".card.left");
+    const grid = document.querySelector(".grid");
+
+    // DUO or fixed staff: hide staff selection and go single column
+    if (resolvedMode === "duo" || resolvedMode === "ana" || resolvedMode === "glenda"){
+      if (leftCard) leftCard.style.display = "none";
+      if (grid) grid.style.gridTemplateColumns = "1fr";
+
+      if (subtitle){
+        if (resolvedMode === "duo") subtitle.textContent = "Choose the best available time.";
+        if (resolvedMode === "ana") subtitle.textContent = "Choose the best available time with Ana Paula.";
+        if (resolvedMode === "glenda") subtitle.textContent = "Choose the best available time with Glenda Garcia.";
+      }
+    }
   }
 
   async function loadAvailability(){
@@ -465,50 +527,26 @@
       tzInfo.textContent = data.timeZone ? `Timezone: ${data.timeZone}` : "";
 
       renderDates();
-
-      // ✅ libera staff agora que terminou de carregar
       staffButtons().forEach(b => b.disabled = false);
 
-      // ===== MODO DUO =====
-      if (mode === "duo") {
-        const leftCard = document.querySelector(".card.left");
-        const grid = document.querySelector(".grid");
-        if (leftCard) leftCard.style.display = "none";
-        if (grid) grid.style.gridTemplateColumns = "1fr";
+      // ✅ apply allocation UI
+      applyModeUI();
 
-        if (subtitle) subtitle.textContent = "Choose the best available time.";
+      // ✅ auto-set staff by allocation
+      state.staff = resolvedMode; // "ana" | "glenda" | "duo"
+      state.slot = null;
 
-        state.staff = "duo";
-        state.slot = null;
-
-        dateSelect.disabled = !state.data?.days?.length;
-        if (state.data?.days?.length){
-          state.date = state.data.days[0].date;
-          dateSelect.value = state.date;
-        } else {
-          state.date = null;
-          dateSelect.value = "";
-        }
-
-        hintBox.textContent = "Select a date and time.";
-        renderSlots();
-        return;
-      }
-
-      // (opcional) auto-select
-      if (mode === "ana") setStaff("ana");
-      if (mode === "glenda") setStaff("glenda");
-
-      if (state.staff && state.data?.days?.length){
-        dateSelect.disabled = false;
-        if (!state.date){
-          state.date = state.data.days[0].date;
-        }
+      dateSelect.disabled = !state.data?.days?.length;
+      if (state.data?.days?.length){
+        state.date = state.data.days[0].date;
         dateSelect.value = state.date;
-        renderSlots();
       } else {
-        loadingEl.style.display = "none";
+        state.date = null;
+        dateSelect.value = "";
       }
+
+      hintBox.textContent = "Select a date and time.";
+      renderSlots();
 
     }catch(e){
       showError("Erro ao buscar agenda: " + (e.message || e));
@@ -538,7 +576,7 @@
 
     const payload = {
       staffKey: state.staff,  // "ana" | "glenda" | "duo"
-      staffName,              // "" no DUO
+      staffName,              // "" no DUO (checkout já trata)
       date: state.date,
       startISO: state.slot.startISO,
       endISO: state.slot.endISO,
