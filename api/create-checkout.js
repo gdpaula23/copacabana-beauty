@@ -1,6 +1,27 @@
 const Stripe = require("stripe");
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+function safeStr(v){ return (v == null) ? "" : String(v); }
+
+function getStaffDisplay(booking){
+  const key = safeStr(booking.staffKey).toLowerCase();
+  if (key === "duo") return "DUO Service";
+  // se vier vazio, tenta cair pro staffKey
+  const name = safeStr(booking.staffName).trim();
+  if (name) return name;
+  if (key === "ana") return "Ana Paula";
+  if (key === "glenda") return "Glenda Garcia";
+  return key || "Staff";
+}
+
+function getWhenDisplay(booking){
+  // booking.date já está YYYY-MM-DD no seu fluxo
+  const date = safeStr(booking.date).trim();
+  const label = safeStr(booking.label).trim(); // "HH:MM"
+  const when = [date, label].filter(Boolean).join(" · ");
+  return when || "";
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
 
@@ -10,8 +31,8 @@ module.exports = async function handler(req, res) {
       : (req.body || {});
 
     const booking = body.booking || {};
-    const customerName = body.customerName || "";
-    const customerEmail = body.customerEmail || "";
+    const customerName = safeStr(body.customerName).trim();
+    const customerEmail = safeStr(body.customerEmail).trim();
 
     // validações mínimas
     if (!booking.staffKey || !booking.startISO || !booking.endISO) {
@@ -20,6 +41,9 @@ module.exports = async function handler(req, res) {
     if (!customerEmail) {
       return res.status(400).json({ error: "Email is required." });
     }
+
+    const staffDisplay = getStaffDisplay(booking);
+    const whenDisplay = getWhenDisplay(booking);
 
     const baseUrl =
       process.env.SITE_URL ||
@@ -36,7 +60,11 @@ module.exports = async function handler(req, res) {
         {
           price_data: {
             currency: "gbp",
-            product_data: { name: "Copacabana Beauty — Deposit" },
+            product_data: {
+              name: `Copacabana Beauty — Deposit (${staffDisplay})`,
+              // ✅ aparece no Stripe/Dashboard e ajuda muito no backoffice
+              description: whenDisplay ? `Appointment: ${whenDisplay}` : undefined,
+            },
             unit_amount: 2000, // £20
           },
           quantity: 1,
@@ -45,13 +73,13 @@ module.exports = async function handler(req, res) {
 
       // ✅ metadata para webhook / backoffice
       metadata: {
-        staffKey: booking.staffKey,
-        staffName: booking.staffName || "",
-        date: booking.date || "",
-        startISO: booking.startISO,
-        endISO: booking.endISO,
-        label: booking.label || "",
-        durationMin: String(booking.durationMin || ""),
+        staffKey: safeStr(booking.staffKey),
+        staffName: staffDisplay, // ✅ garante que DUO não fique vazio
+        date: safeStr(booking.date),
+        startISO: safeStr(booking.startISO),
+        endISO: safeStr(booking.endISO),
+        label: safeStr(booking.label),
+        durationMin: safeStr(booking.durationMin || ""),
         customerName,
         customerEmail,
       },

@@ -50,9 +50,13 @@ function filterBusy(slots, busyRanges) {
 }
 
 function hhmm(date) {
-  // HH:MM em UTC do servidor; no front a gente pode formatar melhor depois.
-  // Para já, isso funciona.
   return date.toISOString().slice(11, 16);
+}
+
+// ✅ interseção por startISO (grid igual)
+function intersectByStartISO(listA = [], listB = []) {
+  const setB = new Set(listB.map(s => s.startISO));
+  return listA.filter(s => setB.has(s.startISO));
 }
 
 export default async function handler(req, res) {
@@ -78,7 +82,7 @@ export default async function handler(req, res) {
 
     const calendar = google.calendar({ version: "v3", auth });
 
-    // ===== Config (você edita depois) =====
+    // ===== Config =====
     const days = Number(req.query.days || 14);
     const startHour = Number(req.query.startHour || 9);
     const endHour = Number(req.query.endHour || 18);
@@ -102,14 +106,14 @@ export default async function handler(req, res) {
     const anaBusy = (calBusy[calendarAna]?.busy || []).map(b => ({ start: new Date(b.start), end: new Date(b.end) }));
     const glendaBusy = (calBusy[calendarGlenda]?.busy || []).map(b => ({ start: new Date(b.start), end: new Date(b.end) }));
 
-    // Gera days + slots
     const out = {
       ok: true,
-      timeZone: "Europe/London", // só pra exibir; não depende de ENV
+      timeZone: "Europe/London",
       range: { timeMin: rangeStart.toISOString(), timeMax: rangeEnd.toISOString() },
       staff: {
         ana: { name: "Ana Paula" },
         glenda: { name: "Glenda Garcia" },
+        duo: { name: "DUO" }, // ✅ opcional (só pra referência)
       },
       days: [],
     };
@@ -127,24 +131,36 @@ export default async function handler(req, res) {
       const anaAvail = filterBusy(allSlots, anaBusy);
       const glendaAvail = filterBusy(allSlots, glendaBusy);
 
+      const anaMapped = anaAvail.map(s => ({
+        label: hhmm(s.start),
+        startISO: s.start.toISOString(),
+        endISO: s.end.toISOString(),
+      }));
+
+      const glendaMapped = glendaAvail.map(s => ({
+        label: hhmm(s.start),
+        startISO: s.start.toISOString(),
+        endISO: s.end.toISOString(),
+      }));
+
+      // ✅ DUO = interseção
+      const duoMapped = intersectByStartISO(anaMapped, glendaMapped);
+
       out.days.push({
         date: dateKey,
-        ana: anaAvail.map(s => ({
-          label: hhmm(s.start),
-          startISO: s.start.toISOString(),
-          endISO: s.end.toISOString(),
-        })),
-        glenda: glendaAvail.map(s => ({
-          label: hhmm(s.start),
-          startISO: s.start.toISOString(),
-          endISO: s.end.toISOString(),
-        })),
+        ana: anaMapped,
+        glenda: glendaMapped,
+        duo: duoMapped,
       });
     }
 
     return res.status(200).json(out);
   } catch (e) {
     console.error(e);
-    return res.status(500).json({ ok: false, error: "Erro ao buscar agenda", detail: e?.message || String(e) });
+    return res.status(500).json({
+      ok: false,
+      error: "Erro ao buscar agenda",
+      detail: e?.message || String(e),
+    });
   }
 }

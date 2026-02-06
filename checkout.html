@@ -406,19 +406,15 @@ function getServiceFromCart(){
     sessionStorage.removeItem(PAYMENT_PENDING_KEY);
   }
 
-  // success OR (has session_id and was pending)
   if (success || (sessionId && pending)){
     sessionStorage.removeItem(PAYMENT_PENDING_KEY);
 
-    // clear booking + cart
     sessionStorage.removeItem(BOOKING_KEY);
     localStorage.removeItem(BOOKING_KEY); // legado
     localStorage.removeItem(CART_KEY);
 
-    // clean URL (no params)
     window.history.replaceState({}, document.title, window.location.pathname);
 
-    // show message
     const box = document.getElementById("statusBox");
     box.style.display = "block";
     box.innerHTML = "✅ Payment received! Your booking is confirmed. Thank you!";
@@ -486,11 +482,17 @@ function setLoading(isLoading){
   `;
 
   const booking = getBooking();
+  const isDuo = booking?.staffKey === "duo";
+
   const when = (booking.date ? booking.date : "") + (booking.label ? (" · " + booking.label) : "");
+
+  const staffLine = isDuo ? "DUO Service" : (booking.staffName || booking.staffKey || "Staff");
+  const changeBtnLabel = isDuo ? "Change time" : "Change therapist / time";
+
   el.miniItems.innerHTML += `
     <div class="mini">
       <div class="t">Appointment</div>
-      <div class="m">${booking.staffName || booking.staffKey || "Staff"}</div>
+      <div class="m">${staffLine}</div>
       <div class="b">
         ${when}<br>
         <span style="opacity:.8;">Duration: ${booking.durationMin || 60} min</span>
@@ -510,7 +512,7 @@ function setLoading(isLoading){
             text-transform:uppercase;
             cursor:pointer;
           ">
-          Change therapist / time
+          ${changeBtnLabel}
         </button>
       </div>
     </div>
@@ -523,9 +525,14 @@ document.addEventListener("click", (e) => {
   if (!(t instanceof Element)) return;
   if (t.id !== "changeApptBtn") return;
 
+  const booking = getBooking();
+  const isDuo = booking?.staffKey === "duo";
+
   sessionStorage.removeItem(BOOKING_KEY);
   localStorage.removeItem(BOOKING_KEY); // legado
-  window.location.href = "booking.html?reset=1";
+
+  // ✅ volta pro booking no mesmo modo
+  window.location.href = isDuo ? "booking.html?mode=duo&reset=1" : "booking.html?reset=1";
 });
 
 el.payBtn.addEventListener("click", async (e) => {
@@ -548,7 +555,6 @@ el.payBtn.addEventListener("click", async (e) => {
     setLoading(true);
     setStatus("Opening secure Stripe Checkout…");
 
-    // mark payment pending (used for auto-clean on return)
     sessionStorage.setItem(PAYMENT_PENDING_KEY, "1");
 
     const resp = await fetch("/api/create-checkout", {

@@ -104,7 +104,6 @@
       border-color: rgba(244,234,214,.70);
       background: rgba(244,234,214,.14);
     }
-    /* ✅ enquanto carrega, bloqueia clique e deixa visual claro */
     .staff-btn:disabled{
       opacity:.55;
       cursor:not-allowed;
@@ -249,7 +248,7 @@
     <div class="topbar">
       <div>
         <h1>Booking</h1>
-        <div class="sub">Choose the professional and the best available time.</div>
+        <div class="sub" id="subtitle">Choose the professional and the best available time.</div>
       </div>
       <div class="sub" id="tzInfo"></div>
     </div>
@@ -313,6 +312,9 @@
 
   // ✅ Reset ONLY when coming from checkout (Change therapist/time)
   const params = new URLSearchParams(location.search);
+  const mode = (params.get("mode") || "").toLowerCase(); // "duo" | "ana" | "glenda" | ""
+  const subtitle = document.getElementById("subtitle");
+
   if(params.get("reset") === "1"){
     sessionStorage.removeItem(CART_BOOKING_KEY);
     localStorage.removeItem(CART_BOOKING_KEY); // legado
@@ -358,10 +360,8 @@
 
     hintBox.textContent = "Select a date and time.";
 
-    // só habilita dateSelect se já tiver dados carregados
     dateSelect.disabled = !state.data?.days?.length;
 
-    // se já tiver data carregada, seta a primeira
     if (state.data?.days?.length){
       state.date = state.data.days[0].date;
       dateSelect.value = state.date;
@@ -399,7 +399,6 @@
       dateSelect.appendChild(opt);
     });
 
-    // sem staff ainda
     dateSelect.disabled = true;
   }
 
@@ -414,7 +413,6 @@
     }
 
     if (!state.data || !state.date){
-      // se ainda não carregou, mantém loading
       loadingEl.style.display = state.data ? "none" : "block";
       slotsEl.style.display = "none";
       return;
@@ -453,7 +451,6 @@
     loadingEl.style.display = "block";
     slotsEl.style.display = "none";
 
-    // ✅ FIX PRINCIPAL: bloqueia staff durante load pra evitar "clicar antes"
     staffButtons().forEach(b => b.disabled = true);
 
     try{
@@ -472,7 +469,36 @@
       // ✅ libera staff agora que terminou de carregar
       staffButtons().forEach(b => b.disabled = false);
 
-      // Se a pessoa já tinha escolhido staff (edge case), seta data agora
+      // ===== MODO DUO =====
+      if (mode === "duo") {
+        const leftCard = document.querySelector(".card.left");
+        const grid = document.querySelector(".grid");
+        if (leftCard) leftCard.style.display = "none";
+        if (grid) grid.style.gridTemplateColumns = "1fr";
+
+        if (subtitle) subtitle.textContent = "Choose the best available time.";
+
+        state.staff = "duo";
+        state.slot = null;
+
+        dateSelect.disabled = !state.data?.days?.length;
+        if (state.data?.days?.length){
+          state.date = state.data.days[0].date;
+          dateSelect.value = state.date;
+        } else {
+          state.date = null;
+          dateSelect.value = "";
+        }
+
+        hintBox.textContent = "Select a date and time.";
+        renderSlots();
+        return;
+      }
+
+      // (opcional) auto-select
+      if (mode === "ana") setStaff("ana");
+      if (mode === "glenda") setStaff("glenda");
+
       if (state.staff && state.data?.days?.length){
         dateSelect.disabled = false;
         if (!state.date){
@@ -505,11 +531,14 @@
   $("btnNext").addEventListener("click", () => {
     if (!state.slot || !state.staff) return;
 
-    const staffName = state.staff === "ana" ? "Ana Paula" : "Glenda Garcia";
+    let staffName = "";
+    if (state.staff === "ana") staffName = "Ana Paula";
+    if (state.staff === "glenda") staffName = "Glenda Garcia";
+    // duo = ""
 
     const payload = {
-      staffKey: state.staff,
-      staffName,
+      staffKey: state.staff,  // "ana" | "glenda" | "duo"
+      staffName,              // "" no DUO
       date: state.date,
       startISO: state.slot.startISO,
       endISO: state.slot.endISO,
