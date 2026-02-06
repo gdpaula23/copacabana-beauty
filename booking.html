@@ -281,10 +281,7 @@
           </button>
         </div>
 
-        <div class="hint" id="hintBox">
-          Loading…
-        </div>
-
+        <div class="hint" id="hintBox">Loading…</div>
         <div class="error" id="errBox" style="display:none;"></div>
       </div>
 
@@ -308,7 +305,7 @@
   </div>
 
 <script>
-  const VERSION = "booking-final-v1";
+  const VERSION = "booking-subtitle-fix-v1";
   const CART_BOOKING_KEY = "cb_booking_v1";
   const CART_KEY = "cb_cart_v1";
 
@@ -353,19 +350,14 @@
     const hasSignature = /\bsignature\b/.test(s);
     const hasRelaxing = /\brelaxing\b/.test(s);
 
-    // DUO Copacabana OR Brazilian Signature (DUO)
     if ((hasDuo && hasCopacabana) || (hasBrazilian && hasSignature)) return "duo";
-
-    // Relaxing = Glenda
     if (hasRelaxing) return "glenda";
-
-    // Default = Ana
     return "ana";
   }
 
-  const resolvedMode = resolveModeFromService(); // "ana" | "glenda" | "duo"
+  const resolvedMode = resolveModeFromService();
 
-  // Only apply 15:00 rule for DUO (safety)
+  // DUO safety rule only
   const DUO_MIN_LABEL_TIME = "15:00";
   function allowSlot(slot){
     if (resolvedMode !== "duo") return true;
@@ -470,12 +462,12 @@
     const leftCard = document.querySelector(".card.left");
     const grid = document.querySelector(".grid");
 
-    // Auto mode = hide staff selection
     if (leftCard) leftCard.style.display = "none";
     if (grid) grid.style.gridTemplateColumns = "1fr";
 
+    // ✅ EXACT text you requested:
     if (subtitle){
-      if (resolvedMode === "duo") subtitle.textContent = "Choose the best available time (DUO Service).";
+      if (resolvedMode === "duo") subtitle.textContent = "Choose the best available time.";
       if (resolvedMode === "ana") subtitle.textContent = "Choose the best available time with Ana Paula.";
       if (resolvedMode === "glenda") subtitle.textContent = "Choose the best available time with Glenda Garcia.";
     }
@@ -502,7 +494,6 @@
       state.staff = resolvedMode;
       state.slot = null;
 
-      // Only show dates that have at least 1 slot for this staff (and DUO rule applied)
       const daysAvailable = (state.data.days || []).filter(d => getSlotsForDay(d).length > 0);
 
       renderDates(daysAvailable);
@@ -540,7 +531,7 @@
     let staffName = "";
     if (state.staff === "ana") staffName = "Ana Paula";
     if (state.staff === "glenda") staffName = "Glenda Garcia";
-    // duo = "" (checkout/stripe already handles)
+    // duo = ""
 
     const payload = {
       staffKey: state.staff,
