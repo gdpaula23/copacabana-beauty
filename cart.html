@@ -11,25 +11,12 @@
 :root{
   --olive-900:#2F3A22;
   --olive-800:#3F4D2F;
-  --olive-700:#566643;
-
   --beige:#F4EAD6;
-  --beige-80: rgba(244,234,214,.80);
-  --beige-40: rgba(244,234,214,.40);
-  --beige-22: rgba(244,234,214,.22);
-  --beige-14: rgba(244,234,214,.14);
-  --beige-10: rgba(244,234,214,.10);
-
-  /* surfaces claras */
   --surface:#F5EFE6;
   --surface-2:#FBF9F4;
   --stroke:#E2D9C7;
-  --gold:#C6B48A;
-
-  --shadow: 0 40px 90px rgba(0,0,0,.30);
-  --radius-xl: 24px;
-  --radius-lg: 18px;
-  --max: 1160px;
+  --radius-xl:24px;
+  --max:1160px;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -56,38 +43,35 @@ body{
   background-position:center;
   background-repeat:no-repeat;
   opacity:.11;
-  filter: blur(1.2px) saturate(.85) contrast(.95);
-  mix-blend-mode: soft-light;
-  transform: rotate(0deg) scale(1.12);
+  filter:blur(1.2px);
+  mix-blend-mode:soft-light;
+  transform:scale(1.12);
 }
-body > *:not(.marble-overlay){position:relative; z-index:1;}
+
+body > *:not(.marble-overlay){
+  position:relative;
+  z-index:1;
+}
 
 nav{
   position:fixed;
-  top:0; left:0; width:100%;
+  top:0;
+  left:0;
+  width:100%;
   padding:18px 40px;
   z-index:50;
   display:flex;
   justify-content:flex-end;
   gap:22px;
-  background:transparent;
-  transition:background .25s ease, transform .25s ease, border-color .25s ease;
 }
-nav.is-scrolled{
-  background:rgba(0,0,0,.10);
-  border-bottom:1px solid rgba(244,234,214,.10);
-  backdrop-filter: blur(6px);
-}
-nav.is-hidden{ transform:translateY(-110%); }
 
 nav a{
   color:rgba(244,234,214,.92);
   text-decoration:none;
   font-size:12px;
   letter-spacing:2px;
-  opacity:.95;
 }
-nav a:hover{opacity:1}
+
 .nav-cta{
   padding:10px 14px;
   border:1px solid rgba(244,234,214,.28);
@@ -95,16 +79,23 @@ nav a:hover{opacity:1}
   background:rgba(244,234,214,.10);
 }
 
-.wrap{max-width:var(--max); margin:0 auto; padding:0 20px;}
-.section{padding:120px 0 110px;}
+.wrap{
+  max-width:var(--max);
+  margin:0 auto;
+  padding:0 20px;
+}
+
+.section{
+  padding:120px 0 110px;
+}
 
 h1{
   font-family:'Cormorant Garamond',serif;
   font-size:48px;
   text-align:center;
   margin-bottom:12px;
-  text-shadow:0 18px 40px rgba(0,0,0,.20);
 }
+
 .sub{
   text-align:center;
   max-width:760px;
@@ -113,6 +104,7 @@ h1{
   line-height:1.9;
   font-size:15px;
 }
+
 .title-line{
   width:min(520px, 88%);
   height:1px;
@@ -122,19 +114,17 @@ h1{
 
 .layout{
   display:grid;
-  grid-template-columns: 1.2fr .8fr;
+  grid-template-columns:1.2fr .8fr;
   gap:18px;
   margin-top:44px;
 }
 
-/* PANEL glass */
 .panel{
   background:
     linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02)),
     rgba(244,234,214,.10);
   border:1px solid rgba(244,234,214,.22);
   border-radius:var(--radius-xl);
-  box-shadow:0 24px 60px rgba(0,0,0,.18);
   padding:22px;
 }
 
@@ -143,34 +133,30 @@ h1{
   gap:12px;
 }
 
-/* ITEM claro */
 .item{
   display:grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns:1fr auto;
   gap:12px;
-  padding:16px 16px;
+  padding:16px;
   border-radius:18px;
-
   background:var(--surface);
   border:1px solid var(--stroke);
   color:var(--olive-900);
-  box-shadow: 0 10px 26px rgba(0,0,0,.10);
 }
 
 .item-title{
   font-family:'Cormorant Garamond',serif;
   font-size:22px;
-  line-height:1.1;
   margin-bottom:6px;
-  color:var(--olive-900);
 }
+
 .item-meta{
   font-size:12px;
   letter-spacing:2px;
   text-transform:uppercase;
-  opacity:.78;
-  color:rgba(47,58,34,.70);
+  opacity:.7;
 }
+
 .item-right{
   display:flex;
   flex-direction:column;
@@ -178,151 +164,182 @@ h1{
   gap:10px;
 }
 
-.price{
-  font-size:14px;
-  opacity:.95;
-  color:rgba(47,58,34,.85);
-}
 .price strong{
   font-size:18px;
-  font-weight:600;
-  color:var(--olive-900);
 }
 
-/* Qty */
 .qty{
   display:flex;
   align-items:center;
   gap:8px;
 }
+
 .qty button{
   width:34px;
   height:34px;
   border-radius:999px;
   border:1px solid var(--stroke);
   background:var(--surface-2);
-  color:var(--olive-900);
   cursor:pointer;
-  font-size:16px;
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-.qty button:hover{ transform:translateY(-1px); }
-.qty button:focus{
-  outline:none;
-  border-color:var(--gold);
-  box-shadow: 0 0 0 4px rgba(198,180,138,.18);
-}
-.qty span{
-  min-width:24px;
-  text-align:center;
-  font-size:13px;
-  opacity:.9;
-  color:rgba(47,58,34,.85);
 }
 
-/* Remove */
 .remove{
   border:none;
   background:transparent;
-  color:rgba(47,58,34,.62);
   font-size:12px;
   letter-spacing:2px;
   text-transform:uppercase;
   cursor:pointer;
-  opacity:.95;
-}
-.remove:hover{opacity:1; color:rgba(47,58,34,.82);}
-
-.empty{
-  padding:24px;
-  text-align:center;
-  opacity:.85;
-  line-height:1.9;
 }
 
-/* card claro interno do summary */
 .summary-card{
   background:var(--surface-2);
   border:1px solid var(--stroke);
   border-radius:18px;
-  padding:18px 16px;
+  padding:16px;
   color:var(--olive-900);
-  box-shadow: 0 14px 34px rgba(0,0,0,.10);
 }
 
-/* Summary rows */
 .summary-row{
   display:flex;
   justify-content:space-between;
-  gap:12px;
   padding:10px 0;
-  opacity:.95;
   font-size:14px;
-  color:var(--olive-900);
 }
-.summary-row + .summary-row{
-  border-top:1px solid rgba(47,58,34,.10);
+
+.summary-row.discount{
+  color:#49613a;
+  font-weight:500;
+  border-bottom:1px solid rgba(47,58,34,.08);
 }
+
 .summary-row.total{
   border-top:1px solid rgba(47,58,34,.18);
   margin-top:10px;
-  padding-top:14px;
-  font-size:16px;
-  font-weight:600;
+  padding-top:16px;
+  font-size:17px;
+  font-weight:700;
 }
 
-/* Actions */
+.voucher-box{
+  margin:0 0 18px;
+  overflow:hidden;
+  border-radius:20px;
+  border:1px solid var(--stroke);
+  background:#2F3A22;
+  animation:voucherFloat 3.5s ease-in-out infinite;
+  box-shadow:0 16px 36px rgba(0,0,0,.14);
+}
+
+.voucher-box img{
+  width:100%;
+  display:block;
+  transform:none;
+}
+
+@keyframes voucherFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-5px)}
+}
+
+.coupon-title{
+  text-align:center;
+  margin:10px 0 14px;
+  font-size:13px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:#49613a;
+  font-weight:700;
+}
+
+.coupon-box{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  margin-top:14px;
+}
+
+.coupon-box input{
+  width:100%;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  padding:12px 14px;
+  outline:none;
+  font-size:13px;
+  text-transform:uppercase;
+  background:#fffdf8;
+  color:var(--olive-900);
+}
+
+.coupon-box button{
+  border:none;
+  border-radius:999px;
+  padding:12px 14px;
+  background:var(--olive-800);
+  color:var(--beige);
+  font-size:11px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+
+.coupon-msg{
+  margin-top:8px;
+  font-size:12px;
+  line-height:1.6;
+  color:rgba(47,58,34,.72);
+}
+
 .actions{
   display:grid;
   gap:10px;
   margin-top:16px;
 }
+
 .btn{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  gap:10px;
   padding:14px 18px;
   border-radius:999px;
   text-decoration:none;
   font-size:12px;
   letter-spacing:2px;
   text-transform:uppercase;
-  transition:transform .2s ease, background .2s ease, border-color .2s ease, filter .2s ease;
 }
+
 .btn-primary{
   background:var(--beige);
   color:var(--olive-800);
-  border:1px solid rgba(244,234,214,.75);
 }
-.btn-primary:hover{transform:translateY(-2px); filter:brightness(.98);}
 
 .btn-ghost{
   background:rgba(47,58,34,.06);
   border:1px solid rgba(47,58,34,.18);
   color:rgba(47,58,34,.88);
 }
-.btn-ghost:hover{transform:translateY(-2px); background:rgba(47,58,34,.08);}
 
 .note{
   margin-top:12px;
   font-size:12px;
-  opacity:.72;
   line-height:1.8;
   text-align:center;
   color:rgba(47,58,34,.70);
 }
 
-/* FAB (fix para mobile) */
+.empty{
+  padding:24px;
+  text-align:center;
+  line-height:1.9;
+}
+
 .cart-fab{
-  position:fixed !important;
-  left:auto !important;
-  right:18px !important;
-  bottom:18px !important;
-  z-index:9999 !important;
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:9999;
   border:1px solid rgba(255,255,255,.18);
   background:rgba(0,0,0,.18);
-  backdrop-filter:blur(10px);
   padding:12px 14px;
   border-radius:999px;
   color:rgba(244,234,214,.92);
@@ -331,55 +348,49 @@ h1{
   display:inline-flex;
   align-items:center;
   gap:8px;
-  white-space:nowrap;
-  max-width: calc(100vw - 24px);
 }
+
 .cart-fab span{
   padding:2px 8px;
   border-radius:999px;
   background:rgba(244,234,214,.16);
 }
 
-/* REVEAL */
-.reveal{opacity:0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease;}
-.reveal.in{opacity:1; transform:none;}
-
 @media(max-width:1020px){
-  nav{ padding:16px 16px; }
-  .layout{ grid-template-columns:1fr; }
+  .layout{
+    grid-template-columns:1fr;
+  }
 }
+
 @media(max-width:560px){
-  h1{ font-size:42px; }
-  .item{ grid-template-columns:1fr; }
-  .item-right{ align-items:flex-start; }
+  h1{
+    font-size:42px;
+  }
+
+  .item{
+    grid-template-columns:1fr;
+  }
+
+  .item-right{
+    align-items:flex-start;
+  }
+
+  .coupon-box{
+    grid-template-columns:1fr;
+  }
+
+  .voucher-box img{
+    transform:scale(1.28);
+  }
 }
 </style>
 </head>
 
-<script>
-  (function(){
-    const flag = sessionStorage.getItem("cb_added_to_basket");
-    if(flag !== "1") return;
-    sessionStorage.removeItem("cb_added_to_basket");
-
-    const fab = document.querySelector(".cart-fab");
-    const count = document.querySelector(".cart-fab span");
-    if(fab){
-      fab.classList.add("pop");
-      setTimeout(()=>fab.classList.remove("pop"), 450);
-    }
-    if(count){
-      count.classList.add("bump");
-      setTimeout(()=>count.classList.remove("bump"), 450);
-    }
-  })();
-</script>
-
-
 <body>
-<div class="marble-overlay" id="marbleOverlay"></div>
 
-<nav id="nav">
+<div class="marble-overlay"></div>
+
+<nav>
   <a href="home.html">HOME</a>
   <a href="services2.html">SERVICES</a>
   <a href="cart.html" class="nav-cta">BASKET</a>
@@ -387,62 +398,79 @@ h1{
 
 <section class="section">
   <div class="wrap">
-    <h1 class="reveal">Basket</h1>
-    <p class="sub reveal">Review your items and pay a £20 deposit to secure your appointment.</p>
-    <div class="title-line reveal"></div>
+
+    <h1>Basket</h1>
+
+    <p class="sub">
+      Review your selected treatments and continue your booking on WhatsApp.
+    </p>
+
+    <div class="title-line"></div>
 
     <div class="layout">
-      <!-- Items -->
-      <div class="panel reveal">
+
+      <div class="panel">
         <div id="items" class="items"></div>
+
         <div id="emptyState" class="empty" style="display:none;">
           Your basket is empty.<br>
           Browse our services and add your favourite rituals.
+
           <div style="margin-top:16px;">
-            <a class="btn btn-primary" href="services2.html">View Services</a>
+            <a class="btn btn-primary" href="services2.html">
+              View Services
+            </a>
           </div>
         </div>
       </div>
 
-      <!-- Summary -->
-      <div class="panel reveal">
+      <div class="panel">
         <div class="summary-card">
-          <div class="summary-row">
-            <span>Subtotal</span>
-            <span id="subtotal">£0</span>
+
+          <div class="voucher-box">
+            <img src="images/voucher.jpeg" alt="£10 off voucher GLE10">
           </div>
 
-          <div class="summary-row">
-            <span>Deposit today</span>
-            <span id="depositToday">£0</span>
-          </div>
-
-          <div class="summary-row">
-            <span>Remaining on appointment day</span>
-            <span id="remainingDay">£0</span>
+          <div class="summary-row discount" id="discountRow" style="display:none;">
+            <span>GLE10 discount</span>
+            <span id="discount">-£0</span>
           </div>
 
           <div class="summary-row total">
-            <span>Total (full service value)</span>
+            <span>Total</span>
             <span id="total">£0</span>
           </div>
 
+          <div class="coupon-title">
+            🎁 Use GLE10 for 10% OFF
+          </div>
+
+          <div class="coupon-box">
+            <input id="couponInput" placeholder="Enter code" autocomplete="off">
+            <button id="applyCouponBtn" type="button">Apply</button>
+          </div>
+
+          <div class="coupon-msg" id="couponMsg">
+            Use code <b>GLE10</b> for 10% off eligible treatments. Excludes waxing.
+          </div>
+
           <div class="actions">
-            <a class="btn btn-ghost" href="services2.html">Continue Shopping</a>
-            <a class="btn btn-primary" id="checkoutBtn" href="checkout.html">Pay deposit</a>
+            <a class="btn btn-ghost" href="services2.html">
+              Continue Shopping
+            </a>
+
+            <a class="btn btn-primary" id="checkoutBtn" href="#">
+              Continue on WhatsApp
+            </a>
           </div>
 
           <div class="note">
-  💳 Booking & Deposit
+            Our team will assist you with appointment times and payment directly via WhatsApp.
+          </div>
 
-A £20 deposit per treatment is required to secure your appointment.
-This deposit will be deducted from your final balance on the day of your treatment.
-
-Appointments are confirmed only after the deposit has been received.<br>
-  <strong>Deposit is non-refundable once your booking is confirmed.</strong>
-</div>
         </div>
       </div>
+
     </div>
   </div>
 </section>
@@ -452,78 +480,85 @@ Appointments are confirmed only after the deposit has been received.<br>
 </a>
 
 <script>
-/* ===== Nav hide/show ===== */
-(() => {
-  const nav = document.getElementById("nav");
-  let lastY = window.scrollY;
-  const TOP = 8;
-  const HIDE_AFTER = 90;
-
-  function onScroll(){
-    const y = window.scrollY;
-    const down = y > lastY;
-
-    if (y > TOP) nav.classList.add("is-scrolled");
-    else nav.classList.remove("is-scrolled");
-
-    if (down && y > HIDE_AFTER) nav.classList.add("is-hidden");
-    else nav.classList.remove("is-hidden");
-
-    lastY = y;
-  }
-  window.addEventListener("scroll", onScroll, { passive:true });
-  onScroll();
-})();
-
-/* ===== Random marble ===== */
-(() => {
-  const el = document.getElementById("marbleOverlay");
-  if (!el) return;
-  const deg = (Math.random() * 10) - 5;
-  const x = Math.floor(Math.random() * 34) + 33;
-  const y = Math.floor(Math.random() * 34) + 33;
-  el.style.transform = `rotate(${deg}deg) scale(1.12)`;
-  el.style.backgroundPosition = `${x}% ${y}%`;
-})();
-
-/* ===== Reveal ===== */
-(() => {
-  const els = document.querySelectorAll(".reveal");
-  const io = new IntersectionObserver((entries) => {
-    for (const e of entries){
-      if (e.isIntersecting){
-        e.target.classList.add("in");
-        io.unobserve(e.target);
-      }
-    }
-  }, { threshold: 0.12, rootMargin: "0px 0px -10% 0px" });
-  els.forEach(el => io.observe(el));
-})();
-
-/* ===== CART LOGIC ===== */
-const CART_KEY="cb_cart_v1";
-const DEPOSIT_FIXED_GBP = 20;
+const CART_KEY = "cb_cart_v1";
+const COUPON_KEY = "cb_coupon_v1";
+const WHATSAPP_NUMBER = "447388949995";
+const VALID_COUPON = "GLE10";
 
 function loadCart(){
-  try{return JSON.parse(localStorage.getItem(CART_KEY))||[]}catch{return[]}
+  try{
+    return JSON.parse(localStorage.getItem(CART_KEY)) || [];
+  }catch{
+    return [];
+  }
 }
+
 function saveCart(cart){
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
 }
-function cartCount(cart){ return cart.reduce((s,i)=>s+(i.qty||1),0); }
+
+function loadCoupon(){
+  return String(localStorage.getItem(COUPON_KEY) || "").toUpperCase().trim();
+}
+
+function saveCoupon(code){
+  localStorage.setItem(COUPON_KEY, String(code || "").toUpperCase().trim());
+}
+
+function cartCount(cart){
+  return cart.reduce((s,i)=>s+(i.qty||1),0);
+}
+
+function normalize(s){
+  return String(s || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g,"")
+    .replace(/\s+/g," ")
+    .trim();
+}
+
+function isWaxing(item){
+  const name = normalize(item.name);
+
+  const waxingNames = [
+    "full leg",
+    "half leg",
+    "underarm",
+    "bikini light",
+    "brazilian waxing",
+    "full body waxing"
+  ];
+
+  return waxingNames.includes(name);
+}
 
 function parseAddFromUrl(){
   const params = new URLSearchParams(window.location.search);
+
   const add = params.get("add");
   const service = params.get("service");
   const price = params.get("price");
+  const duration = params.get("duration") || "";
 
   if(add && service && price){
     const cart = loadCart();
     const p = Number(price) || 0;
-    const idx = cart.findIndex(i => i.name === service && Number(i.price) === p);
-    if(idx >= 0) cart[idx].qty = (cart[idx].qty || 1) + 1;
-    else cart.push({ name: service, price: p, qty: 1 });
+
+    const idx = cart.findIndex(i =>
+      i.name === service &&
+      Number(i.price) === p
+    );
+
+    if(idx >= 0){
+      cart[idx].qty = (cart[idx].qty || 1) + 1;
+    }else{
+      cart.push({
+        name: service,
+        price: p,
+        duration,
+        qty: 1
+      });
+    }
 
     saveCart(cart);
     window.history.replaceState({}, document.title, "cart.html");
@@ -536,50 +571,137 @@ function money(n){
 }
 
 function computeSubtotal(cart){
-  return cart.reduce((s,i)=> s + (Number(i.price)||0) * (Number(i.qty)||1), 0);
+  return cart.reduce((s,i)=> {
+    return s + (Number(i.price)||0) * (Number(i.qty)||1);
+  }, 0);
+}
+
+function computeEligibleSubtotal(cart){
+  return cart.reduce((s,i)=> {
+    if(isWaxing(i)) return s;
+    return s + (Number(i.price)||0) * (Number(i.qty)||1);
+  }, 0);
+}
+
+function isCouponApplied(){
+  return loadCoupon() === VALID_COUPON;
+}
+
+function computeDiscount(cart){
+  if(!isCouponApplied()) return 0;
+  const eligible = computeEligibleSubtotal(cart);
+  return eligible * 0.10;
+}
+
+function computeTotal(cart){
+  return Math.max(0, computeSubtotal(cart) - computeDiscount(cart));
+}
+
+function buildWhatsAppMessage(cart){
+  const subtotal = computeSubtotal(cart);
+  const discount = computeDiscount(cart);
+  const total = computeTotal(cart);
+
+  const lines = cart.map(item => {
+    const qty = Number(item.qty || 1);
+
+    const duration = item.duration
+      ? ` — ${item.duration}`
+      : "";
+
+    const qtyText = qty > 1
+      ? ` x${qty}`
+      : "";
+
+    const lineTotal = Number(item.price || 0) * qty;
+
+    return `• ${item.name}${duration}${qtyText} — ${money(lineTotal)}`;
+  });
+
+  let couponText = "";
+  if(discount > 0){
+    couponText = `
+
+Voucher applied: GLE10
+Discount: -${money(discount)}`;
+  }
+
+  return `Hello Copacabana Beauty ✨
+
+I would like to book the following treatment(s):
+
+${lines.join("\n")}
+
+Subtotal: ${money(subtotal)}${couponText}
+Total: ${money(total)}
+
+Could you please help me choose an appointment time?`;
+}
+
+function openWhatsApp(){
+  const cart = loadCart();
+  if(!cart.length) return;
+
+  const message = encodeURIComponent(buildWhatsAppMessage(cart));
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+
+  window.open(url, "_blank", "noopener");
 }
 
 function render(){
   const cart = loadCart();
+
   document.getElementById("cartCount").innerText = cartCount(cart);
 
   const itemsEl = document.getElementById("items");
   const emptyEl = document.getElementById("emptyState");
+  const checkoutBtn = document.getElementById("checkoutBtn");
+
   itemsEl.innerHTML = "";
 
   if(cart.length === 0){
     emptyEl.style.display = "block";
-    document.getElementById("subtotal").innerText = money(0);
-    document.getElementById("depositToday").innerText = money(0);
-    document.getElementById("remainingDay").innerText = money(0);
+    document.getElementById("discountRow").style.display = "none";
     document.getElementById("total").innerText = money(0);
-    document.getElementById("checkoutBtn").setAttribute("aria-disabled","true");
-    document.getElementById("checkoutBtn").style.opacity = ".6";
-    document.getElementById("checkoutBtn").style.pointerEvents = "none";
+
+    checkoutBtn.setAttribute("aria-disabled","true");
+    checkoutBtn.style.opacity = ".6";
+    checkoutBtn.style.pointerEvents = "none";
+
     return;
-  } else {
-    emptyEl.style.display = "none";
-    document.getElementById("checkoutBtn").removeAttribute("aria-disabled");
-    document.getElementById("checkoutBtn").style.opacity = "1";
-    document.getElementById("checkoutBtn").style.pointerEvents = "auto";
   }
+
+  emptyEl.style.display = "none";
+  checkoutBtn.removeAttribute("aria-disabled");
+  checkoutBtn.style.opacity = "1";
+  checkoutBtn.style.pointerEvents = "auto";
 
   cart.forEach((it, idx) => {
     const row = document.createElement("div");
     row.className = "item";
+
     row.innerHTML = `
       <div>
         <div class="item-title">${it.name}</div>
-        <div class="item-meta">Service</div>
-      </div>
-      <div class="item-right">
-        <div class="price"><strong>${money(it.price)}</strong></div>
-        <div class="qty">
-          <button type="button" aria-label="Decrease">−</button>
-          <span>${it.qty || 1}</span>
-          <button type="button" aria-label="Increase">+</button>
+        <div class="item-meta">
+          ${it.duration ? it.duration : "Treatment"}
         </div>
-        <button class="remove" type="button">Remove</button>
+      </div>
+
+      <div class="item-right">
+        <div class="price">
+          <strong>${money(it.price)}</strong>
+        </div>
+
+        <div class="qty">
+          <button type="button">−</button>
+          <span>${it.qty || 1}</span>
+          <button type="button">+</button>
+        </div>
+
+        <button class="remove" type="button">
+          Remove
+        </button>
       </div>
     `;
 
@@ -611,19 +733,70 @@ function render(){
     itemsEl.appendChild(row);
   });
 
-  const subtotal = computeSubtotal(cart);
-  const depositToday = Math.min(subtotal, DEPOSIT_FIXED_GBP);
-  const remainingDay = Math.max(0, subtotal - depositToday);
-  const total = subtotal;
+  const discount = computeDiscount(cart);
+  const total = computeTotal(cart);
 
-  document.getElementById("subtotal").innerText = money(subtotal);
-  document.getElementById("depositToday").innerText = money(depositToday);
-  document.getElementById("remainingDay").innerText = money(remainingDay);
   document.getElementById("total").innerText = money(total);
+
+  const discountRow = document.getElementById("discountRow");
+
+  if(discount > 0){
+    discountRow.style.display = "flex";
+    document.getElementById("discount").innerText = "-" + money(discount);
+  }else{
+    discountRow.style.display = "none";
+  }
+
+  const couponInput = document.getElementById("couponInput");
+  couponInput.value = loadCoupon();
+
+  updateCouponMessage(cart);
+}
+
+function updateCouponMessage(cart){
+  const msg = document.getElementById("couponMsg");
+  const coupon = loadCoupon();
+
+  if(!coupon){
+    msg.innerHTML = 'Use code <b>GLE10</b> for 10% off eligible treatments. Excludes waxing.';
+    return;
+  }
+
+  if(coupon !== VALID_COUPON){
+    msg.innerHTML = 'Invalid code. Please check and try again.';
+    return;
+  }
+
+  const eligible = computeEligibleSubtotal(cart);
+
+  if(eligible <= 0){
+    msg.innerHTML = 'GLE10 is valid, but this basket only contains waxing services, which are excluded.';
+    return;
+  }
+
+  msg.innerHTML = 'GLE10 applied successfully. 10% off eligible treatments.';
 }
 
 parseAddFromUrl();
 render();
+
+document.getElementById("applyCouponBtn").addEventListener("click", () => {
+  const code = document.getElementById("couponInput").value.toUpperCase().trim();
+  saveCoupon(code);
+  render();
+});
+
+document.getElementById("couponInput").addEventListener("keydown", (e) => {
+  if(e.key === "Enter"){
+    e.preventDefault();
+    document.getElementById("applyCouponBtn").click();
+  }
+});
+
+document.getElementById("checkoutBtn").addEventListener("click", (e) => {
+  e.preventDefault();
+  openWhatsApp();
+});
 </script>
 
 </body>

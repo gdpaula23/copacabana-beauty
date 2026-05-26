@@ -29,7 +29,6 @@
   --gap: 18px;
 }
 
-/* RESET */
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 html, body{height:100%}
@@ -41,7 +40,6 @@ body{
   overflow-x:hidden;
 }
 
-/* BACKGROUND FIXO */
 .bg-layer{
   position:fixed;
   inset:0;
@@ -53,7 +51,6 @@ body{
     linear-gradient(180deg,#4B5A3A 0%, #3F4D2F 45%, #2F3A22 100%);
 }
 
-/* MARBLE OVERLAY */
 .marble-overlay{
   position:fixed;
   inset:-12%;
@@ -69,7 +66,6 @@ body{
   transform: rotate(0deg) scale(1.12);
 }
 
-/* NAV */
 nav{
   position:fixed;
   top:0; left:0; width:100%;
@@ -104,7 +100,6 @@ nav a:hover{opacity:1}
   background:rgba(244,234,214,.10);
 }
 
-/* LAYOUT */
 .wrap{max-width:var(--max); margin:0 auto; padding:0 20px;}
 .section{padding:120px 0 100px;}
 
@@ -131,7 +126,6 @@ h1{
   background:linear-gradient(to right, transparent, rgba(244,234,214,.50), transparent);
 }
 
-/* ===== TÍTULOS DAS CATEGORIAS ===== */
 .cat-title{
   margin-top: 52px;
   text-align:center;
@@ -147,7 +141,6 @@ h1{
   background:linear-gradient(to right, transparent, rgba(244,234,214,.45), transparent);
 }
 
-/* ===== CARDS (ALINHADO + ÚLTIMA LINHA CENTRALIZADA) ===== */
 .cards{
   display:flex;
   flex-wrap:wrap;
@@ -156,7 +149,6 @@ h1{
   margin-top:34px;
 }
 
-/* colunas por seção */
 .cards.cols-6 .card{
   flex: 0 0 calc((100% - (var(--gap) * 5)) / 6);
   max-width: calc((100% - (var(--gap) * 5)) / 6);
@@ -166,11 +158,9 @@ h1{
   max-width: calc((100% - (var(--gap) * 3)) / 4);
 }
 
-/* card base */
 .card{
   display:flex;
   flex-direction:column;
-
   background:
     linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
     rgba(244,234,214,.10);
@@ -180,25 +170,82 @@ h1{
   overflow:hidden;
   transition:transform .18s ease, background .18s ease;
   will-change:transform;
+  text-align:left;
 }
 .card:hover{
   transform:translateY(-4px);
   background:rgba(244,234,214,.12);
 }
 
-/* corpo flex */
 .card-body{
   padding:20px 18px 18px;
   display:flex;
   flex-direction:column;
   flex:1;
+  height:100%;
 }
 
-/* actions */
+.card-header{
+  min-height: 86px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+}
+.card-header h3{
+  display:-webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow:hidden;
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;
+  line-height:1.05;
+}
+.meta{
+  margin-top:7px;
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  opacity:.78;
+}
+
+.card-image-wrap{
+  position: relative;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 14px 30px rgba(0,0,0,.28);
+  background: rgba(0,0,0,.18);
+  aspect-ratio: 4 / 5;
+}
+
+.card.waxing .card-image-wrap{
+  aspect-ratio: 4 / 3;
+}
+
+.card-img{
+  width:100%;
+  height:100% !important;
+  object-fit: cover;
+  display:block;
+  transform: none;
+  transition: transform .45s ease;
+}
+.card:hover .card-img{
+  transform: scale(1.03);
+}
+
+.card .price{
+  min-height: 34px;
+  display:flex;
+  align-items:flex-end;
+  margin-top:12px;
+  font-size:17px;
+}
+
 .card-actions{
   display:flex;
   gap:10px;
   margin-top:auto;
+  padding-top:14px;
 }
 
 .card-actions a,
@@ -227,7 +274,6 @@ h1{
 .card-actions a:hover,
 .card-actions button:hover{ transform:translateY(-2px); filter:brightness(.99); }
 
-/* Buttons generic */
 .btn{
   display:inline-flex;
   align-items:center;
@@ -250,7 +296,6 @@ h1{
 }
 .btn-primary:hover{transform:translateY(-2px); filter:brightness(.98);}
 
-/* BASKET FAB */
 .cart-fab{
   position: fixed !important;
   right: 18px !important;
@@ -284,7 +329,6 @@ h1{
 }
 body{ padding-bottom: 110px; }
 
-/* REVEAL */
 .reveal{
   opacity:0;
   transform: translateY(16px);
@@ -292,7 +336,6 @@ body{ padding-bottom: 110px; }
 }
 .reveal.in{opacity:1; transform:none;}
 
-/* MODAL */
 body.modal-open{ overflow:hidden; }
 
 .modal-overlay{
@@ -301,15 +344,12 @@ body.modal-open{ overflow:hidden; }
   width: 100vw;
   height: 100dvh;
   z-index: 99999;
-
   display: none;
   align-items: center;
   justify-content: center;
-
   background: rgba(0,0,0,.65);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-
   padding: 24px;
 }
 
@@ -318,14 +358,11 @@ body.modal-open{ overflow:hidden; }
   width: min(560px, calc(100vw - 48px));
   border-radius: 22px;
   padding: 28px 26px;
-
   background:
     linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.02)),
     rgba(244,234,214,.12);
-
   border: 1px solid rgba(244,234,214,.30);
   box-shadow: 0 40px 120px rgba(0,0,0,.60);
-
   color: var(--beige);
   text-align: left;
 }
@@ -349,22 +386,18 @@ body.modal-open{ overflow:hidden; }
   right: 12px;
   width: 40px;
   height: 40px;
-
   border-radius: 999px;
   border: 1px solid rgba(244,234,214,.22);
   background: rgba(244,234,214,.10);
   color: rgba(244,234,214,.92);
-
   cursor: pointer;
   display: grid;
   place-items: center;
-
   font-size: 18px;
   line-height: 1;
 }
 .modal-x:hover{ filter: brightness(1.08); }
 
-/* RESPONSIVO */
 @media(max-width:1200px){
   .cards.cols-6 .card,
   .cards.cols-4 .card{
@@ -394,110 +427,14 @@ body.modal-open{ overflow:hidden; }
   .cards.cols-6 .card,
   .cards.cols-4 .card{ flex:0 0 100%; max-width:100%; }
 }
-
-/* ====== ✅ NEW PREMIUM CARD LAYOUT OVERRIDES ====== */
-.card{ text-align:left; }
-
-.card-body{
-  display:flex;
-  flex-direction:column;
-  height:100%;
-}
-
-/* 1) trava o topo (título + duração) */
-.card-header{
-  min-height: 86px; /* ajuste fino: 78–96 dependendo do seu gosto */
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-start;
-}
-
-/* opcional: limita título a 2 linhas para não estourar */
-.card-header h3{
-  display:-webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2; /* mostra até 2 linhas */
-  overflow:hidden;
-}
-
-/* 2) imagem sempre com mesma altura (já ajuda MUITO) */
-.card-img{
-  height:190px; /* pode ser 180/200, mas fixa */
-}
-
-/* 3) trava a área do preço */
-.card .price{
-  min-height: 34px;
-  display:flex;
-  align-items:flex-end;
-}
-
-/* 4) botões sempre colados no final e alinhados */
-.card-actions{
-  margin-top:auto;
-  padding-top:14px;
-}
-
-/* ===== IMAGE GRADIENT OVERLAY (PREMIUM LOOK) ===== */
-
-.card-image-wrap{
-  position: relative;
-  border-radius:16px;
-  overflow:hidden;
-  box-shadow:0 14px 30px rgba(0,0,0,.28);
-  background: rgba(0,0,0,.18);
-}
-
-/* Headspa: formato mais vertical (fica igual teu print bonito) */
-.card.headspa .card-image-wrap{
-  aspect-ratio: 4 / 5;
-}
-
-/* Lashes: formato mais horizontal (olho não corta estranho) */
-.card.lashes .card-image-wrap{
-  aspect-ratio: 4 / 3;
-}
-
-/* imagem ocupa o container certinho */
-.card-img{
-  width:100%;
-  height:100%;
-  object-fit: cover;
-  display:block;
-  transform: none;
-  transition: transform .45s ease;
-}
-
-/* hover suave */
-.card:hover .card-img{
-  transform: scale(1.03);
-}
-
-/* remove qualquer height fixa antiga */
-.card-img{ height:100% !important; }
-
-/* stronger overlay for headspa */
-.card.headspa .card-image-wrap::after{
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(0,0,0,.05) 0%,
-      rgba(0,0,0,.18) 45%,
-      rgba(0,0,0,.45) 100%
-    );
-}
-
-
 </style>
 </head>
 
 <body>
 
-<!-- fixed background layers -->
 <div class="bg-layer"></div>
 <div class="marble-overlay" id="marbleOverlay"></div>
 
-<!-- IMPORTANT INFO MODAL -->
 <div class="modal-overlay" id="infoOverlay" aria-hidden="true">
   <div class="modal-card" role="dialog" aria-modal="true" aria-label="Important Information">
     <button class="modal-x" id="infoX" type="button" aria-label="Close">✕</button>
@@ -506,7 +443,7 @@ body.modal-open{ overflow:hidden; }
 
     <div class="modal-text">
       <p><b>Copacabana Beauty is a women-only wellness space.</b><br>
-      Men are only accepted when attending as part of the <b>Duo Brazilian Experience</b>.</p>
+      Men are only accepted when attending as part of the <b>Duo Experience</b>.</p>
 
       <p>Our treatments are designed for <b>relaxation and wellbeing only</b>.<br>
       We do not offer medical treatments or treatments for scalp conditions.</p>
@@ -521,7 +458,6 @@ body.modal-open{ overflow:hidden; }
   </div>
 </div>
 
-<!-- DETAILS MODAL -->
 <div class="modal-overlay" id="detailsOverlay" aria-hidden="true">
   <div class="modal-card" role="dialog" aria-modal="true" aria-label="Service Details">
     <button class="modal-x" id="detailsX" type="button" aria-label="Close">✕</button>
@@ -551,15 +487,17 @@ body.modal-open{ overflow:hidden; }
     <p class="sub reveal">Choose your ritual and add it to your basket. You can select more than one service.</p>
     <div class="title-line reveal"></div>
 
-    <!-- ✅ CATEGORIA 1 -->
-    <div class="cat-title reveal">Headspa / Massage</div>
+    <div class="cat-title reveal">Head Spa</div>
     <div class="cat-line reveal"></div>
     <div class="cards cols-6" id="cardsHeadspa"></div>
 
-    <!-- ✅ CATEGORIA 2 -->
-    <div class="cat-title reveal">Lashes</div>
+    <div class="cat-title reveal">Brazilian Massage Therapy</div>
     <div class="cat-line reveal"></div>
-    <div class="cards cols-4" id="cardsLashes"></div>
+    <div class="cards cols-4" id="cardsMassage"></div>
+
+    <div class="cat-title reveal">Waxing</div>
+    <div class="cat-line reveal"></div>
+    <div class="cards cols-4" id="cardsWaxing"></div>
   </div>
 </section>
 
@@ -568,113 +506,177 @@ body.modal-open{ overflow:hidden; }
 </a>
 
 <script>
-/* ====== DADOS DOS SERVIÇOS (AGORA COM category) ====== */
 const SERVICES = [
-  // ===== Headspa / Massage (6) =====
-  { id: 1, category:"headspa", title: "🌊 Ocean", duration: "1h", priceLabel: "£80", priceValue: 80, cartServiceName: "Ocean", img: "images/ocean.jpg",
-    desc: `A gentle introduction to the Brazilian Head Spa experience.
+  {
+    id: 1,
+    category:"headspa",
+    title: "🌊 Ocean",
+    duration: "60 min",
+    priceLabel: "£60",
+    priceValue: 60,
+    cartServiceName: "Ocean",
+    img: "images/ocean.jpg",
+    desc: `A calming introduction to the Brazilian Head Spa experience.
 
-This calming ritual includes scalp relaxation, hair drying and a soothing neck massage, designed to release tension and quiet the mind. A perfect choice for those seeking a peaceful escape from daily stress.
+Designed to relax the scalp, release tension and leave you feeling lighter and refreshed.
 
-Includes:
-	•	Brazilian Head Spa
-	•	Relaxing neck massage
-	•	Hair drying` },
+Includes hair drying.`
+  },
+  {
+    id: 2,
+    category:"headspa",
+    title: "🌴 Tropical",
+    duration: "90 min",
+    priceLabel: "£99",
+    priceValue: 99,
+    cartServiceName: "Tropical",
+    img: "images/tropical.jpg",
+    desc: `A deeper self-care ritual combining Brazilian Head Spa techniques with intense hair hydration.
 
-  { id: 2, category:"headspa", title: "🌴 Tropical", duration: "1h 30", priceLabel: "£120", priceValue: 120, cartServiceName: "Tropical", img: "images/tropical.jpg",
-    desc: `A deeper Brazilian Head Spa ritual, enhanced with our signature deep hair hydration inspired by Brazilian hair care traditions.
+Perfect for restoring softness, shine and deep relaxation.`
+  },
+  {
+    id: 3,
+    category:"headspa",
+    title: "🌿 Amazonian Experience",
+    duration: "2h",
+    priceLabel: "£149",
+    priceValue: 149,
+    cartServiceName: "Amazonian Experience",
+    img: "images/amazonian.jpg",
+    desc: `Our most complete wellness ritual.
 
-Includes:
-	•	Brazilian Head Spa
-	•	Relaxing neck massage
-	•	Deep Brazilian hair hydration
-	•	Hair drying.` },
+A deeply immersive experience combining scalp therapy, facial care, steam and foot rituals for total relaxation and restoration.`
+  },
+  {
+    id: 4,
+    category:"headspa",
+    title: "✨ Brazilian Signature Experience",
+    duration: "90 min",
+    priceLabel: "£139",
+    priceValue: 139,
+    cartServiceName: "Brazilian Signature Experience",
+    img: "images/relax.jpg",
+    desc: `A luxurious Brazilian wellness ritual combining body massage, Head Spa therapy and sensory care.
 
-  { id: 3, category:"headspa", title: "🌿 Amazonian Experience", duration: "2h", priceLabel: "£160", priceValue: 160, cartServiceName: "Amazonian Experience", img: "images/amazonian.jpg",
-    desc: `Our most complete Brazilian wellness journey.
+Created for women seeking deep relaxation and intentional self-care.`
+  },
+  {
+    id: 5,
+    category:"headspa",
+    title: "Duo Experience",
+    duration: "90 min",
+    priceLabel: "£149",
+    priceValue: 149,
+    cartServiceName: "Duo Experience",
+    img: "images/duo.jpg",
+    desc: `A shared wellness experience designed for two.
 
-A full ritual designed to care for your scalp, hair, face and feet while deeply relaxing your body. This immersive experience combines Brazilian Head Spa techniques with steam therapy, detox rituals, facial cleansing and a nourishing foot treatment.
+Relax together and enjoy our signature Brazilian Head Spa rituals side by side.`
+  },
 
-Includes:
-	•	Brazilian Head Spa detox 
-	•	Steam session
-	•	Deep Brazilian hair hydration
-	•	Relaxing neck massage
-	•	Mini facial cleansing
-	•	Foot scrub and foot hydration
-	•	Relaxing foot massage
-	•	Hair drying
+  {
+    id: 6,
+    category:"massage",
+    title: "✨ Relaxing Massage",
+    duration: "50 min",
+    priceLabel: "£50",
+    priceValue: 50,
+    cartServiceName: "Relaxing Massage",
+    img: "images/relaxing.jpg",
+    desc: `A calming massage experience designed to release tension, slow your breathing and bring your body back into balance.`
+  },
+  {
+    id: 7,
+    category:"massage",
+    title: "Lymphatic Drainage Massage",
+    duration: "50 min",
+    priceLabel: "£50",
+    priceValue: 50,
+    cartServiceName: "Lymphatic Drainage Massage",
+    img: "images/relaxing.jpg",
+    desc: `A gentle Brazilian massage therapy focused on lightness, relaxation and body wellbeing.`
+  },
 
-Created for women who want to fully disconnect and restore.` },
-
-  { id: 4, category:"headspa", title: "✨ Brazilian Signature Experience", duration: "1h 15", priceLabel: "£149", priceValue: 149, cartServiceName: "Brazilian Signature Experience", img: "images/relax.jpg",
-    desc: `A signature Brazilian ritual combining full body relaxation with Brazilian Head Spa techniques, created to calm your body and quiet your mind.
-
-This exclusive experience blends Brazilian touch with sensory care, offering a moment that feels personal, intentional and deeply restorative.
-
-Includes:
-	•	45 minutes Brazilian Relaxing Body Massage
-	•	30 minutes Brazilian Head Spa
-	•	Hair drying
-	•	Deep hair hydration
-	•	Foot massage , scrub and foot hydration
-	
-
-Designed for women who seek more than just a treatment — a true Brazilian wellness experience.` },
-
-  { id: 5, category:"headspa", title: "Duo Copacabana", duration: "1h 15", priceLabel: "£170 (For Two)", priceValue: 170, cartServiceName: "Duo Copacabana (For Two)", img: "images/duo.jpg",
-    desc: `A shared Brazilian Head Spa experience for two people.
-
-Perfect for couples or close companions, this session includes the Ocean Therapy ritual for both guests, allowing you to relax together in a calm and intimate setting.
-
-Includes (per person):
-	•	Brazilian Head Spa
-	•	Relaxing neck massage
-       •	Hair drying
-       • Mini facial 
-
-Please note: Men are only accepted as part of this Duo Experience.` },
-
-  { id: 6, category:"headspa", title: "✨ Brazilian Relaxing Body Massage", duration: "50m", priceLabel: "£50", priceValue: 50, cartServiceName: "Brazilian Relaxing Massage", img: "images/relaxing.jpg",
-    desc: `A calming Brazilian massage experience designed to release tension, slow your breathing and bring your body back into balance.
-
-Using gentle, intuitive Brazilian techniques, this relaxing body massage focuses on stress relief and deep relaxation, helping you disconnect from daily pressure and reconnect with yourself.
-
-Perfect as a standalone treatment or combined with our Brazilian Head Spa for a complete wellness ritual.
-
-Includes:
-	•	50 minutes Brazilian Relaxing Body Massage
-
-Created for women who need a moment of calm, presence and care.` },
-
-  // ===== Lashes (4) =====
-  { id: 7, category:"lashes", title: "Lash lift + Tint", duration: "2h", priceLabel: "£50", priceValue: 50, cartServiceName: "Lash lift + Tint", img: "images/llt.jpg",
-    desc: `A lash lift with tint to enhance length and definition.
-Perfect for a natural, effortless look.` },
-
-  { id: 8, category:"lashes", title: "Brazilian volume", duration: "2h", priceLabel: "£60", priceValue: 60, cartServiceName: "Brazilian volume", img: "images/brazilian.jpg",
-    desc: `Fuller, fluffier lashes with a bold but elegant finish.
-Ideal for clients who want noticeable volume.` },
-
-  { id: 9, category:"lashes", title: "Classic", duration: "2h", priceLabel: "£60", priceValue: 60, cartServiceName: "Classic", img: "images/classic.jpg",
-    desc: `Classic lash extensions for a clean, timeless look.
-Great for everyday definition.` },
-
-  { id: 10, category:"lashes", title: "Natural", duration: "2h", priceLabel: "£60", priceValue: 60, cartServiceName: "Natural", img: "images/natural.jpg",
-    desc: `Hybrid set combining classic + volume for a textured, balanced look.
-(Placeholder — you can edit everything.)` },
+  {
+    id: 8,
+    category:"waxing",
+    title: "Full Leg",
+    duration: "Waxing",
+    priceLabel: "£30",
+    priceValue: 30,
+    cartServiceName: "Full Leg",
+    img: "images/natural.jpg",
+    desc: `Full leg waxing treatment.`
+  },
+  {
+    id: 9,
+    category:"waxing",
+    title: "Half Leg",
+    duration: "Waxing",
+    priceLabel: "£25",
+    priceValue: 25,
+    cartServiceName: "Half Leg",
+    img: "images/natural.jpg",
+    desc: `Half leg waxing treatment.`
+  },
+  {
+    id: 10,
+    category:"waxing",
+    title: "Underarm",
+    duration: "Waxing",
+    priceLabel: "£12",
+    priceValue: 12,
+    cartServiceName: "Underarm",
+    img: "images/natural.jpg",
+    desc: `Underarm waxing treatment.`
+  },
+  {
+    id: 11,
+    category:"waxing",
+    title: "Bikini Light",
+    duration: "Waxing",
+    priceLabel: "£23",
+    priceValue: 23,
+    cartServiceName: "Bikini Light",
+    img: "images/natural.jpg",
+    desc: `Bikini light waxing treatment.`
+  },
+  {
+    id: 12,
+    category:"waxing",
+    title: "Brazilian",
+    duration: "Waxing",
+    priceLabel: "£33",
+    priceValue: 33,
+    cartServiceName: "Brazilian Waxing",
+    img: "images/natural.jpg",
+    desc: `Brazilian waxing treatment.`
+  },
+  {
+    id: 13,
+    category:"waxing",
+    title: "Full Body",
+    duration: "Waxing",
+    priceLabel: "£99",
+    priceValue: 99,
+    cartServiceName: "Full Body Waxing",
+    img: "images/natural.jpg",
+    desc: `Full body waxing treatment.`
+  }
 ];
 
 const headspaEl = document.getElementById("cardsHeadspa");
-const lashesEl  = document.getElementById("cardsLashes");
+const massageEl = document.getElementById("cardsMassage");
+const waxingEl  = document.getElementById("cardsWaxing");
 
 function addToBasketLink(s){
   const service = encodeURIComponent(s.cartServiceName);
   const price = encodeURIComponent(s.priceValue);
-  return `cart.html?add=1&service=${service}&price=${price}`;
+  const duration = encodeURIComponent(s.duration);
+  return `cart.html?add=1&service=${service}&price=${price}&duration=${duration}`;
 }
 
-/* ✅ CARD HTML (title on top, image below) */
 function cardHTML(s){
   return `
     <div class="card reveal ${s.category}" data-id="${s.id}">
@@ -701,11 +703,10 @@ function cardHTML(s){
   `;
 }
 
-/* ✅ Render separado por categoria */
 headspaEl.innerHTML = SERVICES.filter(s => s.category === "headspa").map(cardHTML).join("");
-lashesEl.innerHTML  = SERVICES.filter(s => s.category === "lashes").map(cardHTML).join("");
+massageEl.innerHTML = SERVICES.filter(s => s.category === "massage").map(cardHTML).join("");
+waxingEl.innerHTML  = SERVICES.filter(s => s.category === "waxing").map(cardHTML).join("");
 
-/* NAV hide/show */
 (() => {
   const nav = document.getElementById("nav");
   let lastY = window.scrollY;
@@ -728,7 +729,6 @@ lashesEl.innerHTML  = SERVICES.filter(s => s.category === "lashes").map(cardHTML
   onScroll();
 })();
 
-/* Scroll reveal */
 (() => {
   const els = document.querySelectorAll(".reveal");
   const io = new IntersectionObserver((entries) => {
@@ -742,7 +742,6 @@ lashesEl.innerHTML  = SERVICES.filter(s => s.category === "lashes").map(cardHTML
   els.forEach(el => io.observe(el));
 })();
 
-/* Random marble */
 (() => {
   const el = document.getElementById("marbleOverlay");
   if (!el) return;
@@ -755,7 +754,6 @@ lashesEl.innerHTML  = SERVICES.filter(s => s.category === "lashes").map(cardHTML
   el.style.backgroundPosition = `${x}% ${y}%`;
 })();
 
-/* Basket badge */
 const CART_KEY="cb_cart_v1";
 function loadCart(){
   try{return JSON.parse(localStorage.getItem(CART_KEY))||[]}catch{return[]}
@@ -763,7 +761,6 @@ function loadCart(){
 function count(cart){return cart.reduce((s,i)=>s+(i.qty||1),0)}
 document.getElementById("cartCount").innerText = String(count(loadCart()));
 
-/* ===== MODAL HELPERS ===== */
 function openOverlay(overlay){
   overlay.style.display = "flex";
   overlay.setAttribute("aria-hidden", "false");
@@ -775,7 +772,6 @@ function closeOverlay(overlay){
   document.body.classList.remove("modal-open");
 }
 
-/* ===== IMPORTANT INFO (1x por sessão) ===== */
 (function(){
   const overlay = document.getElementById("infoOverlay");
   const okBtn = document.getElementById("infoClose");
@@ -797,7 +793,6 @@ function closeOverlay(overlay){
   });
 })();
 
-/* ===== DETAILS MODAL ===== */
 (function(){
   const overlay = document.getElementById("detailsOverlay");
   const titleEl = document.getElementById("detailsTitle");
