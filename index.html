@@ -1,12 +1,455 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0; url=headspa.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Copacabana Beauty</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Copacabana Beauty</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --olive-900:#2F3A22;
+  --olive-800:#3F4D2F;
+  --beige:#F4EAD6;
+  --radius-xl:24px;
+  --max:1160px;
+  --gap:28px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+  font-family:'Montserrat',sans-serif;
+  color:var(--beige);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(244,234,214,.10), transparent 65%),
+    radial-gradient(circle at 78% 12%, rgba(244,234,214,.08), transparent 68%),
+    radial-gradient(circle at 55% 78%, rgba(244,234,214,.07), transparent 72%),
+    linear-gradient(180deg,#4B5A3A 0%, #3F4D2F 45%, #2F3A22 100%);
+  overflow-x:hidden;
+}
+
+.marble-overlay{
+  position:fixed;
+  inset:-12%;
+  z-index:0;
+  pointer-events:none;
+  background-image:url("marble.png");
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  opacity:.11;
+  filter:blur(1.2px) saturate(.85) contrast(.95);
+  mix-blend-mode:soft-light;
+  transform:scale(1.12);
+}
+
+body > *:not(.marble-overlay){
+  position:relative;
+  z-index:1;
+}
+
+nav{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  padding:18px 40px;
+  z-index:50;
+  display:flex;
+  justify-content:flex-end;
+  gap:22px;
+}
+
+nav a{
+  color:rgba(244,234,214,.92);
+  text-decoration:none;
+  font-size:12px;
+  letter-spacing:2px;
+}
+
+.nav-cta{
+  padding:10px 14px;
+  border:1px solid rgba(244,234,214,.28);
+  border-radius:999px;
+  background:rgba(244,234,214,.10);
+}
+
+.wrap{
+  max-width:var(--max);
+  margin:0 auto;
+  padding:120px 20px 100px;
+}
+
+h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:54px;
+  text-align:center;
+  margin-bottom:12px;
+}
+
+.sub{
+  text-align:center;
+  max-width:760px;
+  margin:0 auto 44px;
+  opacity:.88;
+  line-height:1.9;
+  font-size:15px;
+}
+
+.title-line{
+  width:min(520px,88%);
+  height:1px;
+  margin:22px auto 0;
+  background:linear-gradient(to right, transparent, rgba(244,234,214,.50), transparent);
+}
+
+.cat-title{
+  margin-top:60px;
+  text-align:center;
+  font-family:'Cormorant Garamond',serif;
+  font-size:34px;
+}
+
+.cat-line{
+  width:min(360px,84%);
+  height:1px;
+  margin:14px auto 0;
+  background:linear-gradient(to right, transparent, rgba(244,234,214,.45), transparent);
+}
+
+.cards{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:var(--gap);
+  margin-top:34px;
+}
+
+.cards.headspa .card{
+  flex:0 0 calc((100% - (var(--gap) * 2)) / 3);
+  max-width:calc((100% - (var(--gap) * 2)) / 3);
+}
+
+.cards.massage .card{
+  flex:0 0 calc((100% - var(--gap)) / 2);
+  max-width:calc((100% - var(--gap)) / 2);
+}
+
+.cards.waxing .card{
+  flex:0 0 calc((100% - (var(--gap) * 2)) / 3);
+  max-width:calc((100% - (var(--gap) * 2)) / 3);
+}
+
+.card{
+  display:flex;
+  flex-direction:column;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02)),
+    rgba(244,234,214,.10);
+  border:1px solid rgba(244,234,214,.22);
+  border-radius:var(--radius-xl);
+  box-shadow:0 24px 60px rgba(0,0,0,.18);
+  overflow:hidden;
+  transition:.22s;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+  background:rgba(244,234,214,.12);
+}
+
+.card-image-wrap{
+  width:100%;
+  aspect-ratio:4/3;
+  overflow:hidden;
+}
+
+.card-img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.card.waxing .card-image-wrap{
+  display:none;
+}
+
+.card-body{
+  padding:22px 20px 20px;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+}
+
+.card-header{
+  min-height:90px;
+}
+
+.card-header h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:30px;
+  line-height:1.05;
+}
+
+.meta{
+  margin-top:8px;
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  opacity:.78;
+}
+
+.card-desc{
+  font-size:14px;
+  line-height:1.7;
+  opacity:.88;
+  margin:12px 0 18px;
+}
+
+.price{
+  margin-top:auto;
+  font-size:20px;
+  font-weight:600;
+}
+
+.card-actions{
+  margin-top:16px;
+}
+
+.btn{
+  width:100%;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  padding:13px 14px;
+  border-radius:999px;
+  border:1px solid rgba(244,234,214,.75);
+  background:var(--beige);
+  color:var(--olive-900);
+  text-decoration:none;
+  font-size:11px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+
+.cart-fab{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:9999;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(0,0,0,.18);
+  backdrop-filter:blur(10px);
+  padding:12px 14px;
+  border-radius:999px;
+  color:rgba(244,234,214,.92);
+  font-size:12px;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+
+.cart-fab span{
+  padding:2px 8px;
+  border-radius:999px;
+  background:rgba(244,234,214,.16);
+}
+
+@media(max-width:1000px){
+  .cards.headspa .card,
+  .cards.massage .card,
+  .cards.waxing .card{
+    flex:0 0 calc((100% - var(--gap)) / 2);
+    max-width:calc((100% - var(--gap)) / 2);
+  }
+}
+
+@media(max-width:600px){
+  nav{padding:14px 16px}
+  .wrap{padding:95px 16px 70px}
+  h1{font-size:40px}
+  .cat-title{font-size:30px}
+
+  .cards.headspa .card,
+  .cards.massage .card,
+  .cards.waxing .card{
+    flex:0 0 100%;
+    max-width:100%;
+  }
+}
+</style>
 </head>
+
 <body>
-  <p>Redirecting… <a href="home.html">Click here</a></p>
+<div class="marble-overlay"></div>
+
+<nav>
+  <a href="index.html">SERVICES</a>
+  <a href="cart.html" class="nav-cta">BASKET</a>
+</nav>
+
+<div class="wrap">
+  <h1>Copacabana Beauty</h1>
+  <p class="sub">Brazilian wellness rituals, luxury self-care experiences, massage therapy and premium beauty treatments.</p>
+  <div class="title-line"></div>
+
+  <div class="cat-title">Head Spa</div>
+  <div class="cat-line"></div>
+
+  <div class="cards headspa">
+    <div class="card">
+      <div class="card-image-wrap"><img class="card-img" src="images/ocean.jpg" alt="Ocean"></div>
+      <div class="card-body">
+        <div class="card-header">
+          <h3>Ocean</h3>
+          <div class="meta">60 min</div>
+        </div>
+        <div class="card-desc">A calming introduction to the Brazilian Head Spa experience.</div>
+        <div class="price">£60</div>
+        <div class="card-actions"><button class="btn" onclick="addToCart('Ocean',60,'60 min')">Add to Basket</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image-wrap"><img class="card-img" src="images/tropical.jpg" alt="Tropical"></div>
+      <div class="card-body">
+        <div class="card-header">
+          <h3>Tropical</h3>
+          <div class="meta">90 min</div>
+        </div>
+        <div class="card-desc">A deeper self-care ritual with Brazilian Head Spa techniques and intense hair hydration.</div>
+        <div class="price">£99</div>
+        <div class="card-actions"><button class="btn" onclick="addToCart('Tropical',99,'90 min')">Add to Basket</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image-wrap"><img class="card-img" src="images/amazonian.jpg" alt="Amazonian Experience"></div>
+      <div class="card-body">
+        <div class="card-header">
+          <h3>Amazonian Experience</h3>
+          <div class="meta">2 hours</div>
+        </div>
+        <div class="card-desc">Our most complete wellness ritual combining scalp therapy, facial care, steam and foot rituals.</div>
+        <div class="price">£149</div>
+        <div class="card-actions"><button class="btn" onclick="addToCart('Amazonian Experience',149,'2 hours')">Add to Basket</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image-wrap"><img class="card-img" src="images/relax.jpg" alt="Brazilian Signature Experience"></div>
+      <div class="card-body">
+        <div class="card-header">
+          <h3>Brazilian Signature Experience</h3>
+          <div class="meta">90 min</div>
+        </div>
+        <div class="card-desc">A luxurious Brazilian wellness ritual combining body massage, Head Spa therapy and sensory care.</div>
+        <div class="price">£139</div>
+        <div class="card-actions"><button class="btn" onclick="addToCart('Brazilian Signature Experience',139,'90 min')">Add to Basket</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image-wrap"><img class="card-img" src="images/duo.jpg" alt="Duo Experience"></div>
+      <div class="card-body">
+        <div class="card-header">
+          <h3>Duo Experience</h3>
+          <div class="meta">90 min</div>
+        </div>
+        <div class="card-desc">A shared wellness experience designed for two.</div>
+        <div class="price">£149</div>
+        <div class="card-actions"><button class="btn" onclick="addToCart('Duo Experience',149,'90 min')">Add to Basket</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-title">Brazilian Massage Therapy</div>
+  <div class="cat-line"></div>
+
+  <div class="cards massage">
+    <div class="card">
+      <div class="card-image-wrap"><img class="card-img" src="images/relaxing.jpg" alt="Relaxing Massage"></div>
+      <div class="card-body">
+        <div class="card-header">
+          <h3>Relaxing Massage</h3>
+          <div class="meta">50 min</div>
+        </div>
+        <div class="card-desc">A calming massage experience designed to release tension and bring your body back into balance.</div>
+        <div class="price">£50</div>
+        <div class="card-actions"><button class="btn" onclick="addToCart('Relaxing Massage',50,'50 min')">Add to Basket</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image-wrap"><img class="card-img" src="images/relaxing.jpg" alt="Lymphatic Drainage Massage"></div>
+      <div class="card-body">
+        <div class="card-header">
+          <h3>Lymphatic Drainage Massage</h3>
+          <div class="meta">50 min</div>
+        </div>
+        <div class="card-desc">A gentle Brazilian massage therapy focused on lightness, relaxation and body wellbeing.</div>
+        <div class="price">£50</div>
+        <div class="card-actions"><button class="btn" onclick="addToCart('Lymphatic Drainage Massage',50,'50 min')">Add to Basket</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-title">Waxing</div>
+  <div class="cat-line"></div>
+
+  <div class="cards waxing">
+    <div class="card waxing"><div class="card-body"><div class="card-header"><h3>Full Leg</h3><div class="meta">Waxing</div></div><div class="price">£30</div><div class="card-actions"><button class="btn" onclick="addToCart('Full Leg Waxing',30,'Waxing')">Add to Basket</button></div></div></div>
+    <div class="card waxing"><div class="card-body"><div class="card-header"><h3>Half Leg</h3><div class="meta">Waxing</div></div><div class="price">£25</div><div class="card-actions"><button class="btn" onclick="addToCart('Half Leg Waxing',25,'Waxing')">Add to Basket</button></div></div></div>
+    <div class="card waxing"><div class="card-body"><div class="card-header"><h3>Underarm</h3><div class="meta">Waxing</div></div><div class="price">£12</div><div class="card-actions"><button class="btn" onclick="addToCart('Underarm Waxing',12,'Waxing')">Add to Basket</button></div></div></div>
+    <div class="card waxing"><div class="card-body"><div class="card-header"><h3>Bikini Light</h3><div class="meta">Waxing</div></div><div class="price">£23</div><div class="card-actions"><button class="btn" onclick="addToCart('Bikini Light Waxing',23,'Waxing')">Add to Basket</button></div></div></div>
+    <div class="card waxing"><div class="card-body"><div class="card-header"><h3>Brazilian</h3><div class="meta">Waxing</div></div><div class="price">£33</div><div class="card-actions"><button class="btn" onclick="addToCart('Brazilian Waxing',33,'Waxing')">Add to Basket</button></div></div></div>
+    <div class="card waxing"><div class="card-body"><div class="card-header"><h3>Full Body</h3><div class="meta">Waxing</div></div><div class="price">£99</div><div class="card-actions"><button class="btn" onclick="addToCart('Full Body Waxing',99,'Waxing')">Add to Basket</button></div></div></div>
+  </div>
+</div>
+
+<a class="cart-fab" href="cart.html">
+  BASKET <span id="cartCount">0</span>
+</a>
+
+<script>
+const CART_KEY = "cb_cart_v1";
+
+function loadCart(){
+  try{return JSON.parse(localStorage.getItem(CART_KEY)) || []}
+  catch{return []}
+}
+
+function saveCart(cart){
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+}
+
+function updateCartCount(){
+  const cart = loadCart();
+  const count = cart.reduce((s,i)=>s+(i.qty||1),0);
+  document.getElementById("cartCount").innerText = count;
+}
+
+function addToCart(name, price, duration){
+  const cart = loadCart();
+  const idx = cart.findIndex(i => i.name === name && Number(i.price) === Number(price));
+
+  if(idx >= 0){
+    cart[idx].qty = (cart[idx].qty || 1) + 1;
+  }else{
+    cart.push({name, price, duration, qty:1});
+  }
+
+  saveCart(cart);
+  window.location.href = "cart.html";
+}
+
+updateCartCount();
+</script>
 </body>
 </html>
