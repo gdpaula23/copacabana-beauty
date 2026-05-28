@@ -17,17 +17,26 @@
   --gap:28px;
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
 
 body{
   font-family:'Montserrat',sans-serif;
   color:var(--beige);
+
   background:
     radial-gradient(circle at 12% 18%, rgba(244,234,214,.10), transparent 65%),
     radial-gradient(circle at 78% 12%, rgba(244,234,214,.08), transparent 68%),
     radial-gradient(circle at 55% 78%, rgba(244,234,214,.07), transparent 72%),
     linear-gradient(180deg,#4B5A3A 0%, #3F4D2F 45%, #2F3A22 100%);
+
   overflow-x:hidden;
 }
 
@@ -146,13 +155,19 @@ h1{
 .card{
   display:flex;
   flex-direction:column;
+
   background:
     linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02)),
     rgba(244,234,214,.10);
+
   border:1px solid rgba(244,234,214,.22);
+
   border-radius:var(--radius-xl);
+
   box-shadow:0 24px 60px rgba(0,0,0,.18);
+
   overflow:hidden;
+
   transition:.22s;
 }
 
@@ -225,16 +240,80 @@ h1{
   display:inline-flex;
   justify-content:center;
   align-items:center;
+
   padding:13px 14px;
+
   border-radius:999px;
+
   border:1px solid rgba(244,234,214,.75);
+
   background:var(--beige);
   color:var(--olive-900);
+
   text-decoration:none;
+
   font-size:11px;
   letter-spacing:2px;
   text-transform:uppercase;
+
   cursor:pointer;
+}
+
+.location-card{
+  max-width:720px;
+  margin:34px auto 0;
+
+  padding:34px 28px;
+
+  text-align:center;
+
+  border-radius:28px;
+
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02)),
+    rgba(244,234,214,.10);
+
+  border:1px solid rgba(244,234,214,.22);
+
+  box-shadow:0 24px 60px rgba(0,0,0,.18);
+}
+
+.location-card h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:42px;
+  margin-bottom:12px;
+}
+
+.location-card p{
+  font-size:15px;
+  line-height:1.9;
+  opacity:.9;
+  margin-bottom:24px;
+}
+
+.location-btn{
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+
+  padding:14px 20px;
+
+  border-radius:999px;
+
+  background:var(--beige);
+  color:var(--olive-900);
+
+  text-decoration:none;
+
+  font-size:11px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+
+  transition:.2s;
+}
+
+.location-btn:hover{
+  transform:translateY(-2px);
 }
 
 .cart-fab{
@@ -242,14 +321,23 @@ h1{
   right:18px;
   bottom:18px;
   z-index:9999;
+
   border:1px solid rgba(255,255,255,.18);
+
   background:rgba(0,0,0,.18);
+
   backdrop-filter:blur(10px);
+
   padding:12px 14px;
+
   border-radius:999px;
+
   color:rgba(244,234,214,.92);
+
   font-size:12px;
+
   text-decoration:none;
+
   display:inline-flex;
   align-items:center;
   gap:8px;
@@ -262,19 +350,33 @@ h1{
 }
 
 @media(max-width:1000px){
+
   .cards.headspa .card,
   .cards.massage .card,
   .cards.waxing .card{
     flex:0 0 calc((100% - var(--gap)) / 2);
     max-width:calc((100% - var(--gap)) / 2);
   }
+
 }
 
 @media(max-width:600px){
-  nav{padding:14px 16px}
-  .wrap{padding:95px 16px 70px}
-  h1{font-size:40px}
-  .cat-title{font-size:30px}
+
+  nav{
+    padding:14px 16px;
+  }
+
+  .wrap{
+    padding:95px 16px 70px;
+  }
+
+  h1{
+    font-size:40px;
+  }
+
+  .cat-title{
+    font-size:30px;
+  }
 
   .cards.headspa .card,
   .cards.massage .card,
@@ -282,11 +384,13 @@ h1{
     flex:0 0 100%;
     max-width:100%;
   }
+
 }
 </style>
 </head>
 
 <body>
+
 <div class="marble-overlay"></div>
 
 <nav>
@@ -295,122 +399,361 @@ h1{
 </nav>
 
 <div class="wrap">
+
   <h1>Copacabana Beauty</h1>
-  <p class="sub">Brazilian wellness rituals, luxury self-care experiences, massage therapy and premium beauty treatments.</p>
+
+  <p class="sub">
+    Brazilian wellness rituals, luxury self-care experiences,
+    massage therapy and premium beauty treatments.
+  </p>
+
   <div class="title-line"></div>
+
+  <!-- HEAD SPA -->
 
   <div class="cat-title">Head Spa</div>
   <div class="cat-line"></div>
 
   <div class="cards headspa">
+
     <div class="card">
-      <div class="card-image-wrap"><img class="card-img" src="images/ocean.jpg" alt="Ocean"></div>
+      <div class="card-image-wrap">
+        <img class="card-img" src="images/ocean.jpeg" alt="Ocean">
+      </div>
+
       <div class="card-body">
+
         <div class="card-header">
           <h3>Ocean</h3>
           <div class="meta">60 min</div>
         </div>
-        <div class="card-desc">A calming introduction to the Brazilian Head Spa experience.</div>
+
+        <div class="card-desc">
+          A calming introduction to the Brazilian Head Spa experience.
+        </div>
+
         <div class="price">£60</div>
-        <div class="card-actions"><button class="btn" onclick="addToCart('Ocean',60,'60 min')">Add to Basket</button></div>
+
+        <div class="card-actions">
+          <button class="btn" onclick="addToCart('Ocean',60,'60 min')">
+            Add to Basket
+          </button>
+        </div>
+
       </div>
     </div>
 
     <div class="card">
-      <div class="card-image-wrap"><img class="card-img" src="images/tropical.jpg" alt="Tropical"></div>
+      <div class="card-image-wrap">
+        <img class="card-img" src="images/tropical.jpg" alt="Tropical">
+      </div>
+
       <div class="card-body">
+
         <div class="card-header">
           <h3>Tropical</h3>
           <div class="meta">90 min</div>
         </div>
-        <div class="card-desc">A deeper self-care ritual with Brazilian Head Spa techniques and intense hair hydration.</div>
+
+        <div class="card-desc">
+          Deep hydration and Brazilian scalp rituals for complete relaxation.
+        </div>
+
         <div class="price">£99</div>
-        <div class="card-actions"><button class="btn" onclick="addToCart('Tropical',99,'90 min')">Add to Basket</button></div>
+
+        <div class="card-actions">
+          <button class="btn" onclick="addToCart('Tropical',99,'90 min')">
+            Add to Basket
+          </button>
+        </div>
+
       </div>
     </div>
 
     <div class="card">
-      <div class="card-image-wrap"><img class="card-img" src="images/amazonian.jpg" alt="Amazonian Experience"></div>
+      <div class="card-image-wrap">
+        <img class="card-img" src="images/amazonian.jpg" alt="Amazonian Experience">
+      </div>
+
       <div class="card-body">
+
         <div class="card-header">
           <h3>Amazonian Experience</h3>
           <div class="meta">2 hours</div>
         </div>
-        <div class="card-desc">Our most complete wellness ritual combining scalp therapy, facial care, steam and foot rituals.</div>
+
+        <div class="card-desc">
+          Our most complete wellness ritual combining scalp therapy,
+          facial care, steam and foot rituals.
+        </div>
+
         <div class="price">£149</div>
-        <div class="card-actions"><button class="btn" onclick="addToCart('Amazonian Experience',149,'2 hours')">Add to Basket</button></div>
+
+        <div class="card-actions">
+          <button class="btn" onclick="addToCart('Amazonian Experience',149,'2 hours')">
+            Add to Basket
+          </button>
+        </div>
+
       </div>
     </div>
 
     <div class="card">
-      <div class="card-image-wrap"><img class="card-img" src="images/relax.jpg" alt="Brazilian Signature Experience"></div>
+      <div class="card-image-wrap">
+        <img class="card-img" src="images/relax.jpg" alt="Brazilian Signature Experience">
+      </div>
+
       <div class="card-body">
+
         <div class="card-header">
           <h3>Brazilian Signature Experience</h3>
           <div class="meta">90 min</div>
         </div>
-        <div class="card-desc">A luxurious Brazilian wellness ritual combining body massage, Head Spa therapy and sensory care.</div>
+
+        <div class="card-desc">
+          Luxury Brazilian wellness ritual combining massage and Head Spa.
+        </div>
+
         <div class="price">£139</div>
-        <div class="card-actions"><button class="btn" onclick="addToCart('Brazilian Signature Experience',139,'90 min')">Add to Basket</button></div>
+
+        <div class="card-actions">
+          <button class="btn" onclick="addToCart('Brazilian Signature Experience',139,'90 min')">
+            Add to Basket
+          </button>
+        </div>
+
       </div>
     </div>
 
     <div class="card">
-      <div class="card-image-wrap"><img class="card-img" src="images/duo.jpg" alt="Duo Experience"></div>
+      <div class="card-image-wrap">
+        <img class="card-img" src="images/duo.jpg" alt="Duo Experience">
+      </div>
+
       <div class="card-body">
+
         <div class="card-header">
           <h3>Duo Experience</h3>
           <div class="meta">90 min</div>
         </div>
-        <div class="card-desc">A shared wellness experience designed for two.</div>
+
+        <div class="card-desc">
+          A shared wellness experience designed for two.
+        </div>
+
         <div class="price">£149</div>
-        <div class="card-actions"><button class="btn" onclick="addToCart('Duo Experience',149,'90 min')">Add to Basket</button></div>
+
+        <div class="card-actions">
+          <button class="btn" onclick="addToCart('Duo Experience',149,'90 min')">
+            Add to Basket
+          </button>
+        </div>
+
       </div>
     </div>
+
   </div>
+
+  <!-- MASSAGE -->
 
   <div class="cat-title">Brazilian Massage Therapy</div>
   <div class="cat-line"></div>
 
   <div class="cards massage">
+
     <div class="card">
-      <div class="card-image-wrap"><img class="card-img" src="images/relaxing.jpg" alt="Relaxing Massage"></div>
+      <div class="card-image-wrap">
+        <img class="card-img" src="images/relaxing.jpg" alt="Relaxing Massage">
+      </div>
+
       <div class="card-body">
+
         <div class="card-header">
           <h3>Relaxing Massage</h3>
           <div class="meta">50 min</div>
         </div>
-        <div class="card-desc">A calming massage experience designed to release tension and bring your body back into balance.</div>
+
+        <div class="card-desc">
+          A calming massage experience designed to release tension
+          and bring your body back into balance.
+        </div>
+
         <div class="price">£50</div>
-        <div class="card-actions"><button class="btn" onclick="addToCart('Relaxing Massage',50,'50 min')">Add to Basket</button></div>
+
+        <div class="card-actions">
+          <button class="btn" onclick="addToCart('Relaxing Massage',50,'50 min')">
+            Add to Basket
+          </button>
+        </div>
+
       </div>
     </div>
 
     <div class="card">
-      <div class="card-image-wrap"><img class="card-img" src="images/relaxing.jpg" alt="Lymphatic Drainage Massage"></div>
+      <div class="card-image-wrap">
+        <img class="card-img" src="images/lilian.jpeg.jpeg" alt="Lymphatic Drainage Massage">
+      </div>
+
       <div class="card-body">
+
         <div class="card-header">
           <h3>Lymphatic Drainage Massage</h3>
           <div class="meta">50 min</div>
         </div>
-        <div class="card-desc">A gentle Brazilian massage therapy focused on lightness, relaxation and body wellbeing.</div>
+
+        <div class="card-desc">
+          A gentle Brazilian massage therapy focused on lightness,
+          relaxation and body wellbeing.
+        </div>
+
         <div class="price">£50</div>
-        <div class="card-actions"><button class="btn" onclick="addToCart('Lymphatic Drainage Massage',50,'50 min')">Add to Basket</button></div>
+
+        <div class="card-actions">
+          <button class="btn" onclick="addToCart('Lymphatic Drainage Massage',50,'50 min')">
+            Add to Basket
+          </button>
+        </div>
+
       </div>
     </div>
+
   </div>
+
+  <!-- WAXING -->
 
   <div class="cat-title">Waxing</div>
   <div class="cat-line"></div>
 
   <div class="cards waxing">
-    <div class="card waxing"><div class="card-body"><div class="card-header"><h3>Full Leg</h3><div class="meta">Waxing</div></div><div class="price">£30</div><div class="card-actions"><button class="btn" onclick="addToCart('Full Leg Waxing',30,'Waxing')">Add to Basket</button></div></div></div>
-    <div class="card waxing"><div class="card-body"><div class="card-header"><h3>Half Leg</h3><div class="meta">Waxing</div></div><div class="price">£25</div><div class="card-actions"><button class="btn" onclick="addToCart('Half Leg Waxing',25,'Waxing')">Add to Basket</button></div></div></div>
-    <div class="card waxing"><div class="card-body"><div class="card-header"><h3>Underarm</h3><div class="meta">Waxing</div></div><div class="price">£12</div><div class="card-actions"><button class="btn" onclick="addToCart('Underarm Waxing',12,'Waxing')">Add to Basket</button></div></div></div>
-    <div class="card waxing"><div class="card-body"><div class="card-header"><h3>Bikini Light</h3><div class="meta">Waxing</div></div><div class="price">£23</div><div class="card-actions"><button class="btn" onclick="addToCart('Bikini Light Waxing',23,'Waxing')">Add to Basket</button></div></div></div>
-    <div class="card waxing"><div class="card-body"><div class="card-header"><h3>Brazilian</h3><div class="meta">Waxing</div></div><div class="price">£33</div><div class="card-actions"><button class="btn" onclick="addToCart('Brazilian Waxing',33,'Waxing')">Add to Basket</button></div></div></div>
-    <div class="card waxing"><div class="card-body"><div class="card-header"><h3>Full Body</h3><div class="meta">Waxing</div></div><div class="price">£99</div><div class="card-actions"><button class="btn" onclick="addToCart('Full Body Waxing',99,'Waxing')">Add to Basket</button></div></div></div>
+
+    <div class="card waxing">
+      <div class="card-body">
+        <div class="card-header">
+          <h3>Full Leg</h3>
+          <div class="meta">Waxing</div>
+        </div>
+
+        <div class="price">£30</div>
+
+        <div class="card-actions">
+          <button class="btn" onclick="addToCart('Full Leg Waxing',30,'Waxing')">
+            Add to Basket
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card waxing">
+      <div class="card-body">
+        <div class="card-header">
+          <h3>Half Leg</h3>
+          <div class="meta">Waxing</div>
+        </div>
+
+        <div class="price">£25</div>
+
+        <div class="card-actions">
+          <button class="btn" onclick="addToCart('Half Leg Waxing',25,'Waxing')">
+            Add to Basket
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card waxing">
+      <div class="card-body">
+        <div class="card-header">
+          <h3>Underarm</h3>
+          <div class="meta">Waxing</div>
+        </div>
+
+        <div class="price">£12</div>
+
+        <div class="card-actions">
+          <button class="btn" onclick="addToCart('Underarm Waxing',12,'Waxing')">
+            Add to Basket
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card waxing">
+      <div class="card-body">
+        <div class="card-header">
+          <h3>Bikini Light</h3>
+          <div class="meta">Waxing</div>
+        </div>
+
+        <div class="price">£23</div>
+
+        <div class="card-actions">
+          <button class="btn" onclick="addToCart('Bikini Light Waxing',23,'Waxing')">
+            Add to Basket
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card waxing">
+      <div class="card-body">
+        <div class="card-header">
+          <h3>Brazilian</h3>
+          <div class="meta">Waxing</div>
+        </div>
+
+        <div class="price">£33</div>
+
+        <div class="card-actions">
+          <button class="btn" onclick="addToCart('Brazilian Waxing',33,'Waxing')">
+            Add to Basket
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card waxing">
+      <div class="card-body">
+        <div class="card-header">
+          <h3>Full Body</h3>
+          <div class="meta">Waxing</div>
+        </div>
+
+        <div class="price">£99</div>
+
+        <div class="card-actions">
+          <button class="btn" onclick="addToCart('Full Body Waxing',99,'Waxing')">
+            Add to Basket
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>
+
+  <!-- LOCATION -->
+
+  <div class="cat-title">Location</div>
+  <div class="cat-line"></div>
+
+  <div class="location-card">
+
+    <h3>Copacabana Beauty</h3>
+
+    <p>
+      Oakhurst Ave, Dewsbury Rd,<br>
+      Beeston, Leeds LS11 7HL
+    </p>
+
+    <a
+      class="location-btn"
+      href="https://www.google.com/maps/search/?api=1&query=Oakhurst%20Ave%2C%20Dewsbury%20Rd%2C%20Beeston%2C%20Leeds%20LS11%207HL"
+      target="_blank"
+    >
+      Open in Google Maps
+    </a>
+
+  </div>
+
 </div>
 
 <a class="cart-fab" href="cart.html">
@@ -418,11 +761,15 @@ h1{
 </a>
 
 <script>
+
 const CART_KEY = "cb_cart_v1";
 
 function loadCart(){
-  try{return JSON.parse(localStorage.getItem(CART_KEY)) || []}
-  catch{return []}
+  try{
+    return JSON.parse(localStorage.getItem(CART_KEY)) || []
+  }catch{
+    return []
+  }
 }
 
 function saveCart(cart){
@@ -436,20 +783,31 @@ function updateCartCount(){
 }
 
 function addToCart(name, price, duration){
+
   const cart = loadCart();
-  const idx = cart.findIndex(i => i.name === name && Number(i.price) === Number(price));
+
+  const idx = cart.findIndex(
+    i => i.name === name && Number(i.price) === Number(price)
+  );
 
   if(idx >= 0){
     cart[idx].qty = (cart[idx].qty || 1) + 1;
   }else{
-    cart.push({name, price, duration, qty:1});
+    cart.push({
+      name,
+      price,
+      duration,
+      qty:1
+    });
   }
 
   saveCart(cart);
+
   window.location.href = "cart.html";
 }
 
 updateCartCount();
+
 </script>
 </body>
 </html>
